@@ -1,0 +1,24 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"key": {
+		"J": {
+			"item": "bossesunleashed:celestial_jelly"
+		},
+		"C": {
+			"item": "bossesunleashed:celestial_core"
+		},
+		"S": {
+			"item": "minecraft:stick"
+		}
+	},
+	"pattern": [
+		"JJJ",
+		"JCJ",
+		" S "
+	],
+	"result": {
+		"count": 1,
+		"item": "bossesunleashed:celestial_jellyfish_umbrella"
+	},
+	"show_notification": true
+}

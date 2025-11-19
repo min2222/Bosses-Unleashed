@@ -1,0 +1,11 @@
+{
+	"type": "bossesunleashed:celestial_field",
+	"generator": {
+		"type": "minecraft:noise",
+		"settings": "bossesunleashed:celestial_field",
+		"biome_source": {
+			"type": "minecraft:fixed",
+			"biome": "bossesunleashed:celestial_field"
+		}
+	}
+}

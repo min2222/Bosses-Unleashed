@@ -1,0 +1,22 @@
+{
+	"blend": {
+		"func": "add",
+		"srcrgb": "srcalpha",
+		"dstrgb": "1-srcalpha"
+	},
+	"vertex": "bossesunleashed:raymarching",
+	"fragment": "bossesunleashed:wormhole",
+	"attributes": [ "Position" ],
+	"samplers": [
+		{ "name": "DiffuseSampler" },
+		{ "name": "DepthSampler" }
+	],
+	"uniforms" : [
+        { "name": "InverseTransformMatrix", "type": "matrix4x4", "count": 16, "values": [ 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0 ] },
+        { "name": "ProjectionMatrix", "type": "matrix4x4", "count": 16, "values": [ 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0 ] },
+        { "name": "ViewMatrix", "type": "matrix4x4", "count": 16, "values": [ 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0 ] },
+        { "name": "iResolution", "type": "int", "count": 2, "values": [ 2560, 1440 ] },
+		{ "name": "OutSize", "type": "float", "count": 2, "values": [ 1.0, 1.0 ] },
+		{ "name": "iTime", "type": "float", "count": 1, "values": [ 1.0 ] }
+	]
+}

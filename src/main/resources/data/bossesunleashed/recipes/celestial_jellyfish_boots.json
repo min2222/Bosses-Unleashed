@@ -1,0 +1,18 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"key": {
+		"J": {
+			"item": "bossesunleashed:celestial_jelly"
+		}
+	},
+	"pattern": [
+		"   ",
+		"J J",
+		"J J"
+	],
+	"result": {
+		"count": 1,
+		"item": "bossesunleashed:celestial_jellyfish_boots"
+	},
+	"show_notification": true
+}

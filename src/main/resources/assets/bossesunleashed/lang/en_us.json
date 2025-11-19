@@ -1,0 +1,19 @@
+{
+	"itemGroup.unleashed": "Bosses Unleashed",
+	"biome.Unleashed.celestial_field": "Celestial Field",
+	"entity.bossesunleashed.jellyfish": "Jellyfish",
+	"entity.bossesunleashed.celestial_jellyfish": "Celestial Jellyfish",
+	"entity.bossesunleashed.celestial_orb": "Celestial Orb",
+	"entity.bossesunleashed.celestial_beam": "Celestial Beam",
+	"entity.bossesunleashed.camera_shake": "Camera Shake",
+	"entity.bossesunleashed.wormhole": "Wormhole",
+	"item.bossesunleashed.celestial_core": "Celestial Core",
+	"item.bossesunleashed.celestial_jelly": "Celestial Jelly",
+	"item.bossesunleashed.celestial_jellyfish_umbrella": "Celestial Jellyfish Umbrella",
+	"item.bossesunleashed.celestial_jellyfish_umbrella.tooltip": "Shift right-click to fold/unfold umbrella.",
+	"item.bossesunleashed.celestial_jellyfish_mask": "Celestial Jellyfish Mask",
+	"item.bossesunleashed.celestial_jellyfish_chestplate": "Celestial Jellyfish Chestplate",
+	"item.bossesunleashed.celestial_jellyfish_leggings": "Celestial Jellyfish Leggings",
+	"item.bossesunleashed.celestial_jellyfish_boots": "Celestial Jellyfish Boots",
+	"item.bossesunleashed.celestial_jellyfish_spawn_egg": "Celestial Jellyfish Spawn Egg"
+}

@@ -1,0 +1,42 @@
+{
+	"celestial_jellyfish_hurt": {
+		"sounds": [
+			{
+				"name": "bossesunleashed:entity/celestial_jellyfish_hurt",
+				"stream": true
+			}
+		]
+	},
+	"celestial_jellyfish_dash": {
+		"sounds": [
+			{
+				"name": "bossesunleashed:entity/celestial_jellyfish_dash",
+				"stream": true
+			}
+		]
+	},
+	"celestial_jellyfish_transform": {
+		"sounds": [
+			{
+				"name": "bossesunleashed:entity/celestial_jellyfish_transform",
+				"stream": true
+			}
+		]
+	},
+	"celestial_jellyfish_explosion": {
+		"sounds": [
+			{
+				"name": "bossesunleashed:entity/celestial_jellyfish_explosion",
+				"stream": true
+			}
+		]
+	},
+	"celestial_jellyfish_rewind": {
+		"sounds": [
+			{
+				"name": "bossesunleashed:entity/celestial_jellyfish_rewind",
+				"stream": true
+			}
+		]
+	}
+}

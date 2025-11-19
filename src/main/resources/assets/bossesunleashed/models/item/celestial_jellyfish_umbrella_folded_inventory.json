@@ -1,0 +1,6 @@
+{
+	"parent": "minecraft:item/generated",
+	"textures": {
+		"layer0": "bossesunleashed:item/celestial_jellyfish_umbrella_folded_item"
+	}
+}

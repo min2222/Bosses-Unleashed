@@ -1,0 +1,36 @@
+{
+	"type": "minecraft:entity",
+	"pools": [
+		{
+			"bonus_rolls": 0,
+			"entries": [
+				{
+					"type": "minecraft:item",
+					"name": "bossesunleashed:celestial_core",
+					"weight": 1
+				}
+			],
+			"rolls": 1
+		},
+		{
+			"rolls": 1,
+			"entries": [
+				{
+					"type": "minecraft:item",
+					"name": "bossesunleashed:celestial_jelly"
+				}
+			],
+			"functions": [
+				{
+					"function": "minecraft:set_count",
+					"count": {
+						"type": "minecraft:uniform",
+						"min": 25,
+						"max": 35
+					}
+				}
+			]
+		}
+	],
+	"random_sequence": "bossesunleashed:entities/celestial_jellyfish"
+}
