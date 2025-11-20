@@ -75,7 +75,7 @@ public class EntityWormhole extends Entity implements IShaderEffect
 					UnleashedSavedData data = UnleashedSavedData.get(this.getServer().getLevel(Level.OVERWORLD));
 					if(this.level.dimension() == UnleashedWorlds.CELESTIAL_FIELD)
 					{
-						UnleashedUtil.teleportEntityToDimension(t, this.getServer().getLevel(data.getPrevDimension(serverPlayer.getUUID())), data.getPrevPos(serverPlayer.getUUID()));
+						UnleashedUtil.teleportEntityToDimension(t, this.getServer().getLevel(data.getPrevDimension(serverPlayer.getUUID())), data.getPrevPos(serverPlayer.getUUID()).equals(BlockPos.ZERO) ? serverPlayer.level.getSharedSpawnPos() : data.getPrevPos(serverPlayer.getUUID()));
 						serverPlayer.setRespawnPosition(data.getRespawnDimension(serverPlayer.getUUID()), data.getRespawnPos(serverPlayer.getUUID()).equals(BlockPos.ZERO) ? null : data.getRespawnPos(serverPlayer.getUUID()), serverPlayer.getRespawnAngle(), serverPlayer.isRespawnForced(), false);
 					}
 					else

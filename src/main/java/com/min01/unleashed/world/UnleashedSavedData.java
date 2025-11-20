@@ -199,7 +199,7 @@ public class UnleashedSavedData extends SavedData
 	{
 		if(!this.prevPos.containsKey(player))
 		{
-			return BlockPos.containing(0, 64, 0);
+			return BlockPos.ZERO;
 		}
 		return this.prevPos.get(player);
 	}
