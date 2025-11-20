@@ -313,6 +313,7 @@ public class EntityCelestialJellyfish extends AbstractAnimatableFlyingMonster im
     	{
     		this.setDeltaMovement(Vec3.ZERO);
     		int tick = this.getHitTime();
+			float strength = 500 - this.getHitTime();
     		tick /= 20;
     		tick = Math.max(tick, 1);
     		if(this.tickCount % tick == 0)
@@ -323,9 +324,18 @@ public class EntityCelestialJellyfish extends AbstractAnimatableFlyingMonster im
     			beam.setYaw(this.random.nextFloat() * 360.0F);
     			beam.setPitch(this.random.nextFloat() * 45.0F);
     			this.level.addFreshEntity(beam);
-    			float strength = 500 - this.getHitTime();
     			EntityCameraShake.cameraShake(this.level, this.position(), Math.max(strength * 0.1F, 30.0F), Math.max(strength * 0.0001F, 0.0F), 0, 20);
     		}
+			List<LivingEntity> list = this.level.getEntitiesOfClass(LivingEntity.class, this.getBoundingBox().inflate(10.0F), EntitySelector.NO_CREATIVE_OR_SPECTATOR.and(t -> !(t instanceof EntityCelestialJellyfish) && !t.isAlliedTo(this)));
+			list.forEach(t -> 
+			{
+				Vec3 motion = UnleashedUtil.fromToVector(this.position(), t.position(), Math.max(0.05F - (strength * 0.0001F), 0.0F));
+				t.push(motion.x, motion.y, motion.z);
+	    		if(t instanceof ServerPlayer player)
+	    		{
+	    			player.connection.send(new ClientboundSetEntityMotionPacket(t));
+	    		}
+			});
     		if(this.hurtTime > 0)
     		{
     			this.level.explode(this, this.getX(), this.getEyeY(), this.getZ(), 5.0F, ExplosionInteraction.NONE);
