@@ -4,6 +4,7 @@ import com.min01.unleashed.BossesUnleashed;
 import com.min01.unleashed.entity.UnleashedEntities;
 import com.min01.unleashed.entity.living.EntityCelestialJellyfish;
 import com.min01.unleashed.entity.projectile.EntityCelestialOrb;
+import com.min01.unleashed.misc.UnleashedTags;
 import com.min01.unleashed.network.UnleashedNetwork;
 import com.min01.unleashed.network.UpdateStarfieldPacket;
 import com.min01.unleashed.util.UnleashedUtil;
@@ -12,6 +13,7 @@ import com.min01.unleashed.world.UnleashedWorlds;
 
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec2;
@@ -19,12 +21,22 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.event.TickEvent.PlayerTickEvent;
 import net.minecraftforge.event.entity.EntityJoinLevelEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
+import net.minecraftforge.event.level.ExplosionEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
 @Mod.EventBusSubscriber(modid = BossesUnleashed.MODID, bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class EventHandlerForge 
 {
+	@SubscribeEvent
+	public static void onExplostionDetonate(ExplosionEvent.Detonate event)
+	{
+		if(event.getExplosion().getExploder() instanceof EntityCelestialJellyfish)
+		{
+			event.getAffectedEntities().removeIf(t -> t instanceof ItemEntity itemEntity && itemEntity.getItem().is(UnleashedTags.UnleashedItems.EXPLOSION_IMMUNE));
+		}
+	}
+	
 	@SubscribeEvent
 	public static void onEntityJoinLevel(EntityJoinLevelEvent event)
 	{

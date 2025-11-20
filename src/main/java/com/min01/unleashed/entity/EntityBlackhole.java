@@ -34,12 +34,12 @@ public class EntityBlackhole extends Entity implements IShaderEffect
 	public void tick() 
 	{
 		super.tick();
-		if(this.tickCount == 150)
+		if(this.tickCount == 60)
 		{
     		this.spawnWormhole();
 			this.discard();
 		}
-		else if(this.tickCount == 40)
+		else if(this.tickCount == 20)
 		{
 			List<LivingEntity> list = this.level.getEntitiesOfClass(LivingEntity.class, this.getBoundingBox().inflate(100.0F));
 			list.forEach(t -> 

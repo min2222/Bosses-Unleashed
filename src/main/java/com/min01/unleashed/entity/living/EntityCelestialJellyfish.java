@@ -43,6 +43,7 @@ import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundEvents;
 import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.util.Mth;
 import net.minecraft.world.damagesource.DamageSource;
@@ -245,7 +246,7 @@ public class EntityCelestialJellyfish extends AbstractAnimatableFlyingMonster im
         	
         	if(this.getTarget() != null)
         	{
-        		if(this.canMove() && this.getAnimationState() != 0)
+        		if(this.canMove() && this.isAlive())
         		{
         			this.getNavigation().moveTo(this.getTarget(), 1.0F);
         		}
@@ -310,6 +311,7 @@ public class EntityCelestialJellyfish extends AbstractAnimatableFlyingMonster im
     	}
     	if(this.isFinalPhase())
     	{
+    		this.setDeltaMovement(Vec3.ZERO);
     		int tick = this.getHitTime();
     		tick /= 20;
     		tick = Math.max(tick, 1);
@@ -338,9 +340,17 @@ public class EntityCelestialJellyfish extends AbstractAnimatableFlyingMonster im
     			EntityBlackhole blackHole = new EntityBlackhole(UnleashedEntities.BLACKHOLE.get(), this.level);
     			blackHole.setPos(this.position());
     			this.level.addFreshEntity(blackHole);
+    			this.playSound(SoundEvents.GENERIC_EXPLODE);
+    			EntityCameraShake.cameraShake(this.level, this.position(), 100.0F, 0.1F, 0, 10);
     			this.discard();
     		}
     	}
+    }
+    
+    @Override
+    public boolean isEffectiveAi() 
+    {
+    	return super.isEffectiveAi() && !this.isFinalPhase();
     }
     
     public void spawnWormhole()
@@ -464,7 +474,7 @@ public class EntityCelestialJellyfish extends AbstractAnimatableFlyingMonster im
     	else
     	{
     		this.phaseTime++;
-            this.setDeltaMovement(this.getDeltaMovement().add(0.0D, -0.08D / 4.0D, 0.0D));
+            this.setDeltaMovement(this.getDeltaMovement().add(0.0D, -0.08D, 0.0D));
             this.bossEvent.setVisible(false);
     		if(this.phaseTime == 200)
     		{
@@ -622,7 +632,7 @@ public class EntityCelestialJellyfish extends AbstractAnimatableFlyingMonster im
         		this.playSound(UnleashedSounds.CELESTIAL_JELLYFISH_TRANSFORM.get());
         		return false;
         	}
-    		if(!this.isVisible() || this.getAnimationState() == 1 || this.getAnimationState() == 3 || this.isClone())
+    		if(!this.isVisible() || this.getAnimationState() == 1 || this.getAnimationState() == 3 || this.isClone() || this.isTeleport())
     		{
     			return false;
     		}

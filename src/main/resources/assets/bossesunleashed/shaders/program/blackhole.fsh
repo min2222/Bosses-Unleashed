@@ -52,7 +52,7 @@ void main() {
     vec3 far3 = far_4.xyz / far_4.w;
     vec3 rd = normalize(far3 - ro);
     
-    ro /= iTime * 30.0;
+    ro /= iTime * 50.0;
     
   	vec3 bg = texture(DiffuseSampler, texCoord).rgb;
     float depth = linearizeDepth(texture(DepthSampler, texCoord).r);
