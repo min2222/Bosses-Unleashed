@@ -75,21 +75,21 @@ public class EntityWormhole extends Entity implements IShaderEffect
 					UnleashedSavedData data = UnleashedSavedData.get(this.getServer().getLevel(Level.OVERWORLD));
 					if(this.level.dimension() == UnleashedWorlds.CELESTIAL_FIELD)
 					{
-						UnleashedUtil.teleportEntityToDimension(t, this.getServer().getLevel(data.getPrevDimension()), data.getPrevPos());
-						serverPlayer.setRespawnPosition(data.getRespawnDimension(), data.getRespawnPos().equals(BlockPos.ZERO) ? null : data.getRespawnPos(), serverPlayer.getRespawnAngle(), serverPlayer.isRespawnForced(), false);
+						UnleashedUtil.teleportEntityToDimension(t, this.getServer().getLevel(data.getPrevDimension(serverPlayer.getUUID())), data.getPrevPos(serverPlayer.getUUID()));
+						serverPlayer.setRespawnPosition(data.getRespawnDimension(serverPlayer.getUUID()), data.getRespawnPos(serverPlayer.getUUID()).equals(BlockPos.ZERO) ? null : data.getRespawnPos(serverPlayer.getUUID()), serverPlayer.getRespawnAngle(), serverPlayer.isRespawnForced(), false);
 					}
 					else
 					{
-						data.setPrevPos(serverPlayer.blockPosition());
-						data.setPrevDimension(serverPlayer.level.dimension());
-						data.setRespawnDimension(serverPlayer.getRespawnDimension());
+						data.setPrevPos(serverPlayer.getUUID(), serverPlayer.blockPosition());
+						data.setPrevDimension(serverPlayer.getUUID(), serverPlayer.level.dimension());
+						data.setRespawnDimension(serverPlayer.getUUID(), serverPlayer.getRespawnDimension());
 						if(serverPlayer.getRespawnPosition() != null)
 						{
-							data.setRespawnPos(serverPlayer.getRespawnPosition());
+							data.setRespawnPos(serverPlayer.getUUID(), serverPlayer.getRespawnPosition());
 						}
 						BlockPos blockPos = BlockPos.containing(0, 64, 0);
-						serverPlayer.setRespawnPosition(UnleashedWorlds.CELESTIAL_FIELD, blockPos, serverPlayer.getRespawnAngle(), serverPlayer.isRespawnForced(), false);
 						UnleashedUtil.teleportEntityToDimension(t, this.getServer().getLevel(UnleashedWorlds.CELESTIAL_FIELD), blockPos);
+						serverPlayer.setRespawnPosition(UnleashedWorlds.CELESTIAL_FIELD, blockPos, serverPlayer.getRespawnAngle(), serverPlayer.isRespawnForced(), false);
 						this.setDisappear(true);
 					}
 					if(this.level.players().size() < 1)

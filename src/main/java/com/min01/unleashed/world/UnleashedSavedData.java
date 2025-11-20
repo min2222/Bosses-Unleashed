@@ -1,11 +1,16 @@
 package com.min01.unleashed.world;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
+
 import com.min01.unleashed.network.UnleashedNetwork;
 import com.min01.unleashed.network.UpdateStarfieldPacket;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.NbtUtils;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
@@ -19,10 +24,10 @@ public class UnleashedSavedData extends SavedData
 	public static final String NAME = "unleashed_data";
 	protected boolean isStarfield;
 	protected boolean isJellyfishSpawned;
-	protected ResourceKey<Level> respawnDimension = Level.OVERWORLD;
-	protected ResourceKey<Level> prevDimension = Level.OVERWORLD;
-	protected BlockPos respawnPos = BlockPos.ZERO;
-	protected BlockPos prevPos = BlockPos.ZERO;
+	protected final Map<UUID, ResourceKey<Level>> respawnDimension = new HashMap<>();
+	protected final Map<UUID, ResourceKey<Level>> prevDimension = new HashMap<>();
+	protected final Map<UUID, BlockPos> respawnPos =  new HashMap<>();
+	protected final Map<UUID, BlockPos> prevPos =  new HashMap<>();
 	
     public static UnleashedSavedData get(Level level)
     {
@@ -40,10 +45,35 @@ public class UnleashedSavedData extends SavedData
     	UnleashedSavedData data = new UnleashedSavedData();
     	data.setStarfield(nbt.getBoolean("isStarfield"));
     	data.setJellyfishSpawned(nbt.getBoolean("isJellyfishSpawned"));
-    	data.setRespawnDimension(ResourceKey.create(Registries.DIMENSION, new ResourceLocation(nbt.getString("RespawnDimension"))));
-    	data.setPrevDimension(ResourceKey.create(Registries.DIMENSION, new ResourceLocation(nbt.getString("PrevDimension"))));
-    	data.setRespawnPos(NbtUtils.readBlockPos(nbt.getCompound("RespawnPos")));
-    	data.setPrevPos(NbtUtils.readBlockPos(nbt.getCompound("PrevPos")));
+
+        ListTag respawnDim = nbt.getList("RespawnDimension", 10);
+        ListTag prevDim = nbt.getList("PrevDimension", 10);
+        ListTag respawnP = nbt.getList("RespawnPos", 10);
+        ListTag prevP = nbt.getList("PrevPos", 10);
+        
+        for(int i = 0; i < respawnDim.size(); ++i) 
+        {
+        	CompoundTag tag = respawnDim.getCompound(i);
+        	data.setRespawnDimension(tag.getUUID("PlayerUUID"), ResourceKey.create(Registries.DIMENSION, new ResourceLocation(tag.getString("Dimension"))));
+        }
+        
+        for(int i = 0; i < prevDim.size(); ++i) 
+        {
+        	CompoundTag tag = prevDim.getCompound(i);
+        	data.setPrevDimension(tag.getUUID("PlayerUUID"), ResourceKey.create(Registries.DIMENSION, new ResourceLocation(tag.getString("Dimension"))));
+        }
+        
+        for(int i = 0; i < respawnP.size(); ++i) 
+        {
+        	CompoundTag tag = respawnP.getCompound(i);
+        	data.setRespawnPos(tag.getUUID("PlayerUUID"), NbtUtils.readBlockPos(tag.getCompound("BlockPos")));
+        }
+        
+        for(int i = 0; i < prevP.size(); ++i) 
+        {
+        	CompoundTag tag = prevP.getCompound(i);
+        	data.setRespawnPos(tag.getUUID("PlayerUUID"), NbtUtils.readBlockPos(tag.getCompound("BlockPos")));
+        }
         return data;
     }
 	
@@ -52,10 +82,42 @@ public class UnleashedSavedData extends SavedData
 	{
 		nbt.putBoolean("isStarfield", this.isStarfield);
 		nbt.putBoolean("isJellyfishSpawned", this.isJellyfishSpawned);
-		nbt.putString("RespawnDimension", this.respawnDimension.location().toString());
-		nbt.putString("PrevDimension", this.prevDimension.location().toString());
-		nbt.put("RespawnPos", NbtUtils.writeBlockPos(this.respawnPos));
-		nbt.put("PrevPos", NbtUtils.writeBlockPos(this.prevPos));
+		ListTag respawnDim = new ListTag();
+		ListTag prevDim = new ListTag();
+		ListTag respawnP = new ListTag();
+		ListTag prevP = new ListTag();
+		this.respawnDimension.forEach((t, u) ->
+		{
+			CompoundTag tag = new CompoundTag();
+			tag.putUUID("PlayerUUID", t);
+			tag.putString("Dimension", u.location().toString());
+			respawnDim.add(tag);
+		});
+		this.prevDimension.forEach((t, u) ->
+		{
+			CompoundTag tag = new CompoundTag();
+			tag.putUUID("PlayerUUID", t);
+			tag.putString("Dimension", u.location().toString());
+			prevDim.add(tag);
+		});
+		this.respawnPos.forEach((t, u) ->
+		{
+			CompoundTag tag = new CompoundTag();
+			tag.putUUID("PlayerUUID", t);
+			tag.put("BlockPos", NbtUtils.writeBlockPos(u));
+			respawnP.add(tag);
+		});
+		this.prevPos.forEach((t, u) ->
+		{
+			CompoundTag tag = new CompoundTag();
+			tag.putUUID("PlayerUUID", t);
+			tag.put("BlockPos", NbtUtils.writeBlockPos(u));
+			prevP.add(tag);
+		});
+		nbt.put("RespawnDimension", respawnDim);
+		nbt.put("PrevDimension", prevDim);
+		nbt.put("RespawnPos", respawnP);
+		nbt.put("PrevPos", prevP);
 		return nbt;
 	}
 	
@@ -82,47 +144,47 @@ public class UnleashedSavedData extends SavedData
 		return this.isJellyfishSpawned;
 	}
 	
-	public void setRespawnDimension(ResourceKey<Level> level)
+	public void setRespawnDimension(UUID player, ResourceKey<Level> level)
 	{
-		this.respawnDimension = level;
+		this.respawnDimension.put(player, level);
 		this.setDirty();
 	}
 	
-	public ResourceKey<Level> getRespawnDimension()
+	public ResourceKey<Level> getRespawnDimension(UUID player)
 	{
-		return this.respawnDimension;
+		return this.respawnDimension.get(player);
 	}
 	
-	public void setPrevDimension(ResourceKey<Level> level)
+	public void setPrevDimension(UUID player, ResourceKey<Level> level)
 	{
-		this.prevDimension = level;
+		this.prevDimension.put(player, level);
 		this.setDirty();
 	}
 	
-	public ResourceKey<Level> getPrevDimension()
+	public ResourceKey<Level> getPrevDimension(UUID player)
 	{
-		return this.prevDimension;
+		return this.prevDimension.get(player);
 	}
 	
-	public void setRespawnPos(BlockPos pos)
+	public void setRespawnPos(UUID player, BlockPos pos)
 	{
-		this.respawnPos = pos;
+		this.respawnPos.put(player, pos);
 		this.setDirty();
 	}
 	
-	public BlockPos getRespawnPos()
+	public BlockPos getRespawnPos(UUID player)
 	{
-		return this.respawnPos;
+		return this.respawnPos.get(player);
 	}
 	
-	public void setPrevPos(BlockPos pos)
+	public void setPrevPos(UUID player, BlockPos pos)
 	{
-		this.prevPos = pos;
+		this.prevPos.put(player, pos);
 		this.setDirty();
 	}
 	
-	public BlockPos getPrevPos()
+	public BlockPos getPrevPos(UUID player)
 	{
-		return this.prevPos;
+		return this.prevPos.get(player);
 	}
 }

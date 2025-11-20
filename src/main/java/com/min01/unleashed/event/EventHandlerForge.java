@@ -12,16 +12,20 @@ import com.min01.unleashed.world.UnleashedSavedData;
 import com.min01.unleashed.world.UnleashedWorlds;
 
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec2;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.event.TickEvent.PlayerTickEvent;
 import net.minecraftforge.event.entity.EntityJoinLevelEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
+import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.level.ExplosionEvent;
+import net.minecraftforge.eventbus.api.Event.Result;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
@@ -59,6 +63,21 @@ public class EventHandlerForge
 			}
 		}
 	}
+	
+    @SubscribeEvent
+    public static void onRightClickBlock(PlayerInteractEvent.RightClickBlock event)
+    {
+    	Player player = event.getEntity();
+    	if(player.level.dimension() == UnleashedWorlds.CELESTIAL_FIELD)
+    	{
+    		if(!player.getAbilities().instabuild && event.getItemStack().getItem() instanceof BlockItem)
+    		{
+    			event.setCancellationResult(InteractionResult.PASS);
+        		event.setUseBlock(Result.DENY);
+        		event.setCanceled(true);
+    		}
+    	}
+    }
 	
 	@SubscribeEvent
 	public static void onLivingDeath(LivingDeathEvent event)

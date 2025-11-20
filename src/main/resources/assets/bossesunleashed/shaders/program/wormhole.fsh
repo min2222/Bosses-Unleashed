@@ -71,37 +71,34 @@ vec3 render(vec2 uv, float maindepth, vec3 col, vec3 ro, vec3 rd) {
         vec2 dir = 0.5 * normalize(texCoord - screencenter);
     	return texture(DiffuseSampler, texCoord - dir * intensity).rgb;
     }
-    else {
-	    if (intensity < length(hit)) {
-        	hit = Sphere(ro, rd, 2.0);
-	    	vec3 dir = rd;
-			vec3 from=vec3(1.,.5,0.5);
-			//volumetric rendering
-			float s=0.1,fade=1.;
-			vec3 v=vec3(0.);
-			for (int r=0; r<volsteps; r++) {
-			    if(s > maindepth) break;
-				vec3 p=from+s*dir*.5;
-				p=abs(p)/max(dot(p,p),0.0016)-formuparam; // the magic formula
-				float pa,a=pa=0.;
-				for (int i=0; i<iterations; i++) { 
-					p=abs(p)/dot(p,p)-formuparam; // the magic formula
-					a+=abs(length(p)-pa); // absolute sum of average change
-					pa=length(p);
-				}
-				float dm=max(0.,darkmatter-a*a*.001); //dark matter
-				a*=a*a; // add contrast
-				if (r>6) fade*=1.-dm; // dark matter, don't render near
-				//v+=vec3(dm,dm*.5,0.);
-				v+=fade;
-				v+=vec3(s,s*s,s*s*s*s)*a*brightness*fade; // coloring based on distance
-				fade*=distfading; // distance fading
-				s+=stepsize;
+    hit = Sphere(ro, rd, 4.0);
+	if (intensity < length(hit)) {
+	    vec3 dir = rd;
+		vec3 from=vec3(1.,.5,0.5);
+		//volumetric rendering
+		float s=0.1,fade=1.;
+		vec3 v=vec3(0.);
+		for (int r=0; r<volsteps; r++) {
+			if(s > maindepth) break;
+			vec3 p=from+s*dir*.5;
+			p=abs(p)/max(dot(p,p),0.0016)-formuparam; // the magic formula
+			float pa,a=pa=0.;
+			for (int i=0; i<iterations; i++) { 
+				p=abs(p)/dot(p,p)-formuparam; // the magic formula
+				a+=abs(length(p)-pa); // absolute sum of average change
+				pa=length(p);
 			}
-			v=mix(vec3(length(v)),v,saturation); //color adjust
-		    return v*.01;
-	    }
-    }
+			float dm=max(0.,darkmatter-a*a*.001); //dark matter
+			a*=a*a; // add contrast
+			if (r>6) fade*=1.-dm; // dark matter, don't render near
+			v+=fade;
+			v+=vec3(s,s*s,s*s*s*s)*a*brightness*fade; // coloring based on distance
+			fade*=distfading; // distance fading
+			s+=stepsize;
+		}
+		v=mix(vec3(length(v)),v,saturation); //color adjust
+		return v*.01;
+	}
     return col;
 }
 

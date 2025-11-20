@@ -17,6 +17,7 @@ import net.minecraft.client.model.geom.builders.LayerDefinition;
 import net.minecraft.client.model.geom.builders.MeshDefinition;
 import net.minecraft.client.model.geom.builders.PartDefinition;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.Mth;
 
 public class ModelCelestialJellyfish extends HierarchicalModel<EntityCelestialJellyfish>
 {
@@ -256,7 +257,9 @@ public class ModelCelestialJellyfish extends HierarchicalModel<EntityCelestialJe
 		this.top_umbrella.visible = !entity.isFinalPhase();
 		if(isFirstPhase)
 		{
-			this.root.xRot = -45.0F;
+			float pitch = headPitch + 90.0F;
+			float xRot = Mth.lerp(Math.min(entity.phaseTime / 20.0F, 1.0F), pitch, pitch < 0.0F ? -65.0F : 65.0F);
+			this.root.xRot = (float) Math.toRadians(xRot);
 		}
 		if(isHitTime)
 		{
