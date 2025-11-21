@@ -328,7 +328,7 @@ public class EntityCelestialJellyfish extends AbstractAnimatableFlyingMonster im
     			this.level.addFreshEntity(beam);
     			EntityCameraShake.cameraShake(this.level, this.position(), Math.max(strength * 0.1F, 30.0F), Math.max(strength * 0.0001F, 0.0F), 0, 20);
     		}
-			List<Entity> list = this.level.getEntitiesOfClass(Entity.class, this.getBoundingBox().inflate(30.0F), this::canPush);
+			List<Entity> list = this.level.getEntitiesOfClass(Entity.class, this.getBoundingBox().inflate(15.0F), this::canPush);
 			list.forEach(t -> 
 			{
 				if(t instanceof Projectile)
@@ -362,6 +362,7 @@ public class EntityCelestialJellyfish extends AbstractAnimatableFlyingMonster im
     			this.level.addFreshEntity(blackHole);
     			this.playSound(SoundEvents.GENERIC_EXPLODE);
     			EntityCameraShake.cameraShake(this.level, this.position(), 100.0F, 0.1F, 0, 10);
+    			this.dropAllDeathLoot(this.damageSources().generic());
     			this.discard();
     		}
     	}
