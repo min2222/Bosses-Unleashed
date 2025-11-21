@@ -1,5 +1,7 @@
 package com.min01.unleashed.entity;
 
+import com.min01.unleashed.config.UnleashedConfig;
+
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
@@ -136,7 +138,7 @@ public class EntityCameraShake extends Entity
 
     public static void cameraShake(Level world, Vec3 position, float radius, float magnitude, int duration, int fadeDuration)
     {
-        if(!world.isClientSide) 
+        if(!world.isClientSide && UnleashedConfig.cameraShakes.get()) 
         {
             EntityCameraShake cameraShake = new EntityCameraShake(world, position, radius, magnitude, duration, fadeDuration);
             world.addFreshEntity(cameraShake);

@@ -3,6 +3,7 @@ package com.min01.unleashed.shader;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.min01.unleashed.config.UnleashedConfig;
 import com.min01.unleashed.network.AddShaderEffectPacket;
 import com.min01.unleashed.network.UnleashedNetwork;
 
@@ -16,7 +17,7 @@ public class UnleashedShaderEffects
 	
 	public static void addEffect(Level level, String name, Vec3 pos, int lifeTime, float scale)
 	{
-		if(!level.isClientSide)
+		if(!level.isClientSide && UnleashedConfig.shaderEffects.get())
 		{
 			UnleashedNetwork.sendToAll(new AddShaderEffectPacket(level.dimension(), name, pos, lifeTime, scale));
 		}
