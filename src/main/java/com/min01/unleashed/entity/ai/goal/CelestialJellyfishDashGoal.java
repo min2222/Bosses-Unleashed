@@ -2,6 +2,7 @@ package com.min01.unleashed.entity.ai.goal;
 
 import java.util.List;
 
+import com.min01.unleashed.config.UnleashedConfig;
 import com.min01.unleashed.entity.UnleashedEntities;
 import com.min01.unleashed.entity.living.EntityCelestialJellyfish;
 import com.min01.unleashed.entity.projectile.EntityCelestialOrb;
@@ -100,7 +101,7 @@ public class CelestialJellyfishDashGoal extends AbstractCelestialJellyfishSkillG
 					else
 					{
 						this.mob.setHitTime(true);
-						this.mob.setHitTime(200);
+						this.mob.setHitTime(this.mob.isSecondPhase() ? UnleashedConfig.phaseTwoDealTime.get() : UnleashedConfig.phaseOneDealTime.get());
 					}
 				}
 				else
