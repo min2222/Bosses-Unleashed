@@ -2,7 +2,6 @@ package com.min01.unleashed.entity;
 
 import java.util.List;
 
-import com.min01.unleashed.entity.living.EntityCelestialJellyfish;
 import com.min01.unleashed.util.UnleashedUtil;
 import com.min01.unleashed.world.UnleashedSavedData;
 import com.min01.unleashed.world.UnleashedWorlds;
@@ -23,7 +22,7 @@ import net.minecraftforge.network.NetworkHooks;
 
 public class EntityWormhole extends Entity implements IShaderEffect
 {
-	public static final EntityDataAccessor<Boolean> CAN_DISAPPEAR = SynchedEntityData.defineId(EntityCelestialJellyfish.class, EntityDataSerializers.BOOLEAN);
+	public static final EntityDataAccessor<Boolean> CAN_DISAPPEAR = SynchedEntityData.defineId(EntityWormhole.class, EntityDataSerializers.BOOLEAN);
 	
 	public int disapperTick;
 	
