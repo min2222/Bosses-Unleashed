@@ -110,20 +110,17 @@ public class ClientEventHandlerForge
         {
             PoseStack poseStack = event.getGuiGraphics().pose();
             Component component = event.getBossEvent().getName();
-            int i = UnleashedClientUtil.MC.getWindow().getGuiScaledWidth();
-            int j = event.getY();
+            int width = UnleashedClientUtil.MC.getWindow().getGuiScaledWidth();
+            int y = event.getY();
             int progressScaled = (int)(event.getBossEvent().getProgress() * 127.0F);
-            int l = UnleashedClientUtil.MC.font.width(component);
-            int i1 = i / 2 - l / 2;
-            int j1 = j + 25;
+            int componentWidth = UnleashedClientUtil.MC.font.width(component);
+            int x = width / 2 - componentWidth / 2;
             event.setCanceled(true);
             poseStack.pushPose();
-            poseStack.translate(i1 / 9.5F, j - 23, 0);
+            poseStack.translate(x / 11.5F, y - 23, 0);
             event.getGuiGraphics().blit(JELLYFISH_BOSS_BAR_FRAME_TEXTURE, event.getX(), event.getY(), 0, 0, 140, 32, 140, 32);
             event.getGuiGraphics().blit(JELLYFISH_BOSS_BAR_BAR_TEXTURE, event.getX(), event.getY(), 0, 0, 9 + progressScaled, 32, 140, 32);
-            poseStack.popPose();
-            poseStack.pushPose();
-            poseStack.translate(i1, j1, 0);
+            poseStack.translate(x - 20.0F, y + 35, 0);
             UnleashedClientUtil.MC.font.drawInBatch(component.plainCopy().withStyle(ChatFormatting.AQUA).getVisualOrderText(), 0.0F, 0.0F, 16777215, true, poseStack.last().pose(), UnleashedClientUtil.MC.renderBuffers().bufferSource(), Font.DisplayMode.POLYGON_OFFSET, 0, LightTexture.FULL_BRIGHT);
             poseStack.popPose();
             event.setIncrement(event.getIncrement() + 7);
