@@ -278,6 +278,11 @@ public class EntityCelestialJellyfish extends AbstractAnimatableFlyingMonster im
     	}
     }
     
+    @Override
+    public boolean canCollideWith(Entity p_20303_) 
+    {
+    	return false;
+    }
     
     @Override
     protected void doPush(Entity p_20971_) 
