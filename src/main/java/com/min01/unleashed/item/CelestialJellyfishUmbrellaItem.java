@@ -100,7 +100,7 @@ public class CelestialJellyfishUmbrellaItem extends SwordItem
 			{
 				return InteractionResultHolder.consume(stack);
 			}
-			else
+			else if(p_41433_.onGround())
 			{
 				Vec3 lookPos = UnleashedUtil.getLookPos(new Vec2(0.0F, p_41433_.getYHeadRot()), p_41433_.position(), 0, 2, 100.0F);
 				p_41433_.setDeltaMovement(UnleashedUtil.fromToVector(p_41433_.position(), lookPos, 4.0F).add(0.0F, 0.25F, 0.0F));
