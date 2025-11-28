@@ -82,7 +82,7 @@ public class EntityCelestialJellyfish extends AbstractAnimatableFlyingMonster im
 	public static final EntityDataAccessor<Boolean> IS_SECOND_PHASE = SynchedEntityData.defineId(EntityCelestialJellyfish.class, EntityDataSerializers.BOOLEAN);
 	public static final EntityDataAccessor<Boolean> IS_FINAL_PHASE = SynchedEntityData.defineId(EntityCelestialJellyfish.class, EntityDataSerializers.BOOLEAN);
 	public static final EntityDataAccessor<Float> EFFECT_SCALE = SynchedEntityData.defineId(EntityCelestialJellyfish.class, EntityDataSerializers.FLOAT);
-	public static final EntityDataAccessor<Integer> SCALE_DIRECTION = SynchedEntityData.defineId(EntityCelestialJellyfish.class, EntityDataSerializers.INT);
+	public static final EntityDataAccessor<Integer> SCALE_DIR = SynchedEntityData.defineId(EntityCelestialJellyfish.class, EntityDataSerializers.INT);
 	public static final EntityDataAccessor<Integer> HIT_TIME = SynchedEntityData.defineId(EntityCelestialJellyfish.class, EntityDataSerializers.INT);
 	public static final EntityDataAccessor<Optional<UUID>> OWNER_UUID = SynchedEntityData.defineId(EntityCelestialJellyfish.class, EntityDataSerializers.OPTIONAL_UUID);
 	public static final EntityDataAccessor<Vec3> LAST_LOOK_POS = SynchedEntityData.defineId(EntityCelestialJellyfish.class, UnleashedEntityDataSerializers.VEC3.get());
@@ -152,7 +152,7 @@ public class EntityCelestialJellyfish extends AbstractAnimatableFlyingMonster im
     	this.entityData.define(IS_SECOND_PHASE, false);
     	this.entityData.define(IS_FINAL_PHASE, false);
     	this.entityData.define(EFFECT_SCALE, 0.0F);
-    	this.entityData.define(SCALE_DIRECTION, 1);
+    	this.entityData.define(SCALE_DIR, 1);
     	this.entityData.define(HIT_TIME, 0);
 		this.entityData.define(OWNER_UUID, Optional.empty());
     	this.entityData.define(LAST_LOOK_POS, Vec3.ZERO);
@@ -169,6 +169,11 @@ public class EntityCelestialJellyfish extends AbstractAnimatableFlyingMonster im
     	if(!this.level.isClientSide)
     	{
             this.bossEvent.setProgress(this.getHealth() / this.getMaxHealth());
+        	
+        	if(!(this.getTarget() instanceof Player))
+        	{
+        		this.setTarget(null);
+        	}
     	}
     	else
     	{
@@ -899,12 +904,12 @@ public class EntityCelestialJellyfish extends AbstractAnimatableFlyingMonster im
     
     public void setScaleDirection(int value)
     {
-    	this.entityData.set(SCALE_DIRECTION, value);
+    	this.entityData.set(SCALE_DIR, value);
     }
     
     public int getScaleDirection()
     {
-    	return this.entityData.get(SCALE_DIRECTION);
+    	return this.entityData.get(SCALE_DIR);
     }
     
     public void setEffectScale(float value)
