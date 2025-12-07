@@ -28,17 +28,17 @@ public class GlowingLayer<T extends Entity, M extends EntityModel<T>> extends Re
 	}
 
 	@Override
-	public void render(PoseStack poseStack, MultiBufferSource bufferSource, int packedLight, T entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch, float p_117358_)
+	public void render(PoseStack poseStack, MultiBufferSource bufferIn, int packedLightIn, T entity, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch)
 	{
-		this.coloredGlowingModelCopyLayerRender(this.getParentModel(), this.model, this.texture, poseStack, bufferSource, packedLight, entity, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, p_117358_, 1.0F, 1.0F, 1.0F);
+		this.coloredGlowingModelCopyLayerRender(this.getParentModel(), this.model, this.texture, poseStack, bufferIn, packedLightIn, entity, limbSwing, limbSwingAmount, partialTicks, ageInTicks, netHeadYaw, headPitch, 1.0F, 1.0F, 1.0F);
 	}
 	
-	public void coloredGlowingModelCopyLayerRender(M model1, M model2, ResourceLocation texture, PoseStack poseStack, MultiBufferSource bufferSource, int packedLight, T entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch, float p_117372_, float r, float g, float b)
+	public void coloredGlowingModelCopyLayerRender(M model1, M model2, ResourceLocation texture, PoseStack poseStack, MultiBufferSource bufferSource, int packedLight, T entity, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch, float r, float g, float b)
 	{
 		if(!entity.isInvisible())
 		{
 			model1.copyPropertiesTo(model2);
-			model2.prepareMobModel(entity, limbSwing, limbSwingAmount, p_117372_);
+			model2.prepareMobModel(entity, limbSwing, limbSwingAmount, partialTicks);
 			this.renderColoredGlowingModel(model2, texture, poseStack, bufferSource, packedLight, entity, r, g, b);
 		}
 	}
