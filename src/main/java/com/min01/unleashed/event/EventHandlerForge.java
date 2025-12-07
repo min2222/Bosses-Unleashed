@@ -80,7 +80,7 @@ public class EventHandlerForge
 	{
 		Level level = event.getLevel();
 		Entity entity = event.getEntity();
-		if(entity instanceof Player player && level.dimension() == UnleashedWorlds.CELESTIAL_FIELD)
+		if(entity instanceof Player player && level.dimension() == UnleashedWorlds.CELESTIAL_FIELD && UnleashedConfig.spawnJellyfish.get())
 		{
 			UnleashedSavedData data = UnleashedSavedData.get(level);
 			if(data != null)
