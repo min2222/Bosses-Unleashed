@@ -698,9 +698,12 @@ public class EntityCelestialJellyfish extends AbstractAnimatableFlyingMonster im
     		}
     		else if(this.isSecondPhase() && this.getHealth() - p_21017_ <= 1.0F && !this.isFinalPhase())
     		{
-    			this.setHealth(1.0F);
-    			this.doTeleport();
-    			return false;
+    			if(p_21016_.getDirectEntity() != null)
+    			{
+        			this.setHealth(1.0F);
+        			this.doTeleport();
+        			return false;
+    			}
     		}
     	}
     	return super.hurt(p_21016_, p_21017_);
