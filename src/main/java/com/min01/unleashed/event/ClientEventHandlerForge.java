@@ -42,7 +42,7 @@ public class ClientEventHandlerForge
     public static final ResourceLocation JELLYFISH_BOSS_BAR_BAR_TEXTURE = new ResourceLocation(BossesUnleashed.MODID, "textures/gui/celestial_jellyfish_bossbar_bar.png");
     
     @SubscribeEvent
-    public static void onSetupCamera(ViewportEvent.ComputeCameraAngles event) 
+    public static void onComputeCameraAngles(ViewportEvent.ComputeCameraAngles event) 
     {
         Player player = UnleashedClientUtil.MC.player;
         float delta = UnleashedClientUtil.MC.getFrameTime();
