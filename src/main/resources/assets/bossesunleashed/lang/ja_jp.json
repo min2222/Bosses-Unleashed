@@ -1,0 +1,21 @@
+{
+"itemGroup.unleashed": "解き放たれしボス",
+"biome.Unleashed.celestial_field": "天界の野",
+"entity.bossesunleashed.jellyfish": "海月",
+"entity.bossesunleashed.celestial_jellyfish": "天界の海月",
+"entity.bossesunleashed.celestial_orb": "天界のオーブ",
+"entity.bossesunleashed.celestial_beam": "天界の光線",
+"entity.bossesunleashed.camera_shake": "カメラ揺れ",
+"entity.bossesunleashed.wormhole": "ワームホール",
+"entity.bossesunleashed.blackhole": "ブラックホール",
+"item.bossesunleashed.celestial_core": "天界のコア",
+"item.bossesunleashed.celestial_jelly": "天界のゼリー",
+"item.bossesunleashed.celestial_jelly.tooltip": "とても美味しそう…",
+"item.bossesunleashed.celestial_jellyfish_umbrella": "天界海月の傘",
+"item.bossesunleashed.celestial_jellyfish_umbrella.tooltip": "Shift＋右クリックで傘を開閉。",
+"item.bossesunleashed.celestial_jellyfish_mask": "天界海月の仮面",
+"item.bossesunleashed.celestial_jellyfish_chestplate": "天界海月の胸当て",
+"item.bossesunleashed.celestial_jellyfish_leggings": "天界海月のレギンス",
+"item.bossesunleashed.celestial_jellyfish_boots": "天界海月のブーツ",
+"item.bossesunleashed.celestial_jellyfish_spawn_egg": "天界の海月のスポーンエッグ"
+}
