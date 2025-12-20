@@ -169,11 +169,6 @@ public class EntityCelestialJellyfish extends AbstractAnimatableFlyingMonster im
     	if(!this.level.isClientSide)
     	{
             this.bossEvent.setProgress(this.getHealth() / this.getMaxHealth());
-        	
-        	if(!(this.getTarget() instanceof Player))
-        	{
-        		this.setTarget(null);
-        	}
     	}
     	else
     	{
