@@ -38,8 +38,8 @@ public class ClientEventHandlerForge
 	public static final AtomicBoolean STARFIELD = new AtomicBoolean();
     public static final Map<UUID, UnleashedBossBarType> BOSS_BAR_MAP = new HashMap<>();
     public static final Map<UUID, Entity> BOSS_MAP = new HashMap<>();
-    public static final ResourceLocation JELLYFISH_BOSS_BAR_FRAME_TEXTURE = new ResourceLocation(BossesUnleashed.MODID, "textures/gui/celestial_jellyfish_bossbar_frame.png");
-    public static final ResourceLocation JELLYFISH_BOSS_BAR_BAR_TEXTURE = new ResourceLocation(BossesUnleashed.MODID, "textures/gui/celestial_jellyfish_bossbar_bar.png");
+    public static final ResourceLocation JELLYFISH_BOSS_BAR_FRAME_TEXTURE = ResourceLocation.fromNamespaceAndPath(BossesUnleashed.MODID, "textures/gui/celestial_jellyfish_bossbar_frame.png");
+    public static final ResourceLocation JELLYFISH_BOSS_BAR_BAR_TEXTURE = ResourceLocation.fromNamespaceAndPath(BossesUnleashed.MODID, "textures/gui/celestial_jellyfish_bossbar_bar.png");
     
     @SubscribeEvent
     public static void onComputeCameraAngles(ViewportEvent.ComputeCameraAngles event) 

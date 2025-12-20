@@ -30,16 +30,12 @@ public class AddShaderEffectPacket
 		this.scale = scale;
 	}
 
-	public AddShaderEffectPacket(FriendlyByteBuf buf)
+	public static AddShaderEffectPacket read(FriendlyByteBuf buf)
 	{
-		this.dimension = buf.readResourceKey(Registries.DIMENSION);
-		this.name = buf.readUtf();
-		this.pos = UnleashedEntityDataSerializers.readVec3(buf);
-		this.lifeTime = buf.readInt();
-		this.scale = buf.readFloat();
+		return new AddShaderEffectPacket(buf.readResourceKey(Registries.DIMENSION), buf.readUtf(), UnleashedEntityDataSerializers.readVec3(buf), buf.readInt(), buf.readFloat());
 	}
 
-	public void encode(FriendlyByteBuf buf)
+	public void write(FriendlyByteBuf buf)
 	{
 		buf.writeResourceKey(this.dimension);
 		buf.writeUtf(this.name);
@@ -48,19 +44,16 @@ public class AddShaderEffectPacket
 		buf.writeFloat(this.scale);
 	}
 
-	public static class Handler 
+	public static boolean handle(AddShaderEffectPacket message, Supplier<NetworkEvent.Context> ctx)
 	{
-		public static boolean onMessage(AddShaderEffectPacket message, Supplier<NetworkEvent.Context> ctx)
+		ctx.get().enqueueWork(() ->
 		{
-			ctx.get().enqueueWork(() ->
+			if(ctx.get().getDirection().getReceptionSide().isClient())
 			{
-				if(ctx.get().getDirection().getReceptionSide().isClient())
-				{
-					UnleashedShaderEffects.EFFECTS.add(new ShaderEffect(message.dimension, message.name, message.pos, message.lifeTime, message.scale));
-				}
-			});
-			ctx.get().setPacketHandled(true);
-			return true;
-		}
+				UnleashedShaderEffects.EFFECTS.add(new ShaderEffect(message.dimension, message.name, message.pos, message.lifeTime, message.scale));
+			}
+		});
+		ctx.get().setPacketHandled(true);
+		return true;
 	}
 }

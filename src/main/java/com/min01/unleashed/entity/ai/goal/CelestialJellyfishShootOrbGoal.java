@@ -56,7 +56,7 @@ public class CelestialJellyfishShootOrbGoal extends AbstractCelestialJellyfishSk
 				Vec3 motion = UnleashedUtil.getLookPos(rot, this.mob.getEyePosition().subtract(0.0F, 0.5F, 0.0F), 0, 0, 3);
 				EntityCelestialOrb orb = new EntityCelestialOrb(UnleashedEntities.CELESTIAL_ORB.get(), this.mob.level);
 				orb.setPos(lookPos);
-				orb.setDeltaMovement(UnleashedUtil.fromToVector(lookPos, motion, 1.0F));
+				orb.setDeltaMovement(UnleashedUtil.getVelocityTowards(lookPos, motion, 1.0F));
 				orb.setOwner(this.mob);
 				orb.setTrail(true);
 				this.mob.level.addFreshEntity(orb);
@@ -89,7 +89,7 @@ public class CelestialJellyfishShootOrbGoal extends AbstractCelestialJellyfishSk
 					Vec3 motion = UnleashedUtil.getLookPos(rot, this.mob.getEyePosition().subtract(0.0F, 0.5F, 0.0F), 0, 0, 3);
 					EntityCelestialOrb orb = new EntityCelestialOrb(UnleashedEntities.CELESTIAL_ORB.get(), this.mob.level);
 					orb.setPos(lookPos);
-					orb.setDeltaMovement(UnleashedUtil.fromToVector(lookPos, motion, 1.0F));
+					orb.setDeltaMovement(UnleashedUtil.getVelocityTowards(lookPos, motion, 1.0F));
 					orb.setOwner(this.mob);
 					orb.setTrail(true);
 					this.mob.level.addFreshEntity(orb);
@@ -117,7 +117,7 @@ public class CelestialJellyfishShootOrbGoal extends AbstractCelestialJellyfishSk
 	}
 
 	@Override
-	protected void performSkill()
+	public void performSkill()
 	{
 		if(!this.mob.isClone() && this.mob.goal == null)
 		{
@@ -144,19 +144,19 @@ public class CelestialJellyfishShootOrbGoal extends AbstractCelestialJellyfishSk
 	}
 
 	@Override
-	protected int getSkillUsingTime()
+	public int getSkillUsingTime()
 	{
 		return 300;
 	}
 	
 	@Override
-	protected int getSkillWarmupTime() 
+	public int getSkillWarmupTime() 
 	{
 		return 200;
 	}
 
 	@Override
-	protected int getSkillUsingInterval() 
+	public int getSkillUsingInterval() 
 	{
 		return 800;
 	}

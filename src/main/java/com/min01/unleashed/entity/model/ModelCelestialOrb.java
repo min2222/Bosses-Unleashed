@@ -18,7 +18,7 @@ import net.minecraft.resources.ResourceLocation;
 
 public class ModelCelestialOrb extends EntityModel<EntityCelestialOrb>
 {
-	public static final ModelLayerLocation LAYER_LOCATION = new ModelLayerLocation(new ResourceLocation(BossesUnleashed.MODID, "celestial_orb"), "main");
+	public static final ModelLayerLocation LAYER_LOCATION = new ModelLayerLocation(ResourceLocation.fromNamespaceAndPath(BossesUnleashed.MODID, "celestial_orb"), "main");
 	private final ModelPart orb;
 
 	public ModelCelestialOrb(ModelPart root) 

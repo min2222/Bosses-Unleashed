@@ -29,33 +29,33 @@ public class CelestialBeamRenderer extends EntityRenderer<EntityCelestialBeam>
     private static final float START_RADIUS = 1.3F;
     private static final float BEAM_RADIUS = 1.0F;
     
-	public CelestialBeamRenderer(Context p_174008_) 
+	public CelestialBeamRenderer(Context pContext) 
 	{
-		super(p_174008_);
+		super(pContext);
 	}
 	
 	@Override
-	public void render(EntityCelestialBeam p_114485_, float p_114486_, float p_114487_, PoseStack p_114488_, MultiBufferSource p_114489_, int p_114490_) 
+	public void render(EntityCelestialBeam pEntity, float pEntityYaw, float pPartialTick, PoseStack pPoseStack, MultiBufferSource pBuffer, int pPackedLight) 
 	{
-		Vec3 collidePos = p_114485_.collidePos;
-        Vec3 pos = p_114485_.getPosition(p_114487_);
-        float yaw = p_114485_.getYaw();
-        float pitch = p_114485_.getPitch();
+		Vec3 collidePos = pEntity.collidePos;
+        Vec3 pos = pEntity.getPosition(pPartialTick);
+        float yaw = pEntity.getYaw();
+        float pitch = pEntity.getPitch();
         
         Vec3 relativePos = collidePos.subtract(pos);
 
         float length = (float) Math.sqrt(Math.pow(relativePos.x, 2) + Math.pow(relativePos.y, 2) + Math.pow(relativePos.z, 2));
         int frame = 5;
-        VertexConsumer consumer = p_114489_.getBuffer(UnleashedRenderType.eyes(this.getTextureLocation(p_114485_)));
+        VertexConsumer consumer = pBuffer.getBuffer(UnleashedRenderType.eyes(this.getTextureLocation(pEntity)));
 
-        this.renderStart(frame, p_114488_, consumer, LightTexture.FULL_BRIGHT);
-        this.renderBeam(length, 180.0F / (float) Math.PI * yaw, 180.0F / (float) Math.PI * pitch, frame, p_114488_, consumer, LightTexture.FULL_BRIGHT);
+        this.renderStart(frame, pPoseStack, consumer, LightTexture.FULL_BRIGHT);
+        this.renderBeam(length, 180.0F / (float) Math.PI * yaw, 180.0F / (float) Math.PI * pitch, frame, pPoseStack, consumer, LightTexture.FULL_BRIGHT);
 
-        p_114488_.pushPose();
-        p_114488_.translate(relativePos.x, relativePos.y, relativePos.z);
-        this.renderEnd(frame, null, p_114488_, consumer, LightTexture.FULL_BRIGHT);
-        p_114488_.popPose();
-    }
+        pPoseStack.pushPose();
+        pPoseStack.translate(relativePos.x, relativePos.y, relativePos.z);
+        this.renderEnd(frame, null, pPoseStack, consumer, LightTexture.FULL_BRIGHT);
+        pPoseStack.popPose();
+	}
 
     private void renderFlatQuad(int frame, PoseStack matrixStackIn, VertexConsumer builder, int packedLightIn)
     {
@@ -141,8 +141,8 @@ public class CelestialBeamRenderer extends EntityRenderer<EntityCelestialBeam>
     }
 
 	@Override
-	public ResourceLocation getTextureLocation(EntityCelestialBeam p_114482_)
+	public ResourceLocation getTextureLocation(EntityCelestialBeam pEntity)
 	{
-		return new ResourceLocation(BossesUnleashed.MODID, "textures/entity/celestial_beam.png");
+		return ResourceLocation.fromNamespaceAndPath(BossesUnleashed.MODID, "textures/entity/celestial_beam.png");
 	}
 }

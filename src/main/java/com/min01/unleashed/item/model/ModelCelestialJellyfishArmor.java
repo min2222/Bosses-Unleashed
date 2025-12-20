@@ -18,7 +18,7 @@ import net.minecraft.world.entity.LivingEntity;
 
 public class ModelCelestialJellyfishArmor<T extends LivingEntity> extends HumanoidModel<T>
 {
-	public static final ModelLayerLocation LAYER_LOCATION = new ModelLayerLocation(new ResourceLocation(BossesUnleashed.MODID, "celestial_jellyfish_armor"), "main");
+	public static final ModelLayerLocation LAYER_LOCATION = new ModelLayerLocation(ResourceLocation.fromNamespaceAndPath(BossesUnleashed.MODID, "celestial_jellyfish_armor"), "main");
 	public final ModelPart helmet;
 	public final ModelPart right_arm;
 	public final ModelPart left_arm;

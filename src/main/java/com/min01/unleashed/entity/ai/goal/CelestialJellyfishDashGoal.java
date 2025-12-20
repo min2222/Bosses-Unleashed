@@ -127,12 +127,12 @@ public class CelestialJellyfishDashGoal extends AbstractCelestialJellyfishSkillG
 	}
 
 	@Override
-	protected void performSkill() 
+	public void performSkill() 
 	{
 		this.mob.setShowWarning(false);
 		if(this.dashCount < 5)
 		{
-			this.mob.addDeltaMovement(UnleashedUtil.fromToVector(this.mob.position(), this.mob.getLastLookPos(), 6.0F));
+			this.mob.addDeltaMovement(UnleashedUtil.getVelocityTowards(this.mob.position(), this.mob.getLastLookPos(), 6.0F));
 			this.mob.playSound(UnleashedSounds.CELESTIAL_JELLYFISH_DASH.get());
 			this.mob.setShowAfterImage(true);
 			this.isDash = true;
@@ -162,19 +162,19 @@ public class CelestialJellyfishDashGoal extends AbstractCelestialJellyfishSkillG
 	}
 
 	@Override
-	protected int getSkillUsingTime()
+	public int getSkillUsingTime()
 	{
 		return 1000;
 	}
 	
 	@Override
-	protected int getSkillWarmupTime() 
+	public int getSkillWarmupTime() 
 	{
 		return 1000;
 	}
 
 	@Override
-	protected int getSkillUsingInterval() 
+	public int getSkillUsingInterval() 
 	{
 		return 600;
 	}

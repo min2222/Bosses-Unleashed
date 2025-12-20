@@ -15,7 +15,7 @@ public class UnleashedTags
 		
 		private static TagKey<Item> create(String name) 
 		{
-			return TagKey.create(Registries.ITEM, new ResourceLocation(BossesUnleashed.MODID, name));
+			return TagKey.create(Registries.ITEM, ResourceLocation.fromNamespaceAndPath(BossesUnleashed.MODID, name));
 		}
 	}
 }

@@ -13,7 +13,6 @@ import com.min01.unleashed.sound.UnleashedSounds;
 import net.minecraft.world.entity.Entity;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.IEventBus;
-import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.config.ModConfig.Type;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
@@ -23,10 +22,9 @@ public class BossesUnleashed
 {
 	public static final String MODID = "bossesunleashed";
 	
-	public BossesUnleashed() 
+	public BossesUnleashed(FMLJavaModLoadingContext ctx) 
 	{
-		IEventBus bus = FMLJavaModLoadingContext.get().getModEventBus();
-		ModLoadingContext ctx = ModLoadingContext.get();
+		IEventBus bus = ctx.getModEventBus();
 
 		UnleashedCreativeTabs.CREATIVE_MODE_TAB.register(bus);
 		UnleashedItems.ITEMS.register(bus);

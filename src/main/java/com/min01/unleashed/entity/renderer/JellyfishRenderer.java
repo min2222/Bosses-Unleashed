@@ -15,40 +15,40 @@ import net.minecraft.util.Mth;
 
 public class JellyfishRenderer extends MobRenderer<EntityCelestialJellyfish, ModelJellyfish>
 {
-	public JellyfishRenderer(Context p_174304_) 
+	public JellyfishRenderer(Context pContext) 
 	{
-		super(p_174304_, new ModelJellyfish(p_174304_.bakeLayer(ModelJellyfish.LAYER_LOCATION)), 0.0F);
-		this.addLayer(new JellyfishLayer(this, this.model, new ResourceLocation(BossesUnleashed.MODID, "textures/entity/jellyfish.png")));
+		super(pContext, new ModelJellyfish(pContext.bakeLayer(ModelJellyfish.LAYER_LOCATION)), 0.0F);
+		this.addLayer(new JellyfishLayer(this, this.model, ResourceLocation.fromNamespaceAndPath(BossesUnleashed.MODID, "textures/entity/jellyfish.png")));
 	}
 	
 	@Override
-	protected void scale(EntityCelestialJellyfish p_114046_, PoseStack p_114047_, float p_114048_)
+	protected void scale(EntityCelestialJellyfish pLivingEntity, PoseStack pPoseStack, float pPartialTickTime)
 	{
-		float f = p_114046_.getSwelling(p_114048_);
+		float f = pLivingEntity.getSwelling(pPartialTickTime);
 		float f1 = 1.0F + Mth.sin(f * 100.0F) * f * 0.01F;
 		f = Mth.clamp(f, 0.0F, 1.0F);
 		f *= f;
 		f *= f;
 		float f2 = (1.0F + f * 0.4F) * f1;
 		float f3 = (1.0F + f * 0.1F) / f1;
-		p_114047_.scale(f2, f3, f2);
+		pPoseStack.scale(f2, f3, f2);
 	}
 	
 	@Override
-	protected int getBlockLightLevel(EntityCelestialJellyfish p_114496_, BlockPos p_114497_)
+	protected int getBlockLightLevel(EntityCelestialJellyfish pEntity, BlockPos pPos) 
 	{
 		return 15;
 	}
 	
 	@Override
-	protected RenderType getRenderType(EntityCelestialJellyfish p_115322_, boolean p_115323_, boolean p_115324_, boolean p_115325_) 
+	protected RenderType getRenderType(EntityCelestialJellyfish pLivingEntity, boolean pBodyVisible, boolean pTranslucent, boolean pGlowing) 
 	{
-		return RenderType.entityTranslucent(this.getTextureLocation(p_115322_));
+		return RenderType.entityTranslucent(this.getTextureLocation(pLivingEntity));
 	}
 
 	@Override
-	public ResourceLocation getTextureLocation(EntityCelestialJellyfish p_115812_)
+	public ResourceLocation getTextureLocation(EntityCelestialJellyfish pEntity)
 	{
-		return new ResourceLocation(BossesUnleashed.MODID, "textures/entity/jellyfish.png");
+		return ResourceLocation.fromNamespaceAndPath(BossesUnleashed.MODID, "textures/entity/jellyfish.png");
 	}
 }

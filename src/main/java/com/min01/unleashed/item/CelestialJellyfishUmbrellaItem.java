@@ -51,32 +51,32 @@ public class CelestialJellyfishUmbrellaItem extends SwordItem
 	}
 	
 	@Override
-	public void inventoryTick(ItemStack p_41404_, Level p_41405_, Entity p_41406_, int p_41407_, boolean p_41408_) 
+	public void inventoryTick(ItemStack pStack, Level pLevel, Entity pEntity, int pSlotId, boolean pIsSelected)
 	{
-		boolean isUnfolded = isUnfolded(p_41404_);
-		if(p_41408_)
+		boolean isUnfolded = isUnfolded(pStack);
+		if(pIsSelected)
 		{
 			if(isUnfolded)
 			{
-				if(p_41406_.getDeltaMovement().y < 0.0F)
+				if(pEntity.getDeltaMovement().y < 0.0F)
 				{
-					p_41406_.setDeltaMovement(p_41406_.getDeltaMovement().multiply(1.0F, 0.65F, 1.0F));
+					pEntity.setDeltaMovement(pEntity.getDeltaMovement().multiply(1.0F, 0.65F, 1.0F));
 				}
-				p_41406_.resetFallDistance();
+				pEntity.resetFallDistance();
 			}
 		}
 	}
 	
 	@Override
-	public void appendHoverText(ItemStack p_41421_, Level p_41422_, List<Component> p_41423_, TooltipFlag p_41424_) 
+	public void appendHoverText(ItemStack pStack, Level pLevel, List<Component> pTooltipComponents, TooltipFlag pIsAdvanced) 
 	{
-		p_41423_.add(Component.translatable("item.bossesunleashed.celestial_jellyfish_umbrella.tooltip").withStyle(ChatFormatting.AQUA));
+		pTooltipComponents.add(Component.translatable("item.bossesunleashed.celestial_jellyfish_umbrella.tooltip").withStyle(ChatFormatting.AQUA));
 	}
 	
 	@Override
-	public boolean isValidRepairItem(ItemStack p_43311_, ItemStack p_43312_)
+	public boolean isValidRepairItem(ItemStack pToRepair, ItemStack pRepair)
 	{
-		return p_43312_.is(UnleashedItems.CELESTIAL_JELLY.get());
+		return pRepair.is(UnleashedItems.CELESTIAL_JELLY.get());
 	}
 	
 	@Override
@@ -86,11 +86,11 @@ public class CelestialJellyfishUmbrellaItem extends SwordItem
 	}
 	
 	@Override
-	public InteractionResultHolder<ItemStack> use(Level p_41432_, Player p_41433_, InteractionHand p_41434_)
+	public InteractionResultHolder<ItemStack> use(Level pLevel, Player pPlayer, InteractionHand pUsedHand) 
 	{
-		ItemStack stack = p_41433_.getItemInHand(p_41434_);
+		ItemStack stack = pPlayer.getItemInHand(pUsedHand);
 		boolean isUnfolded = isUnfolded(stack);
-		if(p_41433_.isShiftKeyDown())
+		if(pPlayer.isShiftKeyDown())
 		{
 			setUnfolded(stack, !isUnfolded);
 		}
@@ -100,13 +100,13 @@ public class CelestialJellyfishUmbrellaItem extends SwordItem
 			{
 				return InteractionResultHolder.consume(stack);
 			}
-			else if(p_41433_.onGround())
+			else if(pPlayer.onGround())
 			{
-				Vec3 lookPos = UnleashedUtil.getLookPos(new Vec2(0.0F, p_41433_.getYHeadRot()), p_41433_.position(), 0, 2, 100.0F);
-				p_41433_.setDeltaMovement(UnleashedUtil.fromToVector(p_41433_.position(), lookPos, 4.0F).add(0.0F, 0.25F, 0.0F));
-				p_41433_.playSound(UnleashedSounds.CELESTIAL_JELLYFISH_DASH.get());
-				UnleashedUtil.setDashTick(p_41433_, 20);
-				p_41433_.getCooldowns().addCooldown(this, 60);
+				Vec3 lookPos = UnleashedUtil.getLookPos(new Vec2(0.0F, pPlayer.getYHeadRot()), pPlayer.position(), 0, 2, 100.0F);
+				pPlayer.setDeltaMovement(UnleashedUtil.getVelocityTowards(pPlayer.position(), lookPos, 4.0F).add(0.0F, 0.25F, 0.0F));
+				pPlayer.playSound(UnleashedSounds.CELESTIAL_JELLYFISH_DASH.get());
+				UnleashedUtil.setDashTick(pPlayer, 20);
+				pPlayer.getCooldowns().addCooldown(this, 60);
 			}
 			return InteractionResultHolder.consume(stack);
 		}
@@ -133,9 +133,9 @@ public class CelestialJellyfishUmbrellaItem extends SwordItem
 	}
 	
 	@Override
-	public Multimap<Attribute, AttributeModifier> getDefaultAttributeModifiers(EquipmentSlot p_41388_)
+	public Multimap<Attribute, AttributeModifier> getDefaultAttributeModifiers(EquipmentSlot pEquipmentSlot)
 	{
-		return p_41388_ == EquipmentSlot.MAINHAND ? this.attributeModifiers : super.getDefaultAttributeModifiers(p_41388_);
+		return pEquipmentSlot == EquipmentSlot.MAINHAND ? this.attributeModifiers : super.getDefaultAttributeModifiers(pEquipmentSlot);
 	}
 	
 	@Override
@@ -145,7 +145,7 @@ public class CelestialJellyfishUmbrellaItem extends SwordItem
 	}
 	
 	@Override
-	public int getUseDuration(ItemStack p_41454_)
+	public int getUseDuration(ItemStack pStack)
 	{
 		return 60;
 	}

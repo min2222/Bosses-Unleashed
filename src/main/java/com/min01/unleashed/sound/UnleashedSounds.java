@@ -20,6 +20,6 @@ public class UnleashedSounds
 	
 	private static RegistryObject<SoundEvent> registerFixedSound(String name, float range) 
 	{
-		return SOUNDS.register(name, () -> SoundEvent.createFixedRangeEvent(new ResourceLocation(BossesUnleashed.MODID, name), 16.0F * range));
+		return SOUNDS.register(name, () -> SoundEvent.createFixedRangeEvent(ResourceLocation.fromNamespaceAndPath(BossesUnleashed.MODID, name), 16.0F * range));
     }
 }

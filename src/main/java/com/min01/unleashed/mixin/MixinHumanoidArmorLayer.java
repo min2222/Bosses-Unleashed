@@ -15,7 +15,7 @@ import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 
-@Mixin(HumanoidArmorLayer.class)
+@Mixin(value = HumanoidArmorLayer.class, priority = -10000)
 public class MixinHumanoidArmorLayer<T extends LivingEntity, M extends HumanoidModel<T>, A extends HumanoidModel<T>>
 {
 	@Inject(at = @At("HEAD"), method = "renderArmorPiece", cancellable = true)

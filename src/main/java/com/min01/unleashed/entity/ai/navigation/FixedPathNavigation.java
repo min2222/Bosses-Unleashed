@@ -5,6 +5,7 @@ import java.util.Objects;
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.MobType;
 import net.minecraft.world.entity.ai.navigation.GroundPathNavigation;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
@@ -162,7 +163,14 @@ public class FixedPathNavigation extends GroundPathNavigation
                     BlockPathTypes below = this.nodeEvaluator.getBlockPathType(this.level, x, y0 - 1, z);
                     BlockPathTypes in = this.nodeEvaluator.getBlockPathType(this.level, x, y0, z, this.mob);
                     float priority = this.mob.getPathfindingMalus(in);
-                    if(below == BlockPathTypes.WATER || below == BlockPathTypes.LAVA || below == BlockPathTypes.OPEN)
+                    if(this.mob.getMobType() != MobType.WATER)
+                    {
+                        if(below == BlockPathTypes.WATER)
+                        {
+                        	return false;
+                        }
+                    }
+                    if(below == BlockPathTypes.OPEN)
                     {
                     	return false;
                     }
@@ -170,9 +178,12 @@ public class FixedPathNavigation extends GroundPathNavigation
                     {
                     	return false;
                     }
-                    if(in == BlockPathTypes.DAMAGE_FIRE || in == BlockPathTypes.DANGER_FIRE || in == BlockPathTypes.DAMAGE_OTHER) 
+                    if(!this.mob.getType().fireImmune())
                     {
-                    	return false;
+                        if(in == BlockPathTypes.DAMAGE_FIRE || in == BlockPathTypes.DANGER_FIRE || in == BlockPathTypes.DAMAGE_OTHER || below == BlockPathTypes.LAVA) 
+                        {
+                        	return false;
+                        }
                     }
                 }
             }

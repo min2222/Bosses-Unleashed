@@ -23,7 +23,7 @@ public class CelestialJellyfishCloneDashGoal extends AbstractCelestialJellyfishS
 	}
 
 	@Override
-	protected void performSkill() 
+	public void performSkill() 
 	{
 		this.mob.goal = CelestialJellyfishDashGoal.class;
 	}
@@ -37,19 +37,19 @@ public class CelestialJellyfishCloneDashGoal extends AbstractCelestialJellyfishS
 	}
 
 	@Override
-	protected int getSkillUsingTime() 
+	public int getSkillUsingTime() 
 	{
 		return 60;
 	}
 	
 	@Override
-	protected int getSkillWarmupTime()
+	public int getSkillWarmupTime()
 	{
 		return 60;
 	}
 
 	@Override
-	protected int getSkillUsingInterval() 
+	public int getSkillUsingInterval() 
 	{
 		return 1000;
 	}

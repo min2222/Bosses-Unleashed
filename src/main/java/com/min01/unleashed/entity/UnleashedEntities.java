@@ -32,6 +32,6 @@ public class UnleashedEntities
 	
 	public static <T extends Entity> RegistryObject<EntityType<T>> registerEntity(String name, EntityType.Builder<T> builder) 
 	{
-		return ENTITY_TYPES.register(name, () -> builder.build(new ResourceLocation(BossesUnleashed.MODID, name).toString()));
+		return ENTITY_TYPES.register(name, () -> builder.build(ResourceLocation.fromNamespaceAndPath(BossesUnleashed.MODID, name).toString()));
 	}
 }

@@ -24,47 +24,41 @@ public class UpdateBossBarPacket
 		this.barType = barType;
 	}
 
-	public UpdateBossBarPacket(FriendlyByteBuf buf)
+	public static UpdateBossBarPacket read(FriendlyByteBuf buf)
 	{
-		this.bossBar = buf.readUUID();
-		this.entity = buf.readUUID();
-		this.barType = UnleashedBossBarType.values()[buf.readInt()];
+		return new UpdateBossBarPacket(buf.readUUID(), buf.readUUID(), UnleashedBossBarType.values()[buf.readInt()]);
 	}
 
-	public void encode(FriendlyByteBuf buf)
+	public void write(FriendlyByteBuf buf)
 	{
 		buf.writeUUID(this.bossBar);
 		buf.writeUUID(this.entity);
 		buf.writeInt(this.barType.ordinal());
 	}
 	
-	public static class Handler 
+	public static boolean handle(UpdateBossBarPacket message, Supplier<NetworkEvent.Context> ctx) 
 	{
-		public static boolean onMessage(UpdateBossBarPacket message, Supplier<NetworkEvent.Context> ctx) 
+		ctx.get().enqueueWork(() ->
 		{
-			ctx.get().enqueueWork(() ->
-			{
-		        if(message.barType == UnleashedBossBarType.NONE)
-		        {
-		            ClientEventHandlerForge.BOSS_BAR_MAP.remove(message.bossBar);
-		            ClientEventHandlerForge.BOSS_MAP.remove(message.bossBar);
-		        }
-		        else
-		        {
-		        	UnleashedUtil.getClientLevel(level -> 
+	        if(message.barType == UnleashedBossBarType.NONE)
+	        {
+	            ClientEventHandlerForge.BOSS_BAR_MAP.remove(message.bossBar);
+	            ClientEventHandlerForge.BOSS_MAP.remove(message.bossBar);
+	        }
+	        else
+	        {
+	        	UnleashedUtil.getClientLevel(level -> 
+	        	{
+		        	ClientEventHandlerForge.BOSS_BAR_MAP.put(message.bossBar, message.barType);
+		        	Entity entity = UnleashedUtil.getEntityByUUID(level, message.entity);
+		        	if(entity != null)
 		        	{
-			        	ClientEventHandlerForge.BOSS_BAR_MAP.put(message.bossBar, message.barType);
-			        	Entity entity = UnleashedUtil.getEntityByUUID(level, message.entity);
-			        	if(entity != null)
-			        	{
-				        	ClientEventHandlerForge.BOSS_MAP.put(message.bossBar, entity);
-			        	}
-		        	});
-		        }
-			});
-
-			ctx.get().setPacketHandled(true);
-			return true;
-		}
+			        	ClientEventHandlerForge.BOSS_MAP.put(message.bossBar, entity);
+		        	}
+	        	});
+	        }
+		});
+		ctx.get().setPacketHandled(true);
+		return true;
 	}
 }

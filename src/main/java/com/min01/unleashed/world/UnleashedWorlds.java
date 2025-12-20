@@ -9,5 +9,5 @@ import net.minecraft.world.level.Level;
 
 public class UnleashedWorlds 
 {
-	public static final ResourceKey<Level> CELESTIAL_FIELD = ResourceKey.create(Registries.DIMENSION, new ResourceLocation(BossesUnleashed.MODID, "celestial_field"));
+	public static final ResourceKey<Level> CELESTIAL_FIELD = ResourceKey.create(Registries.DIMENSION, ResourceLocation.fromNamespaceAndPath(BossesUnleashed.MODID, "celestial_field"));
 }

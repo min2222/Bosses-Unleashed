@@ -16,29 +16,26 @@ public class UpdateStarfieldPacket
 		this.isStarfield = isStarfield;
 	}
 
-	public UpdateStarfieldPacket(FriendlyByteBuf buf)
+	public static UpdateStarfieldPacket read(FriendlyByteBuf buf)
 	{
-		this.isStarfield = buf.readBoolean();
+		return new UpdateStarfieldPacket(buf.readBoolean());
 	}
 
-	public void encode(FriendlyByteBuf buf)
+	public void write(FriendlyByteBuf buf)
 	{
 		buf.writeBoolean(this.isStarfield);
 	}
 
-	public static class Handler 
+	public static boolean handle(UpdateStarfieldPacket message, Supplier<NetworkEvent.Context> ctx)
 	{
-		public static boolean onMessage(UpdateStarfieldPacket message, Supplier<NetworkEvent.Context> ctx)
+		ctx.get().enqueueWork(() ->
 		{
-			ctx.get().enqueueWork(() ->
+			if(ctx.get().getDirection().getReceptionSide().isClient()) 
 			{
-				if(ctx.get().getDirection().getReceptionSide().isClient()) 
-				{
-					ClientEventHandlerForge.STARFIELD.set(message.isStarfield);
-				}
-			});
-			ctx.get().setPacketHandled(true);
-			return true;
-		}
+				ClientEventHandlerForge.STARFIELD.set(message.isStarfield);
+			}
+		});
+		ctx.get().setPacketHandled(true);
+		return true;
 	}
 }

@@ -32,17 +32,15 @@ public class UnleashedUtil
 {
 	public static final Method GET_ENTITY = ObfuscationReflectionHelper.findMethod(Level.class, "m_142646_");
 	
-	@SuppressWarnings("deprecation")
-	public static BlockPos getGroundPos(BlockGetter pLevel, double pX, double startY, double pZ, int belowY)
+	public static BlockPos getGroundPos(BlockGetter level, double x, double startY, double z)
     {
-        BlockPos.MutableBlockPos blockpos$mutable = new BlockPos.MutableBlockPos(pX, startY, pZ);
+        BlockPos.MutableBlockPos mutablePos = new BlockPos.MutableBlockPos(x, startY, z);
         do
         {
-        	blockpos$mutable.move(Direction.DOWN);
+        	mutablePos.move(Direction.DOWN);
         }
-        while((pLevel.getBlockState(blockpos$mutable).isAir() || pLevel.getBlockState(blockpos$mutable).liquid() || !pLevel.getBlockState(blockpos$mutable).isCollisionShapeFullBlock(pLevel, blockpos$mutable)) && blockpos$mutable.getY() > pLevel.getMinBuildHeight());
-        BlockPos pos = blockpos$mutable.below().below(belowY);
-        return pos;
+        while((level.getBlockState(mutablePos).isAir() || !level.getFluidState(mutablePos).isEmpty() || !level.getBlockState(mutablePos).isCollisionShapeFullBlock(level, mutablePos)) && mutablePos.getY() > level.getMinBuildHeight());
+        return mutablePos.immutable();
     }
 	
 	public static void tickDash(LivingEntity entity)
@@ -155,10 +153,10 @@ public class UnleashedUtil
 		});
 	}
 	
-	public static Vec3 fromToVector(Vec3 from, Vec3 to, float scale)
+	public static Vec3 getVelocityTowards(Vec3 from, Vec3 to, float speed)
 	{
 		Vec3 motion = to.subtract(from).normalize();
-		return motion.scale(scale);
+		return motion.scale(speed);
 	}
 	
 	public static void createRandomSpherePos(RandomSource random, float radius, Consumer<Vec3> consumer)
@@ -169,20 +167,6 @@ public class UnleashedUtil
         pos = pos.yRot(y * 2 * (float) Math.PI);
         pos = pos.xRot(x * 2 * (float) Math.PI);
         consumer.accept(pos);
-	}
-
-	public static void createSphere(float radius, Consumer<Vec3> consumer)
-	{
-        for(float y = 0.0F; y < 1.0F; y += 0.05F)
-        {
-            for(float x = 0.0F; x < 1.0F; x += 0.05F) 
-            {
-                Vec3 pos = new Vec3(radius, 0.0F, 0.0F);
-                pos = pos.yRot(y * 2 * (float) Math.PI);
-                pos = pos.xRot(x * 2 * (float) Math.PI);
-                consumer.accept(pos);
-            }
-        }
 	}
 	
 	public static Vec3 getLookPos(Vec2 rotation, Vec3 position, double left, double up, double forwards) 
@@ -218,9 +202,4 @@ public class UnleashedUtil
 		}
 		return null;
 	}
-	
-    public static boolean isNight(Level level)
-    {
-    	return level.dayTime() % 24000L >= 13000L;
-    }
 }

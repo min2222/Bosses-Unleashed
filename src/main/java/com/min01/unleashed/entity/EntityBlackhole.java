@@ -18,9 +18,9 @@ import net.minecraftforge.network.NetworkHooks;
 
 public class EntityBlackhole extends Entity implements IShaderEffect
 {
-	public EntityBlackhole(EntityType<?> p_19870_, Level p_19871_) 
+	public EntityBlackhole(EntityType<?> pEntityType, Level pLevel) 
 	{
-		super(p_19870_, p_19871_);
+		super(pEntityType, pLevel);
 		this.noCulling = true;
 	}
 
@@ -62,13 +62,13 @@ public class EntityBlackhole extends Entity implements IShaderEffect
     }
 
 	@Override
-	protected void readAdditionalSaveData(CompoundTag p_20052_)
+	protected void readAdditionalSaveData(CompoundTag pCompound)
 	{
 		
 	}
 
 	@Override
-	protected void addAdditionalSaveData(CompoundTag p_20139_)
+	protected void addAdditionalSaveData(CompoundTag pCompound)
 	{
 		
 	}

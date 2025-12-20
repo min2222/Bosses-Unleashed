@@ -22,9 +22,9 @@ public abstract class AbstractOwnableEntity<T extends Entity> extends Entity
 {
 	public static final EntityDataAccessor<Optional<UUID>> OWNER_UUID = SynchedEntityData.defineId(AbstractOwnableEntity.class, EntityDataSerializers.OPTIONAL_UUID);
 	
-	public AbstractOwnableEntity(EntityType<?> p_19870_, Level p_19871_) 
+	public AbstractOwnableEntity(EntityType<?> pEntityType, Level pLevel)
 	{
-		super(p_19870_, p_19871_);
+		super(pEntityType, pLevel);
 	}
 	
 	@Override
@@ -34,26 +34,33 @@ public abstract class AbstractOwnableEntity<T extends Entity> extends Entity
 	}
 	
 	@Override
-	public void addAdditionalSaveData(CompoundTag p_37265_) 
+	public void addAdditionalSaveData(CompoundTag pCompound) 
 	{
 		if(this.entityData.get(OWNER_UUID).isPresent())
 		{
-			p_37265_.putUUID("Owner", this.entityData.get(OWNER_UUID).get());
+			pCompound.putUUID("Owner", this.entityData.get(OWNER_UUID).get());
 		}
 	}
 	
 	@Override
-	public void readAdditionalSaveData(CompoundTag p_37262_) 
+	public void readAdditionalSaveData(CompoundTag pCompound) 
 	{
-		if(p_37262_.hasUUID("Owner")) 
+		if(pCompound.hasUUID("Owner")) 
 		{
-			this.entityData.set(OWNER_UUID, Optional.of(p_37262_.getUUID("Owner")));
+			this.entityData.set(OWNER_UUID, Optional.of(pCompound.getUUID("Owner")));
 		}
 	}
 	
 	public void setOwner(T owner)
 	{
-		this.entityData.set(OWNER_UUID, Optional.of(owner.getUUID()));
+		if(owner == null)
+		{
+			this.entityData.set(OWNER_UUID, Optional.empty());
+		}
+		else
+		{
+			this.entityData.set(OWNER_UUID, Optional.of(owner.getUUID()));
+		}
 	}
 	
 	@Nullable

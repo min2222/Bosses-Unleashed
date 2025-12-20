@@ -19,7 +19,7 @@ import net.minecraft.server.packs.resources.IoSupplier;
 import net.minecraft.server.packs.resources.Resource;
 import net.minecraftforge.resource.DelegatingPackResources;
 
-@Mixin(value = Resource.class, priority = -15000)
+@Mixin(value = Resource.class, priority = -999999)
 public class MixinResource 
 {
 	@Shadow

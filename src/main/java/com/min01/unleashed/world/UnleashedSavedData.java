@@ -54,13 +54,13 @@ public class UnleashedSavedData extends SavedData
         for(int i = 0; i < respawnDim.size(); ++i) 
         {
         	CompoundTag tag = respawnDim.getCompound(i);
-        	data.setRespawnDimension(tag.getUUID("PlayerUUID"), ResourceKey.create(Registries.DIMENSION, new ResourceLocation(tag.getString("Dimension"))));
+        	data.setRespawnDimension(tag.getUUID("PlayerUUID"), ResourceKey.create(Registries.DIMENSION, ResourceLocation.parse(tag.getString("Dimension"))));
         }
         
         for(int i = 0; i < prevDim.size(); ++i) 
         {
         	CompoundTag tag = prevDim.getCompound(i);
-        	data.setPrevDimension(tag.getUUID("PlayerUUID"), ResourceKey.create(Registries.DIMENSION, new ResourceLocation(tag.getString("Dimension"))));
+        	data.setPrevDimension(tag.getUUID("PlayerUUID"), ResourceKey.create(Registries.DIMENSION, ResourceLocation.parse(tag.getString("Dimension"))));
         }
         
         for(int i = 0; i < respawnP.size(); ++i) 

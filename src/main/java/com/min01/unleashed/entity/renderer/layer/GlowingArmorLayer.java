@@ -32,33 +32,33 @@ public abstract class GlowingArmorLayer<T extends LivingEntity, M extends Humano
 		super(renderer, innerModel, outerModel, UnleashedClientUtil.MC.getModelManager());
 		this.innerModel = innerModel;
 		this.outerModel = outerModel;
-		this.armorLocation = new ResourceLocation(BossesUnleashed.MODID, armorLocation);
-		this.layerLocation = new ResourceLocation(BossesUnleashed.MODID, layerLocation);
+		this.armorLocation = ResourceLocation.fromNamespaceAndPath(BossesUnleashed.MODID, armorLocation);
+		this.layerLocation = ResourceLocation.fromNamespaceAndPath(BossesUnleashed.MODID, layerLocation);
 	}
 	
 	@Override
-	public void render(PoseStack poseStack, MultiBufferSource p_117097_, int p_117098_, T p_117099_, float p_117100_, float p_117101_, float p_117102_, float p_117103_, float p_117104_, float p_117105_) 
+	public void render(PoseStack pPoseStack, MultiBufferSource pBuffer, int pPackedLight, T pLivingEntity, float pLimbSwing, float pLimbSwingAmount, float pPartialTicks, float pAgeInTicks, float pNetHeadYaw, float pHeadPitch)
 	{
-		this.renderArmorPiece(poseStack, p_117097_, p_117099_, EquipmentSlot.CHEST, p_117098_, this.getArmorModel(EquipmentSlot.CHEST));
-		this.renderArmorPiece(poseStack, p_117097_, p_117099_, EquipmentSlot.LEGS, p_117098_, this.getArmorModel(EquipmentSlot.LEGS));
-		this.renderArmorPiece(poseStack, p_117097_, p_117099_, EquipmentSlot.FEET, p_117098_, this.getArmorModel(EquipmentSlot.FEET));
-		this.renderArmorPiece(poseStack, p_117097_, p_117099_, EquipmentSlot.HEAD, p_117098_, this.getArmorModel(EquipmentSlot.HEAD));
+		this.renderArmorPiece(pPoseStack, pBuffer, pLivingEntity, EquipmentSlot.CHEST, pPackedLight, this.getArmorModel(EquipmentSlot.CHEST));
+		this.renderArmorPiece(pPoseStack, pBuffer, pLivingEntity, EquipmentSlot.LEGS, pPackedLight, this.getArmorModel(EquipmentSlot.LEGS));
+		this.renderArmorPiece(pPoseStack, pBuffer, pLivingEntity, EquipmentSlot.FEET, pPackedLight, this.getArmorModel(EquipmentSlot.FEET));
+		this.renderArmorPiece(pPoseStack, pBuffer, pLivingEntity, EquipmentSlot.HEAD, pPackedLight, this.getArmorModel(EquipmentSlot.HEAD));
 	}
 	
-	public abstract void renderArmorPiece(PoseStack poseStack, MultiBufferSource p_117120_, T p_117121_, EquipmentSlot p_117122_, int p_117123_, A p_117124_);
+	public abstract void renderArmorPiece(PoseStack pPoseStack, MultiBufferSource pBuffer, T pLivingEntity, EquipmentSlot pSlot, int pPackedLight, A pModel);
 	
-	public void render(ItemStack stack, PoseStack poseStack, MultiBufferSource p_117120_, T p_117121_, EquipmentSlot p_117122_, int p_117123_, A p_117124_)
+	public void render(ItemStack stack, PoseStack poseStack, MultiBufferSource pBuffer, T pLivingEntity, EquipmentSlot pSlot, int pPackedLight, A pModel)
 	{
-		ArmorItem armoritem = (ArmorItem) stack.getItem();
-		if(armoritem.getEquipmentSlot() == p_117122_) 
+		ArmorItem armor = (ArmorItem) stack.getItem();
+		if(armor.getEquipmentSlot() == pSlot) 
 		{
-			this.getParentModel().copyPropertiesTo(p_117124_);
-			this.setPartVisibility(p_117124_, p_117122_);
-			Model model = this.getArmorModelHook(p_117121_, stack, p_117122_, p_117124_);
-			this.renderModel(poseStack, p_117120_, p_117123_, model, 1.0F, 1.0F, 1.0F, this.armorLocation, this.layerLocation);
+			this.getParentModel().copyPropertiesTo(pModel);
+			this.setPartVisibility(pModel, pSlot);
+			Model model = this.getArmorModelHook(pLivingEntity, stack, pSlot,  pModel);
+			this.renderModel(poseStack, pBuffer, pPackedLight, model, 1.0F, 1.0F, 1.0F, this.armorLocation, this.layerLocation);
 	        if(stack.hasFoil()) 
 	        {
-	        	this.renderGlint(poseStack, p_117120_, p_117123_, model);
+	        	this.renderGlint(poseStack, pBuffer, pPackedLight, model);
 	        }
 		}
 	}
@@ -73,17 +73,17 @@ public abstract class GlowingArmorLayer<T extends LivingEntity, M extends Humano
 		return (A)(this.usesInnerModel(slot) ? this.innerModel : this.outerModel);
 	}
 	
-	public void renderGlint(PoseStack p_289673_, MultiBufferSource p_289654_, int p_289649_, net.minecraft.client.model.Model p_289659_)
+	private void renderGlint(PoseStack pPoseStack, MultiBufferSource pBuffer, int pPackedLight, net.minecraft.client.model.Model pModel) 
 	{
-		p_289659_.renderToBuffer(p_289673_, p_289654_.getBuffer(RenderType.armorEntityGlint()), p_289649_, OverlayTexture.NO_OVERLAY, 1.0F, 1.0F, 1.0F, 1.0F);
+		pModel.renderToBuffer(pPoseStack, pBuffer.getBuffer(RenderType.armorEntityGlint()), pPackedLight, OverlayTexture.NO_OVERLAY, 1.0F, 1.0F, 1.0F, 1.0F);
 	}
 	
-	public void renderModel(PoseStack poseStack, MultiBufferSource bufferSource, int packedLight, Model p_117112_, float p_117114_, float p_117115_, float p_117116_, ResourceLocation armorResource, ResourceLocation eyeResource)
+	public void renderModel(PoseStack pPoseStack, MultiBufferSource pBuffer, int pPackedLight, net.minecraft.client.model.Model pModel, float pRed, float pGreen, float pBlue, ResourceLocation armorResource, ResourceLocation eyeResource)
 	{
-		VertexConsumer consumer = bufferSource.getBuffer(RenderType.entityTranslucent(armorResource));
-		p_117112_.renderToBuffer(poseStack, consumer, packedLight, OverlayTexture.NO_OVERLAY, p_117114_, p_117115_, p_117116_, 1.0F);
+		VertexConsumer consumer = pBuffer.getBuffer(RenderType.entityTranslucent(armorResource));
+		pModel.renderToBuffer(pPoseStack, consumer, pPackedLight, OverlayTexture.NO_OVERLAY, pRed, pGreen, pBlue, 1.0F);
 		
-		VertexConsumer eyeConsumer = bufferSource.getBuffer(UnleashedRenderType.eyesFix(eyeResource));
-		p_117112_.renderToBuffer(poseStack, eyeConsumer, LightTexture.FULL_BLOCK, OverlayTexture.NO_OVERLAY, p_117114_, p_117115_, p_117116_, 1.0F);
+		VertexConsumer eyeConsumer = pBuffer.getBuffer(UnleashedRenderType.eyesFix(eyeResource));
+		pModel.renderToBuffer(pPoseStack, eyeConsumer, LightTexture.FULL_BLOCK, OverlayTexture.NO_OVERLAY, pRed, pGreen, pBlue, 1.0F);
 	}
 }

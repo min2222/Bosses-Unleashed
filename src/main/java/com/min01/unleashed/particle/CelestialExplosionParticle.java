@@ -14,9 +14,9 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 public class CelestialExplosionParticle extends TextureSheetParticle
 {
 	protected final SpriteSet sprites;
-	public CelestialExplosionParticle(ClientLevel p_108328_, double p_108329_, double p_108330_, double p_108331_, double p_108332_, double p_108333_, double p_108334_, SpriteSet sprites)
+	public CelestialExplosionParticle(ClientLevel pLevel, double pX, double pY, double pZ, double pXSpeed, double pYSpeed, double pZSpeed, SpriteSet sprites)
 	{
-		super(p_108328_, p_108329_, p_108330_, p_108331_, p_108332_, p_108333_, p_108334_);
+		super(pLevel, pX, pY, pZ, pXSpeed, pYSpeed, pZSpeed);
 		this.quadSize = 1.0F;
 		this.lifetime = 60;
 		this.sprites = sprites;
@@ -48,7 +48,7 @@ public class CelestialExplosionParticle extends TextureSheetParticle
 	}
 	
 	@Override
-	protected int getLightColor(float p_107249_) 
+	protected int getLightColor(float pPartialTick) 
 	{
 		return LightTexture.FULL_BRIGHT;
 	}
@@ -58,15 +58,15 @@ public class CelestialExplosionParticle extends TextureSheetParticle
 	{
 		private final SpriteSet sprites;
 
-		public Provider(SpriteSet p_106555_) 
+		public Provider(SpriteSet sprites) 
 		{
-			this.sprites = p_106555_;
+			this.sprites = sprites;
 		}
 		
 		@Override
-		public Particle createParticle(SimpleParticleType p_107421_, ClientLevel p_107422_, double p_107423_, double p_107424_, double p_107425_, double p_107426_, double p_107427_, double p_107428_) 
+		public Particle createParticle(SimpleParticleType pType, ClientLevel pLevel, double pX, double pY, double pZ, double pXSpeed, double pYSpeed, double pZSpeed) 
 		{
-			return new CelestialExplosionParticle(p_107422_, p_107423_, p_107424_, p_107425_, p_107426_, p_107427_, p_107428_, this.sprites);
+			return new CelestialExplosionParticle(pLevel, pX, pY, pZ, pXSpeed, pYSpeed, pZSpeed, this.sprites);
 		}
 	}
 }

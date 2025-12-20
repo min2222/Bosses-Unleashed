@@ -44,7 +44,7 @@ public class UnleashedClientUtil
 
 		if(shader != null)
 		{
-			shader.setSampler("ImageSampler", () -> minecraft.getTextureManager().getTexture(new ResourceLocation(BossesUnleashed.MODID, "textures/misc/blue_noise.png")).getId());
+			shader.setSampler("ImageSampler", () -> minecraft.getTextureManager().getTexture(ResourceLocation.fromNamespaceAndPath(BossesUnleashed.MODID, "textures/misc/blue_noise.png")).getId());
 			shader.safeGetUniform("iResolution").set(minecraft.getWindow().getWidth(), minecraft.getWindow().getHeight());
 			shader.safeGetUniform("InverseTransformMatrix").set(getInverseTransformMatrix(INVERSE_MAT, mtx.last().pose()));
 			shader.safeGetUniform("iTime").set(tickCount / 20.0F);
@@ -158,7 +158,7 @@ public class UnleashedClientUtil
     	Vec3 cameraPos = camera.getPosition();
         int samples = 0;
         Vec3 drawFrom = entityIn.getTrailPosition(0, partialTicks);
-        VertexConsumer vertexconsumer = bufferIn.getBuffer(UnleashedRenderType.eyesFix(new ResourceLocation(BossesUnleashed.MODID, "textures/misc/trail.png")));
+        VertexConsumer vertexconsumer = bufferIn.getBuffer(UnleashedRenderType.eyesFix(ResourceLocation.fromNamespaceAndPath(BossesUnleashed.MODID, "textures/misc/trail.png")));
         while(samples < sampleSize)
         {
             Vec3 sample = entityIn.getTrailPosition(samples, partialTicks);

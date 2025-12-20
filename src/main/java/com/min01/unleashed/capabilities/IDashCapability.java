@@ -11,7 +11,7 @@ import net.minecraftforge.common.util.INBTSerializable;
 @AutoRegisterCapability
 public interface IDashCapability extends INBTSerializable<CompoundTag>
 {
-	ResourceLocation ID = new ResourceLocation(BossesUnleashed.MODID, "dash");
+	ResourceLocation ID = ResourceLocation.fromNamespaceAndPath(BossesUnleashed.MODID, "dash");
 	
 	void tick(LivingEntity entity);
 	

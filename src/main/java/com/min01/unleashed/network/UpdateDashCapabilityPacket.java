@@ -21,39 +21,34 @@ public class UpdateDashCapabilityPacket
 		this.dashTick = dashTick;
 	}
 
-	public UpdateDashCapabilityPacket(FriendlyByteBuf buf)
+	public static UpdateDashCapabilityPacket read(FriendlyByteBuf buf)
 	{
-		this.entityUUID = buf.readUUID();
-		this.dashTick = buf.readInt();
+		return new UpdateDashCapabilityPacket(buf.readUUID(), buf.readInt());
 	}
 
-	public void encode(FriendlyByteBuf buf)
+	public void write(FriendlyByteBuf buf)
 	{
 		buf.writeUUID(this.entityUUID);
 		buf.writeInt(this.dashTick);
 	}
 	
-	public static class Handler 
+	public static boolean handle(UpdateDashCapabilityPacket message, Supplier<NetworkEvent.Context> ctx) 
 	{
-		public static boolean onMessage(UpdateDashCapabilityPacket message, Supplier<NetworkEvent.Context> ctx) 
+		ctx.get().enqueueWork(() ->
 		{
-			ctx.get().enqueueWork(() ->
+			if(ctx.get().getDirection().getReceptionSide().isClient())
 			{
-				if(ctx.get().getDirection().getReceptionSide().isClient())
+				UnleashedUtil.getClientLevel(level -> 
 				{
-					UnleashedUtil.getClientLevel(level -> 
+					Entity entity = UnleashedUtil.getEntityByUUID(level, message.entityUUID);
+					entity.getCapability(UnleashedCapabilities.DASH).ifPresent(cap -> 
 					{
-						Entity entity = UnleashedUtil.getEntityByUUID(level, message.entityUUID);
-						entity.getCapability(UnleashedCapabilities.DASH).ifPresent(cap -> 
-						{
-							cap.setDashTick(message.dashTick);
-						});
+						cap.setDashTick(message.dashTick);
 					});
-				}
-			});
-
-			ctx.get().setPacketHandled(true);
-			return true;
-		}
+				});
+			}
+		});
+		ctx.get().setPacketHandled(true);
+		return true;
 	}
 }

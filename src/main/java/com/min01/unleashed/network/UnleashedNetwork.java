@@ -12,7 +12,7 @@ import net.minecraftforge.server.ServerLifecycleHooks;
 public class UnleashedNetwork 
 {
 	private static final String PROTOCOL_VERSION = "1";
-	public static final SimpleChannel CHANNEL = NetworkRegistry.newSimpleChannel(new ResourceLocation(BossesUnleashed.MODID, "bossesunleashed"),
+	public static final SimpleChannel CHANNEL = NetworkRegistry.newSimpleChannel(ResourceLocation.fromNamespaceAndPath(BossesUnleashed.MODID, BossesUnleashed.MODID),
 			() -> PROTOCOL_VERSION,
 			PROTOCOL_VERSION::equals,
 			PROTOCOL_VERSION::equals
@@ -21,11 +21,11 @@ public class UnleashedNetwork
 	public static int ID = 0;
 	public static void registerMessages()
 	{
-		CHANNEL.registerMessage(ID++, UpdatePosArrayPacket.class, UpdatePosArrayPacket::encode, UpdatePosArrayPacket::new, UpdatePosArrayPacket.Handler::onMessage);
-		CHANNEL.registerMessage(ID++, AddShaderEffectPacket.class, AddShaderEffectPacket::encode, AddShaderEffectPacket::new, AddShaderEffectPacket.Handler::onMessage);
-		CHANNEL.registerMessage(ID++, UpdateBossBarPacket.class, UpdateBossBarPacket::encode, UpdateBossBarPacket::new, UpdateBossBarPacket.Handler::onMessage);
-		CHANNEL.registerMessage(ID++, UpdateDashCapabilityPacket.class, UpdateDashCapabilityPacket::encode, UpdateDashCapabilityPacket::new, UpdateDashCapabilityPacket.Handler::onMessage);
-		CHANNEL.registerMessage(ID++, UpdateStarfieldPacket.class, UpdateStarfieldPacket::encode, UpdateStarfieldPacket::new, UpdateStarfieldPacket.Handler::onMessage);
+		CHANNEL.registerMessage(ID++, UpdatePosArrayPacket.class, UpdatePosArrayPacket::write, UpdatePosArrayPacket::read, UpdatePosArrayPacket::handle);
+		CHANNEL.registerMessage(ID++, AddShaderEffectPacket.class, AddShaderEffectPacket::write, AddShaderEffectPacket::read, AddShaderEffectPacket::handle);
+		CHANNEL.registerMessage(ID++, UpdateBossBarPacket.class, UpdateBossBarPacket::write, UpdateBossBarPacket::read, UpdateBossBarPacket::handle);
+		CHANNEL.registerMessage(ID++, UpdateDashCapabilityPacket.class, UpdateDashCapabilityPacket::write, UpdateDashCapabilityPacket::read, UpdateDashCapabilityPacket::handle);
+		CHANNEL.registerMessage(ID++, UpdateStarfieldPacket.class, UpdateStarfieldPacket::write, UpdateStarfieldPacket::read, UpdateStarfieldPacket::handle);
 	}
 	
     public static <MSG> void sendToServer(MSG message) 

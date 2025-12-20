@@ -22,61 +22,61 @@ public class CelestialJellyfishRenderer extends MobRenderer<EntityCelestialJelly
 {
 	private final JellyfishRenderer renderer;
 	
-	public CelestialJellyfishRenderer(Context p_174304_)
+	public CelestialJellyfishRenderer(Context pContext)
 	{
-		super(p_174304_, new ModelCelestialJellyfish(p_174304_.bakeLayer(ModelCelestialJellyfish.LAYER_LOCATION)), 0.0F);
-		this.addLayer(new CelestialJellyfishLayer(this, this.model, new ResourceLocation(BossesUnleashed.MODID, "textures/entity/celestial_jellyfish.png")));
-		this.renderer = new JellyfishRenderer(p_174304_);
+		super(pContext, new ModelCelestialJellyfish(pContext.bakeLayer(ModelCelestialJellyfish.LAYER_LOCATION)), 0.0F);
+		this.addLayer(new CelestialJellyfishLayer(this, this.model, ResourceLocation.fromNamespaceAndPath(BossesUnleashed.MODID, "textures/entity/celestial_jellyfish.png")));
+		this.renderer = new JellyfishRenderer(pContext);
 	}
 	
 	@Override
-	public void render(EntityCelestialJellyfish p_115455_, float p_115456_, float p_115457_, PoseStack p_115458_, MultiBufferSource p_115459_, int p_115460_)
+	public void render(EntityCelestialJellyfish pEntity, float pEntityYaw, float pPartialTicks, PoseStack pPoseStack, MultiBufferSource pBuffer, int pPackedLight) 
 	{
-		if(p_115455_.isTransform())
+		if(pEntity.isTransform())
 		{
-			p_115455_.afterImage.render(p_115458_, p_115459_, RenderType.eyes(this.getTextureLocation(p_115455_)), p_115460_, p_115457_, 0.5F);
-			p_115455_.afterImage.render(p_115458_, p_115459_, RenderType.entityTranslucent(this.getTextureLocation(p_115455_)), p_115460_, p_115457_, 0.5F);
-			super.render(p_115455_, p_115456_, p_115457_, p_115458_, p_115459_, p_115460_);
+			pEntity.afterImage.render(pPoseStack, pBuffer, RenderType.eyes(this.getTextureLocation(pEntity)), pPackedLight, pPartialTicks, 0.5F);
+			pEntity.afterImage.render(pPoseStack, pBuffer, RenderType.entityTranslucent(this.getTextureLocation(pEntity)), pPackedLight, pPartialTicks, 0.5F);
+			super.render(pEntity, pEntityYaw, pPartialTicks, pPoseStack, pBuffer, pPackedLight);
 			
-			if(p_115455_.showWarning())
+			if(pEntity.showWarning())
 			{
-		        double y = Mth.lerp((double)p_115457_, p_115455_.yOld, p_115455_.getY());
-		        float scale = (float) p_115455_.getBoundingBox().inflate(1.85F).getSize() / 2.0F;
+		        double y = Mth.lerp((double)pPartialTicks, pEntity.yOld, pEntity.getY());
+		        float scale = (float) pEntity.getBoundingBox().inflate(1.85F).getSize() / 2.0F;
 		    	Vec3 camPos = UnleashedClientUtil.MC.gameRenderer.getMainCamera().getPosition();
-		        p_115458_.pushPose();
-                BlockPos groundPos = UnleashedUtil.getGroundPos(p_115455_.level, p_115455_.getX(), p_115455_.getY(), p_115455_.getZ(), -2);
-                p_115458_.translate(0, -(y - camPos.y), 0);
-                p_115458_.translate(0, groundPos.getY() - camPos.y, 0);
-                p_115458_.translate(0, 0.01F, 0);
-                p_115458_.mulPose(Axis.XP.rotationDegrees(90.0F));
-                p_115458_.mulPose(Axis.ZP.rotationDegrees(Mth.rotLerp(p_115457_, p_115455_.yHeadRotO, p_115455_.getYHeadRot())));
-                p_115458_.scale(1, scale * 2.0F, 1);
-                p_115458_.translate(0, scale, 0);
-                UnleashedClientUtil.drawQuad(p_115458_, p_115459_.getBuffer(RenderType.entityTranslucent(new ResourceLocation(BossesUnleashed.MODID, "textures/misc/white.png"))), scale, p_115460_, new Vec3(1.0F, 0.0F, 0.0F), 0.5F);
-                p_115458_.popPose();
+		        pPoseStack.pushPose();
+                BlockPos groundPos = UnleashedUtil.getGroundPos(pEntity.level, pEntity.getX(), pEntity.getY(), pEntity.getZ()).above();
+                pPoseStack.translate(0, -(y - camPos.y), 0);
+                pPoseStack.translate(0, groundPos.getY() - camPos.y, 0);
+                pPoseStack.translate(0, 0.01F, 0);
+                pPoseStack.mulPose(Axis.XP.rotationDegrees(90.0F));
+                pPoseStack.mulPose(Axis.ZP.rotationDegrees(Mth.rotLerp(pPartialTicks, pEntity.yHeadRotO, pEntity.getYHeadRot())));
+                pPoseStack.scale(1, scale * 2.0F, 1);
+                pPoseStack.translate(0, scale, 0);
+                UnleashedClientUtil.drawQuad(pPoseStack, pBuffer.getBuffer(RenderType.entityTranslucent(ResourceLocation.fromNamespaceAndPath(BossesUnleashed.MODID, "textures/misc/white.png"))), scale, pPackedLight, new Vec3(1.0F, 0.0F, 0.0F), 0.5F);
+                pPoseStack.popPose();
 			}
 		}
 		else
 		{
-			this.renderer.render(p_115455_, p_115456_, p_115457_, p_115458_, p_115459_, p_115460_);
+			this.renderer.render(pEntity, pEntityYaw, pPartialTicks, pPoseStack, pBuffer, pPackedLight);
 		}
 	}
 	
 	@Override
-	protected int getBlockLightLevel(EntityCelestialJellyfish p_114496_, BlockPos p_114497_)
+	protected int getBlockLightLevel(EntityCelestialJellyfish pEntity, BlockPos pPos) 
 	{
 		return 15;
 	}
 	
 	@Override
-	protected RenderType getRenderType(EntityCelestialJellyfish p_115322_, boolean p_115323_, boolean p_115324_, boolean p_115325_) 
+	protected RenderType getRenderType(EntityCelestialJellyfish pLivingEntity, boolean pBodyVisible, boolean pTranslucent, boolean pGlowing) 
 	{
-		return RenderType.entityTranslucent(this.getTextureLocation(p_115322_));
+		return RenderType.entityTranslucent(this.getTextureLocation(pLivingEntity));
 	}
 	
 	@Override
-	public ResourceLocation getTextureLocation(EntityCelestialJellyfish p_115812_)
+	public ResourceLocation getTextureLocation(EntityCelestialJellyfish pEntity)
 	{
-		return new ResourceLocation(BossesUnleashed.MODID, "textures/entity/celestial_jellyfish.png");
+		return ResourceLocation.fromNamespaceAndPath(BossesUnleashed.MODID, "textures/entity/celestial_jellyfish.png");
 	}
 }

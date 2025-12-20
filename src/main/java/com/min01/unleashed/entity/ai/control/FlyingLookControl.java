@@ -17,13 +17,13 @@ public class FlyingLookControl extends LookControl
 		if(this.lookAtCooldown > 0) 
 		{
 			--this.lookAtCooldown;
-			this.getYRotD().ifPresent((p_287449_) ->
+			this.getYRotD().ifPresent(t ->
 			{
-				this.mob.yHeadRot = this.rotateTowards(this.mob.yHeadRot, p_287449_ + 20.0F, this.yMaxRotSpeed);
+				this.mob.yHeadRot = this.rotateTowards(this.mob.yHeadRot, t + 20.0F, this.yMaxRotSpeed);
 			});
-			this.getXRotD().ifPresent((p_289401_) ->
+			this.getXRotD().ifPresent(t ->
 			{
-				this.mob.setXRot(this.rotateTowards(this.mob.getXRot(), p_289401_ + 1.0F, this.xMaxRotAngle));
+				this.mob.setXRot(this.rotateTowards(this.mob.getXRot(), t + 1.0F, this.xMaxRotAngle));
 			});
 		} 
 		else 

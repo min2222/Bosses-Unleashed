@@ -8,8 +8,8 @@ import net.minecraft.world.entity.ai.goal.Goal;
 
 public abstract class AbstractAnimationSkillGoal<T extends Mob & IAnimatable> extends Goal
 {
-	protected int skillWarmupDelay;
-	protected int nextSkillTickCount;
+	public int skillWarmupDelay;
+	public int nextSkillTickCount;
 	
     @Override
     public boolean canUse() 
@@ -51,7 +51,6 @@ public abstract class AbstractAnimationSkillGoal<T extends Mob & IAnimatable> ex
     	this.getMob().setUsingSkill(true);
     	this.skillWarmupDelay = this.adjustedTickDelay(this.getSkillWarmupTime());
     	this.getMob().setAnimationTick(this.getSkillUsingTime());
-    	this.nextSkillTickCount = this.getMob().tickCount + this.getSkillUsingInterval();
     }
     
     public boolean stopMovingWhenStart()
@@ -68,6 +67,7 @@ public abstract class AbstractAnimationSkillGoal<T extends Mob & IAnimatable> ex
 		}
 		this.getMob().setAggressive(false);
     	this.getMob().setUsingSkill(false);
+    	this.nextSkillTickCount = this.getMob().tickCount + this.getSkillUsingInterval();
 	}
 	
     @Override
@@ -80,16 +80,19 @@ public abstract class AbstractAnimationSkillGoal<T extends Mob & IAnimatable> ex
     	}
     }
 
-    protected abstract void performSkill();
+    public void performSkill()
+    {
+    	
+    }
 
-    protected int getSkillWarmupTime()
+    public int getSkillWarmupTime()
     {
     	return 20;
     }
     
-    protected abstract int getSkillUsingTime();
+    public abstract int getSkillUsingTime();
 
-    protected abstract int getSkillUsingInterval();
+    public abstract int getSkillUsingInterval();
     
     public abstract T getMob();
 }

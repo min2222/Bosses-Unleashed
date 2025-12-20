@@ -29,9 +29,9 @@ public abstract class AbstractAnimatableMonster extends Monster implements IAnim
 
 	public Vec3[] posArray;
 	
-	public AbstractAnimatableMonster(EntityType<? extends Monster> p_33002_, Level p_33003_) 
+	public AbstractAnimatableMonster(EntityType<? extends Monster> pEntityType, Level pLevel)
 	{
-		super(p_33002_, p_33003_);
+		super(pEntityType, pLevel);
 		this.noCulling = true;
 	}
 	
@@ -50,21 +50,26 @@ public abstract class AbstractAnimatableMonster extends Monster implements IAnim
 	@Override
 	protected void registerGoals()
 	{
+		this.registerDefaultGoals();
+	}
+	
+	public void registerDefaultGoals()
+	{
 		this.goalSelector.addGoal(1, new FloatGoal(this));
+		this.goalSelector.addGoal(8, new WaterAvoidingRandomStrollGoal(this, 1.0F)
+		{
+			@Override
+			public boolean canUse()
+			{
+				return super.canUse() && AbstractAnimatableMonster.this.canMoveAround();
+			}
+		});
 		this.goalSelector.addGoal(6, new RandomLookAroundGoal(this)
 		{
 			@Override
 			public boolean canUse()
 			{
 				return super.canUse() && AbstractAnimatableMonster.this.canLookAround();
-			}
-		});
-		this.goalSelector.addGoal(8, new WaterAvoidingRandomStrollGoal(this, 1.0F)
-		{
-			@Override
-			public boolean canUse()
-			{
-				return super.canUse() && AbstractAnimatableMonster.this.canRandomStroll();
 			}
 		});
 		this.goalSelector.addGoal(9, new LookAtPlayerGoal(this, Player.class, 3.0F, 1.0F)
@@ -102,25 +107,51 @@ public abstract class AbstractAnimatableMonster extends Monster implements IAnim
 		
 		if(this.entityData.get(IS_USING_SKILL) && this.getAnimationTick() <= 0)
 		{
+			this.onAnimationEnd(this.getAnimationState());
 			this.setAnimationState(0);
 			this.setUsingSkill(false);
 		}
     }
     
     @Override
-    protected PathNavigation createNavigation(Level p_21480_)
+    protected PathNavigation createNavigation(Level pLevel)
     {
-    	return new FixedPathNavigation(this, p_21480_);
+    	return new FixedPathNavigation(this, pLevel);
     }
+    
+    public void onAnimationEnd(int animationState)
+    {
+    	
+    }
+    
+    @Override
+	public void moveToTarget()
+	{
+		if(this.canMove())
+		{
+			Vec3 pos = this.getTarget().position();
+			this.getMoveControl().setWantedPosition(pos.x, pos.y, pos.z, 1.0F);
+			this.getNavigation().moveTo(this.getTarget(), 1.0F);
+		}
+	}
+	
+    @Override
+	public void lookAtTarget()
+	{
+		if(this.canLook())
+		{
+			this.getLookControl().setLookAt(this.getTarget(), 30.0F, 30.0F);
+		}
+	}
 	
 	public boolean canLookAround()
 	{
-		return !this.hasTarget();
+		return this.canLook() && !this.isUsingSkill();
 	}
 	
-	public boolean canRandomStroll()
+	public boolean canMoveAround()
 	{
-		return !this.hasTarget();
+		return this.canMove() && !this.isUsingSkill();
 	}
 	
     @Override
@@ -178,6 +209,7 @@ public abstract class AbstractAnimatableMonster extends Monster implements IAnim
     	this.entityData.set(CAN_LOOK, value);
     }
     
+    @Override
     public boolean canLook()
     {
     	return this.entityData.get(CAN_LOOK);

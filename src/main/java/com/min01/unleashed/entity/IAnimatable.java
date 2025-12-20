@@ -13,4 +13,10 @@ public interface IAnimatable
 	boolean canMove();
 	
 	void setCanMove(boolean value);
+	
+	boolean canLook();
+	
+	void moveToTarget();
+
+	void lookAtTarget();
 }

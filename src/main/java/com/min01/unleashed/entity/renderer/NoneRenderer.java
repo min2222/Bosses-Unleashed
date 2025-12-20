@@ -10,19 +10,19 @@ import net.minecraft.world.entity.Entity;
 
 public class NoneRenderer<T extends Entity> extends EntityRenderer<T>
 {
-	public NoneRenderer(Context p_174008_)
+	public NoneRenderer(Context pContext) 
 	{
-		super(p_174008_);
+		super(pContext);
 	}
 	
 	@Override
-	public void render(T p_114485_, float p_114486_, float p_114487_, PoseStack p_114488_, MultiBufferSource p_114489_, int p_114490_) 
+	public void render(T pEntity, float pEntityYaw, float pPartialTick, PoseStack pPoseStack, MultiBufferSource pBuffer, int pPackedLight) 
 	{
 		
 	}
-
+	
 	@Override
-	public ResourceLocation getTextureLocation(T p_114482_)
+	public ResourceLocation getTextureLocation(T pEntity)
 	{
 		return null;
 	}

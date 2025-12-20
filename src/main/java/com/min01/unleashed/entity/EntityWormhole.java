@@ -26,9 +26,9 @@ public class EntityWormhole extends Entity implements IShaderEffect
 	
 	public int disapperTick;
 	
-	public EntityWormhole(EntityType<?> p_19870_, Level p_19871_) 
+	public EntityWormhole(EntityType<?> pEntityType, Level pLevel) 
 	{
-		super(p_19870_, p_19871_);
+		super(pEntityType, pLevel);
 		this.noCulling = true;
 	}
 
@@ -39,17 +39,17 @@ public class EntityWormhole extends Entity implements IShaderEffect
 	}
 
 	@Override
-	protected void readAdditionalSaveData(CompoundTag p_20052_) 
+	protected void readAdditionalSaveData(CompoundTag pCompound) 
 	{
-		this.setDisappear(p_20052_.getBoolean("CanDisappear"));
-		this.disapperTick = p_20052_.getInt("DisappearTick");
+		this.setDisappear(pCompound.getBoolean("CanDisappear"));
+		this.disapperTick = pCompound.getInt("DisappearTick");
 	}
 
 	@Override
-	protected void addAdditionalSaveData(CompoundTag p_20139_) 
+	protected void addAdditionalSaveData(CompoundTag pCompound) 
 	{
-		p_20139_.putBoolean("CanDisappear", this.canDisappear());
-		p_20139_.putInt("DisappearTick", this.disapperTick);
+		pCompound.putBoolean("CanDisappear", this.canDisappear());
+		pCompound.putInt("DisappearTick", this.disapperTick);
 	}
 	
 	@Override

@@ -49,7 +49,7 @@ public class ClientEventHandler
 	public static void onFMLClientSetup(FMLClientSetupEvent event)
 	{
 		UnleashedArmPoses.registerArmPoses();
-        ItemProperties.register(UnleashedItems.CELESTIAL_JELLYFISH_UMBRELLA.get(), new ResourceLocation("folded"), (p_174585_, p_174586_, p_174587_, p_174588_) ->
+        ItemProperties.register(UnleashedItems.CELESTIAL_JELLYFISH_UMBRELLA.get(), ResourceLocation.parse("folded"), (p_174585_, p_174586_, p_174587_, p_174588_) ->
         {
         	return CelestialJellyfishUmbrellaItem.isUnfolded(p_174585_) ? 0.0F : 1.0F;
         });
@@ -66,7 +66,7 @@ public class ClientEventHandler
     @SubscribeEvent
     public static void onRegisterDimensionSpecialEffects(RegisterDimensionSpecialEffectsEvent event)
     {
-    	event.register(new ResourceLocation(BossesUnleashed.MODID, "celestial_field"), new CelestialFieldDimensionSpecialEffects());
+    	event.register(ResourceLocation.fromNamespaceAndPath(BossesUnleashed.MODID, "celestial_field"), new CelestialFieldDimensionSpecialEffects());
     }
 	
 	@SubscribeEvent
@@ -101,7 +101,7 @@ public class ClientEventHandler
     	event.registerEntityRenderer(UnleashedEntities.BLACKHOLE.get(), NoneRenderer::new);
     }
     
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({ "unchecked", "deprecation" })
 	@SubscribeEvent
 	public static void onAddLayers(EntityRenderersEvent.AddLayers event)
 	{

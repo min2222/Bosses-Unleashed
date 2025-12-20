@@ -4,7 +4,6 @@ import com.min01.unleashed.item.CelestialJellyfishArmorItem;
 import com.mojang.blaze3d.vertex.PoseStack;
 
 import net.minecraft.client.model.HumanoidModel;
-import net.minecraft.client.model.Model;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.RenderLayerParent;
 import net.minecraft.resources.ResourceLocation;
@@ -20,18 +19,18 @@ public class CelestialJellyfishArmorLayer<T extends LivingEntity, M extends Huma
 	}
 	
 	@Override
-	public void renderArmorPiece(PoseStack poseStack, MultiBufferSource p_117120_, T p_117121_, EquipmentSlot p_117122_, int p_117123_, A p_117124_) 
+	public void renderArmorPiece(PoseStack pPoseStack, MultiBufferSource pBuffer, T pLivingEntity, EquipmentSlot pSlot, int pPackedLight, A pModel) 
 	{
-		ItemStack stack = p_117121_.getItemBySlot(p_117122_);
+		ItemStack stack = pLivingEntity.getItemBySlot(pSlot);
 		if(stack.getItem() instanceof CelestialJellyfishArmorItem) 
 		{
-			this.render(stack, poseStack, p_117120_, p_117121_, p_117122_, p_117123_, p_117124_);
+			this.render(stack, pPoseStack, pBuffer, pLivingEntity, pSlot, pPackedLight, pModel);
 		}
 	}
 	
 	@Override
-	public void renderModel(PoseStack poseStack, MultiBufferSource bufferSource, int packedLight, Model p_117112_, float p_117114_, float p_117115_, float p_117116_, ResourceLocation armorResource, ResourceLocation eyeResource) 
+	public void renderModel(PoseStack pPoseStack, MultiBufferSource pBuffer, int pPackedLight, net.minecraft.client.model.Model pModel, float pRed, float pGreen, float pBlue, ResourceLocation armorResource, ResourceLocation eyeResource)
 	{
-		super.renderModel(poseStack, bufferSource, packedLight, p_117112_, 0.8F, 0.8F, 0.8F, armorResource, eyeResource);
+		super.renderModel(pPoseStack, pBuffer, pPackedLight, pModel, 0.8F, 0.8F, 0.8F, armorResource, eyeResource);
 	}
 }

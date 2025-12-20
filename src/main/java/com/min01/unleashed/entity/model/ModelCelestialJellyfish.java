@@ -21,7 +21,7 @@ import net.minecraft.util.Mth;
 
 public class ModelCelestialJellyfish extends HierarchicalModel<EntityCelestialJellyfish>
 {
-	public static final ModelLayerLocation LAYER_LOCATION = new ModelLayerLocation(new ResourceLocation(BossesUnleashed.MODID, "celestial_jellyfish"), "main");
+	public static final ModelLayerLocation LAYER_LOCATION = new ModelLayerLocation(ResourceLocation.fromNamespaceAndPath(BossesUnleashed.MODID, "celestial_jellyfish"), "main");
 	private final ModelPart root;
 	private final ModelPart jellyfish;
 	private final ModelPart umbrella;

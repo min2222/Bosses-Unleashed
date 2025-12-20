@@ -51,7 +51,7 @@ public class CelestialJellyfishSummonDashCloneGoal extends AbstractCelestialJell
 			jellyfish.setHitTime(100);
 			jellyfish.setPos(this.mob.position());
 			Vec3 lookPos = UnleashedUtil.getLookPos(new Vec2(0.0F, this.mob.getYHeadRot()), this.mob.position(), this.mob.getRandom().nextBoolean() ? 2 : -2, 0, 0);
-			jellyfish.setDeltaMovement(UnleashedUtil.fromToVector(this.mob.position(), lookPos, 0.2F));
+			jellyfish.setDeltaMovement(UnleashedUtil.getVelocityTowards(this.mob.position(), lookPos, 0.2F));
 			jellyfish.goal = CelestialJellyfishCloneDashGoal.class;
 			jellyfish.setTarget(this.mob.getTarget());
 			this.mob.level.addFreshEntity(jellyfish);
@@ -73,12 +73,6 @@ public class CelestialJellyfishSummonDashCloneGoal extends AbstractCelestialJell
 			this.mob.setEnd(false);
 		}
 	}
-
-	@Override
-	protected void performSkill() 
-	{
-		
-	}
 	
 	@Override
 	public void stop() 
@@ -91,19 +85,19 @@ public class CelestialJellyfishSummonDashCloneGoal extends AbstractCelestialJell
 	}
 
 	@Override
-	protected int getSkillUsingTime() 
+	public int getSkillUsingTime() 
 	{
 		return 1000;
 	}
 	
 	@Override
-	protected int getSkillWarmupTime()
+	public int getSkillWarmupTime()
 	{
 		return 20;
 	}
 
 	@Override
-	protected int getSkillUsingInterval() 
+	public int getSkillUsingInterval() 
 	{
 		return 800;
 	}

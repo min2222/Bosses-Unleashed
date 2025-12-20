@@ -19,50 +19,41 @@ import net.minecraft.world.phys.Vec3;
 public class CelestialOrbRenderer extends EntityRenderer<EntityCelestialOrb>
 {
 	private final ModelCelestialOrb model;
-	public CelestialOrbRenderer(Context p_174008_) 
+	public CelestialOrbRenderer(Context pContext) 
 	{
-		super(p_174008_);
-		this.model = new ModelCelestialOrb(p_174008_.bakeLayer(ModelCelestialOrb.LAYER_LOCATION));
+		super(pContext);
+		this.model = new ModelCelestialOrb(pContext.bakeLayer(ModelCelestialOrb.LAYER_LOCATION));
 	}
 	
 	@Override
-	public void render(EntityCelestialOrb p_114485_, float p_114486_, float p_114487_, PoseStack p_114488_, MultiBufferSource p_114489_, int p_114490_) 
+	public void render(EntityCelestialOrb pEntity, float pEntityYaw, float pPartialTicks, PoseStack pPoseStack, MultiBufferSource pBuffer, int pPackedLight) 
 	{
-		float xRot = Mth.lerp(p_114487_, p_114485_.xRotO, p_114485_.getXRot());
-		float yRot = Mth.lerp(p_114487_, p_114485_.yRotO, p_114485_.getYRot());
+		float xRot = Mth.lerp(pPartialTicks, pEntity.xRotO, pEntity.getXRot());
+		float yRot = Mth.lerp(pPartialTicks, pEntity.yRotO, pEntity.getYRot());
 		
-		/*p_114488_.pushPose();
-		p_114488_.mulPose(Axis.YP.rotationDegrees(yRot));
-		p_114488_.mulPose(Axis.XP.rotationDegrees(xRot));
-		p_114488_.scale(-1.0F, -1.0F, 1.0F);
-		p_114488_.scale(3.0F, 3.0F, 3.0F);
-		p_114488_.translate(0.0F, -1.5F, 0.0F);
-		this.model.renderToBuffer(p_114488_, p_114489_.getBuffer(RenderType.entityCutout(this.getTextureLocation(p_114485_))), p_114490_, OverlayTexture.NO_OVERLAY, 1.0F, 1.0F, 1.0F, 1.0F);
-		p_114488_.popPose();*/
+		pPoseStack.pushPose();
+		pPoseStack.mulPose(Axis.YP.rotationDegrees(yRot));
+		pPoseStack.mulPose(Axis.XP.rotationDegrees(xRot));
+		pPoseStack.scale(-1.0F, -1.0F, 1.0F);
+		pPoseStack.scale(3.0F, 3.0F, 3.0F);
+		pPoseStack.translate(0.0F, -1.5F, 0.0F);
+		this.model.renderToBuffer(pPoseStack, pBuffer.getBuffer(UnleashedRenderType.eyesNoAlpha(this.getTextureLocation(pEntity))), pPackedLight, OverlayTexture.NO_OVERLAY, 1.0F, 1.0F, 1.0F, 1.0F);
+		pPoseStack.popPose();
 		
-		p_114488_.pushPose();
-		p_114488_.mulPose(Axis.YP.rotationDegrees(yRot));
-		p_114488_.mulPose(Axis.XP.rotationDegrees(xRot));
-		p_114488_.scale(-1.0F, -1.0F, 1.0F);
-		p_114488_.scale(3.0F, 3.0F, 3.0F);
-		p_114488_.translate(0.0F, -1.5F, 0.0F);
-		this.model.renderToBuffer(p_114488_, p_114489_.getBuffer(UnleashedRenderType.eyesNoAlpha(this.getTextureLocation(p_114485_))), p_114490_, OverlayTexture.NO_OVERLAY, 1.0F, 1.0F, 1.0F, 1.0F);
-		p_114488_.popPose();
-		
-		if(p_114485_.hasTrail())
+		if(pEntity.hasTrail())
 		{
-			p_114488_.pushPose();
-			Vec3 pos = p_114485_.getPosition(p_114487_);
-			p_114488_.translate(-pos.x, -pos.y + 0.5F, -pos.z);
+			pPoseStack.pushPose();
+			Vec3 pos = pEntity.getPosition(pPartialTicks);
+			pPoseStack.translate(-pos.x, -pos.y + 0.5F, -pos.z);
 	        Vec3 color = Vec3.fromRGB24(8364799);
-	        UnleashedClientUtil.renderTrail(p_114485_, p_114487_, p_114488_, p_114489_, (float)color.x, (float)color.y, (float)color.z, 0.8F, 8, 0.8F);
-	        p_114488_.popPose();
+	        UnleashedClientUtil.renderTrail(pEntity, pPartialTicks, pPoseStack, pBuffer, (float)color.x, (float)color.y, (float)color.z, 0.8F, 8, 0.8F);
+	        pPoseStack.popPose();
 		}
 	}
 
 	@Override
-	public ResourceLocation getTextureLocation(EntityCelestialOrb p_114482_) 
+	public ResourceLocation getTextureLocation(EntityCelestialOrb pEntity) 
 	{
-		return new ResourceLocation(BossesUnleashed.MODID, "textures/entity/celestial_orb.png");
+		return ResourceLocation.fromNamespaceAndPath(BossesUnleashed.MODID, "textures/entity/celestial_orb.png");
 	}
 }
