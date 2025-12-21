@@ -13,7 +13,8 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 
 public class CelestialExplosionParticle extends TextureSheetParticle
 {
-	protected final SpriteSet sprites;
+	private final SpriteSet sprites;
+	
 	public CelestialExplosionParticle(ClientLevel pLevel, double pX, double pY, double pZ, double pXSpeed, double pYSpeed, double pZSpeed, SpriteSet sprites)
 	{
 		super(pLevel, pX, pY, pZ, pXSpeed, pYSpeed, pZSpeed);
