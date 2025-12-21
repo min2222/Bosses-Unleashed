@@ -18,7 +18,6 @@ import com.min01.unleashed.entity.ai.goal.CelestialJellyfishDashGoal;
 import com.min01.unleashed.entity.ai.goal.CelestialJellyfishShootOrbGoal;
 import com.min01.unleashed.entity.ai.goal.CelestialJellyfishSummonDashCloneGoal;
 import com.min01.unleashed.entity.ai.goal.CelestialJellyfishSummonOrbCloneGoal;
-import com.min01.unleashed.entity.ai.goal.LookAtTargetGoal;
 import com.min01.unleashed.entity.projectile.EntityCelestialBeam;
 import com.min01.unleashed.entity.projectile.EntityCelestialOrb;
 import com.min01.unleashed.misc.AfterImage;
@@ -122,7 +121,6 @@ public class EntityCelestialJellyfish extends AbstractAnimatableFlyingMonster im
     protected void registerGoals() 
     {
     	super.registerGoals();
-    	this.goalSelector.addGoal(0, new LookAtTargetGoal<>(this));
     	this.goalSelector.addGoal(0, new CelestialJellyfishDashGoal(this));
     	this.goalSelector.addGoal(0, new CelestialJellyfishShootOrbGoal(this));
     	this.goalSelector.addGoal(0, new CelestialJellyfishSummonDashCloneGoal(this));
