@@ -155,25 +155,25 @@ public abstract class AbstractAnimatableMonster extends Monster implements IAnim
 	}
 	
     @Override
-    public void readAdditionalSaveData(CompoundTag p_21450_) 
+    public void readAdditionalSaveData(CompoundTag pCompound) 
     {
-    	super.readAdditionalSaveData(p_21450_);
-    	this.setUsingSkill(p_21450_.getBoolean("isUsingSkill"));
-    	this.setCanLook(p_21450_.getBoolean("CanLook"));
-    	this.setCanMove(p_21450_.getBoolean("CanMove"));
-    	this.setAnimationTick(p_21450_.getInt("AnimationTick"));
-    	this.setAnimationState(p_21450_.getInt("AnimationState"));
+    	super.readAdditionalSaveData(pCompound);
+    	this.setUsingSkill(pCompound.getBoolean("isUsingSkill"));
+    	this.setCanLook(pCompound.getBoolean("CanLook"));
+    	this.setCanMove(pCompound.getBoolean("CanMove"));
+    	this.setAnimationTick(pCompound.getInt("AnimationTick"));
+    	this.setAnimationState(pCompound.getInt("AnimationState"));
     }
     
     @Override
-    public void addAdditionalSaveData(CompoundTag p_21484_) 
+    public void addAdditionalSaveData(CompoundTag pCompound) 
     {
-    	super.addAdditionalSaveData(p_21484_);
-    	p_21484_.putBoolean("isUsingSkill", this.isUsingSkill());
-    	p_21484_.putBoolean("CanLook", this.canLook());
-    	p_21484_.putBoolean("CanMove", this.canMove());
-    	p_21484_.putInt("AnimationTick", this.getAnimationTick());
-    	p_21484_.putInt("AnimationState", this.getAnimationState());
+    	super.addAdditionalSaveData(pCompound);
+    	pCompound.putBoolean("isUsingSkill", this.isUsingSkill());
+    	pCompound.putBoolean("CanLook", this.canLook());
+    	pCompound.putBoolean("CanMove", this.canMove());
+    	pCompound.putInt("AnimationTick", this.getAnimationTick());
+    	pCompound.putInt("AnimationState", this.getAnimationState());
     }
     
     @Override
