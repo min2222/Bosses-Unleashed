@@ -180,6 +180,15 @@ public class EntityCelestialJellyfish extends AbstractAnimatableFlyingMonster im
 			this.tickTeleport();
 			this.tickFinalPhase();
 			
+			if(!this.getLastLookPos().equals(Vec3.ZERO))
+			{
+				this.lookAt(Anchor.FEET, this.getLastLookPos());
+			}
+			else if(this.getTarget() != null)
+			{
+				this.lookAt(Anchor.EYES, this.getTarget().getEyePosition());
+			}
+			
     		if(this.isClone())
     		{
     			if(this.getOwner() != null)
@@ -243,28 +252,6 @@ public class EntityCelestialJellyfish extends AbstractAnimatableFlyingMonster im
     				this.setHitTime(0);
     			}
     		}
-        	
-        	if(this.getTarget() != null)
-        	{
-        		if(this.canMove() && this.isAlive())
-        		{
-        			this.getNavigation().moveTo(this.getTarget(), 1.0F);
-        		}
-        		if(this.canLook())
-        		{
-        			if(this.getLastLookPos().equals(Vec3.ZERO))
-        			{
-        				if(this.isAlive())
-        				{
-                			this.lookAt(Anchor.EYES, this.getTarget().getEyePosition());
-        				}
-        			}
-        			else
-        			{
-        				this.lookAt(Anchor.EYES, this.getLastLookPos());
-        			}
-        		}
-        	}
     	}
     	else
     	{
