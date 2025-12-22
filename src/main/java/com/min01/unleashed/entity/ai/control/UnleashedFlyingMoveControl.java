@@ -16,8 +16,6 @@ import net.minecraft.world.phys.Vec3;
 
 public class UnleashedFlyingMoveControl extends MoveControl 
 {
-	public Vec3 targetPos = Vec3.ZERO;
-	
 	public UnleashedFlyingMoveControl(Mob mob)
 	{
 		super(mob);
@@ -26,13 +24,14 @@ public class UnleashedFlyingMoveControl extends MoveControl
 	@Override
 	public void tick() 
 	{
-        if(this.mob.tickCount % 60 == 0 || this.targetPos.equals(Vec3.ZERO) || this.targetPos.subtract(this.mob.position()).length() <= 2.5F)
+		Vec3 wantedPos = new Vec3(this.wantedX, this.wantedY, this.wantedZ);
+        if(this.mob.tickCount % 60 == 0 || wantedPos.equals(Vec3.ZERO) || wantedPos.subtract(this.mob.position()).length() <= 2.5F)
         {
         	this.generateNewTarget();
         }
-		double d0 = this.targetPos.x - this.mob.getX();
-		double d1 = this.targetPos.y - this.mob.getY();
-		double d2 = this.targetPos.z - this.mob.getZ();
+		double d0 = this.wantedX - this.mob.getX();
+		double d1 = this.wantedY - this.mob.getY();
+		double d2 = this.wantedZ - this.mob.getZ();
 		double d3 = d0 * d0 + d1 * d1 + d2 * d2;
 		if(d3 < (double) 2.5000003E-7F) 
 		{
@@ -74,15 +73,10 @@ public class UnleashedFlyingMoveControl extends MoveControl
                 BlockState blockState = world.getBlockState(targetPos);
                 if(blockState.isAir())
                 {
-                	this.targetPos = blockHit.getLocation();
+                	this.setWantedPosition(targetPos.getX(), targetPos.getY(), targetPos.getZ(), this.speedModifier);
                 	break;
                 }
         	}
         }
-    }
-    
-    public void setTargetPos(Vec3 pos)
-    {
-    	this.targetPos = pos;
     }
 }

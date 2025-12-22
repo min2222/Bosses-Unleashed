@@ -55,8 +55,8 @@ public abstract class AbstractAnimatableCreature extends PathfinderMob implement
 	
 	public void registerDefaultGoals()
 	{
-		this.goalSelector.addGoal(1, new FloatGoal(this));
-		this.goalSelector.addGoal(8, new WaterAvoidingRandomStrollGoal(this, 1.0F)
+		this.goalSelector.addGoal(0, new FloatGoal(this));
+		this.goalSelector.addGoal(0, new WaterAvoidingRandomStrollGoal(this, 1.0F)
 		{
 			@Override
 			public boolean canUse()
@@ -64,7 +64,7 @@ public abstract class AbstractAnimatableCreature extends PathfinderMob implement
 				return super.canUse() && AbstractAnimatableCreature.this.canMoveAround();
 			}
 		});
-		this.goalSelector.addGoal(6, new RandomLookAroundGoal(this)
+		this.goalSelector.addGoal(0, new RandomLookAroundGoal(this)
 		{
 			@Override
 			public boolean canUse()
@@ -72,7 +72,7 @@ public abstract class AbstractAnimatableCreature extends PathfinderMob implement
 				return super.canUse() && AbstractAnimatableCreature.this.canLookAround();
 			}
 		});
-		this.goalSelector.addGoal(9, new LookAtPlayerGoal(this, Player.class, 3.0F, 1.0F)
+		this.goalSelector.addGoal(0, new LookAtPlayerGoal(this, Player.class, 3.0F, 1.0F)
 		{
 			@Override
 			public boolean canUse()
@@ -80,7 +80,7 @@ public abstract class AbstractAnimatableCreature extends PathfinderMob implement
 				return super.canUse() && AbstractAnimatableCreature.this.canLookAround();
 			}
 		});
-		this.goalSelector.addGoal(10, new LookAtPlayerGoal(this, Mob.class, 8.0F)
+		this.goalSelector.addGoal(0, new LookAtPlayerGoal(this, Mob.class, 8.0F)
 		{
 			@Override
 			public boolean canUse()
@@ -97,7 +97,7 @@ public abstract class AbstractAnimatableCreature extends PathfinderMob implement
 
 		if(!this.level.isClientSide)
 		{
-			this.setHasTarget(this.getTarget() != null);
+			this.setHasTarget(this.getTarget() != null && this.getTarget().isAlive());
 		}
 		
 		if(this.getAnimationTick() > 0)
@@ -127,31 +127,23 @@ public abstract class AbstractAnimatableCreature extends PathfinderMob implement
     @Override
 	public void moveToTarget()
 	{
-		if(this.canMove())
-		{
-			Vec3 pos = this.getTarget().position();
-			this.getMoveControl().setWantedPosition(pos.x, pos.y, pos.z, 1.0F);
-			this.getNavigation().moveTo(this.getTarget(), 1.0F);
-		}
+		this.getNavigation().moveTo(this.getTarget(), 1.0F);
 	}
 	
-	@Override
+    @Override
 	public void lookAtTarget()
 	{
-		if(this.canLook())
-		{
-			this.getLookControl().setLookAt(this.getTarget(), 30.0F, 30.0F);
-		}
+		this.getLookControl().setLookAt(this.getTarget(), 30.0F, 30.0F);
 	}
 	
 	public boolean canLookAround()
 	{
-		return this.canLook() && !this.isUsingSkill();
+		return this.canLook() && !this.isUsingSkill() && !this.hasTarget();
 	}
 	
 	public boolean canMoveAround()
 	{
-		return this.canMove() && !this.isUsingSkill();
+		return this.canMove() && !this.isUsingSkill() && !this.hasTarget();
 	}
 	
     @Override
