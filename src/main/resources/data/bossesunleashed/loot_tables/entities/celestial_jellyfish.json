@@ -2,7 +2,6 @@
 	"type": "minecraft:entity",
 	"pools": [
 		{
-			"bonus_rolls": 0,
 			"entries": [
 				{
 					"type": "minecraft:item",
@@ -28,6 +27,11 @@
 						"min": 25,
 						"max": 35
 					}
+				}
+			],
+			"conditions": [
+				{
+					"condition": "minecraft:killed_by_player"
 				}
 			]
 		}
