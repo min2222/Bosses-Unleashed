@@ -2,6 +2,7 @@ package com.min01.unleashed.entity;
 
 import com.min01.unleashed.entity.ai.control.FlyingLookControl;
 import com.min01.unleashed.entity.ai.control.UnleashedFlyingMoveControl;
+import com.min01.unleashed.util.UnleashedUtil;
 
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
@@ -60,6 +61,12 @@ public abstract class AbstractAnimatableFlyingMonster extends AbstractFlyingMons
 			public boolean canUse()
 			{
 				return super.canUse() && AbstractAnimatableFlyingMonster.this.canMoveAround();
+			}
+			
+			@Override
+			protected Vec3 getPosition() 
+			{
+				return UnleashedUtil.generateNewTarget(AbstractAnimatableFlyingMonster.this, t -> t.isAir());
 			}
 		});
 	}

@@ -3,6 +3,7 @@ package com.min01.unleashed.util;
 import java.lang.reflect.Method;
 import java.util.UUID;
 import java.util.function.Consumer;
+import java.util.function.Predicate;
 
 import org.joml.Math;
 
@@ -19,9 +20,14 @@ import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.Mob;
 import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.entity.LevelEntityGetter;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec2;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.util.LogicalSidedProvider;
@@ -32,6 +38,27 @@ public class UnleashedUtil
 {
 	public static final Method GET_ENTITY = ObfuscationReflectionHelper.findMethod(Level.class, "m_142646_");
 	
+    public static Vec3 generateNewTarget(Mob mob, Predicate<BlockState> predicate) 
+    {
+        Level world = mob.level;
+        Vec3 radius = new Vec3(35, 15, 35);
+        for(int i = 0; i < 10; i++)
+        {
+        	Vec3 pos = getSpreadPosition(mob, radius);
+        	HitResult hitResult = world.clip(new ClipContext(mob.position(), pos, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, mob));
+        	if(hitResult instanceof BlockHitResult blockHit)
+        	{
+                BlockPos targetPos = blockHit.getBlockPos();
+                BlockState blockState = world.getBlockState(targetPos);
+                if(predicate.test(blockState))
+                {
+                	return blockHit.getLocation();
+                }
+        	}
+        }
+        return null;
+    }
+    
 	public static BlockPos getGroundPos(BlockGetter level, double x, double startY, double z)
     {
         BlockPos.MutableBlockPos mutablePos = new BlockPos.MutableBlockPos(x, startY, z);
