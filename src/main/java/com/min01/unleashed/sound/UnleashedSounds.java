@@ -12,14 +12,14 @@ public class UnleashedSounds
 {
 	public static final DeferredRegister<SoundEvent> SOUNDS = DeferredRegister.create(ForgeRegistries.SOUND_EVENTS, BossesUnleashed.MODID);
 
-	public static final RegistryObject<SoundEvent> CELESTIAL_JELLYFISH_HURT = registerFixedSound("celestial_jellyfish_hurt", 10.0F);
-	public static final RegistryObject<SoundEvent> CELESTIAL_JELLYFISH_DASH = registerFixedSound("celestial_jellyfish_dash", 10.0F);
-	public static final RegistryObject<SoundEvent> CELESTIAL_JELLYFISH_TRANSFORM = registerFixedSound("celestial_jellyfish_transform", 30.0F);
-	public static final RegistryObject<SoundEvent> CELESTIAL_JELLYFISH_EXPLOSION = registerFixedSound("celestial_jellyfish_explosion", 30.0F);
-	public static final RegistryObject<SoundEvent> CELESTIAL_JELLYFISH_REWIND = registerFixedSound("celestial_jellyfish_rewind", 30.0F);
+	public static final RegistryObject<SoundEvent> CELESTIAL_JELLYFISH_HURT = registerSound("celestial_jellyfish_hurt");
+	public static final RegistryObject<SoundEvent> CELESTIAL_JELLYFISH_DASH = registerSound("celestial_jellyfish_dash");
+	public static final RegistryObject<SoundEvent> CELESTIAL_JELLYFISH_TRANSFORM = registerSound("celestial_jellyfish_transform");
+	public static final RegistryObject<SoundEvent> CELESTIAL_JELLYFISH_EXPLOSION = registerSound("celestial_jellyfish_explosion");
+	public static final RegistryObject<SoundEvent> CELESTIAL_JELLYFISH_REWIND = registerSound("celestial_jellyfish_rewind");
 	
-	private static RegistryObject<SoundEvent> registerFixedSound(String name, float range) 
+	public static RegistryObject<SoundEvent> registerSound(String name) 
 	{
-		return SOUNDS.register(name, () -> SoundEvent.createFixedRangeEvent(ResourceLocation.fromNamespaceAndPath(BossesUnleashed.MODID, name), 16.0F * range));
+		return SOUNDS.register(name, () -> SoundEvent.createVariableRangeEvent(ResourceLocation.fromNamespaceAndPath(BossesUnleashed.MODID, name)));
     }
 }

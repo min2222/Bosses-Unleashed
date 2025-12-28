@@ -69,12 +69,12 @@ public class CelestialJellyfishShootOrbGoal extends AbstractCelestialJellyfishSk
 				if(this.xRot >= 65.0F)
 				{
 					this.dir = -1;
-					this.mob.playSound(UnleashedSounds.CELESTIAL_JELLYFISH_DASH.get());
+					this.mob.playSound(UnleashedSounds.CELESTIAL_JELLYFISH_DASH.get(), 1.5F, 1.0F);
 				}
 				if(this.xRot <= -45.0F)
 				{
 					this.dir = 1;
-					this.mob.playSound(UnleashedSounds.CELESTIAL_JELLYFISH_DASH.get());
+					this.mob.playSound(UnleashedSounds.CELESTIAL_JELLYFISH_DASH.get(), 1.5F, 1.0F);
 				}
 				for(float i = 22.5F; i <= 360; i += 22.5F)
 				{
@@ -111,7 +111,7 @@ public class CelestialJellyfishShootOrbGoal extends AbstractCelestialJellyfishSk
 		{
 			if(this.skillWarmupDelay == -15)
 			{
-				this.mob.playSound(UnleashedSounds.CELESTIAL_JELLYFISH_REWIND.get());
+				this.mob.playSound(UnleashedSounds.CELESTIAL_JELLYFISH_REWIND.get(), 2.0F, 1.0F);
 			}
 		}
 	}

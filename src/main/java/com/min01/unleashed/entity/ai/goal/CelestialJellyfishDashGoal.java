@@ -128,7 +128,7 @@ public class CelestialJellyfishDashGoal extends AbstractCelestialJellyfishSkillG
 		if(this.dashCount < 5)
 		{
 			this.mob.addDeltaMovement(UnleashedUtil.getVelocityTowards(this.mob.position(), this.mob.getLastLookPos(), 6.0F));
-			this.mob.playSound(UnleashedSounds.CELESTIAL_JELLYFISH_DASH.get());
+			this.mob.playSound(UnleashedSounds.CELESTIAL_JELLYFISH_DASH.get(), 1.5F, 1.0F);
 			this.mob.setShowAfterImage(true);
 			this.isDash = true;
 			this.dashCount++;

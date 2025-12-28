@@ -419,7 +419,7 @@ public class EntityCelestialJellyfish extends AbstractAnimatableFlyingMonster im
     			if(this.getEffectScale() == 199.0F)
     			{
     				UnleashedShaderEffects.addEffect(this.level, "Shockwave", this.position(), 100, 1.0F);
-    	    		this.playSound(UnleashedSounds.CELESTIAL_JELLYFISH_EXPLOSION.get());
+    	    		this.playSound(UnleashedSounds.CELESTIAL_JELLYFISH_EXPLOSION.get(), 2.0F, 1.0F);
     			}
 			}
 			else
@@ -502,7 +502,7 @@ public class EntityCelestialJellyfish extends AbstractAnimatableFlyingMonster im
     		{
     			this.setAnimationState(1);
     			this.setShowEffect(true);
-        		this.playSound(UnleashedSounds.CELESTIAL_JELLYFISH_TRANSFORM.get());
+        		this.playSound(UnleashedSounds.CELESTIAL_JELLYFISH_TRANSFORM.get(), 2.0F, 1.0F);
     		}
     	}
     }
@@ -610,7 +610,7 @@ public class EntityCelestialJellyfish extends AbstractAnimatableFlyingMonster im
     	}
 		UnleashedShaderEffects.addEffect(this.level, "Shockwave", pos, 100, 1.0F);
 		EntityCameraShake.cameraShake(this.level, this.position(), 100.0F, 0.1F, 0, 20);
-		this.playSound(UnleashedSounds.CELESTIAL_JELLYFISH_EXPLOSION.get());
+		this.playSound(UnleashedSounds.CELESTIAL_JELLYFISH_EXPLOSION.get(), 2.0F, 1.0F);
     }
     
     public void doTeleport()
@@ -639,6 +639,12 @@ public class EntityCelestialJellyfish extends AbstractAnimatableFlyingMonster im
     }
     
     @Override
+    protected float getSoundVolume() 
+    {
+    	return 1.5F;
+    }
+    
+    @Override
     public boolean hurt(DamageSource pSource, float pAmount)
     {
     	if(pSource.is(DamageTypeTags.IS_EXPLOSION))
@@ -651,7 +657,7 @@ public class EntityCelestialJellyfish extends AbstractAnimatableFlyingMonster im
         	{
         		this.setAnimationState(1);
         		this.setShowEffect(true);
-        		this.playSound(UnleashedSounds.CELESTIAL_JELLYFISH_TRANSFORM.get());
+        		this.playSound(UnleashedSounds.CELESTIAL_JELLYFISH_TRANSFORM.get(), 2.0F, 1.0F);
         		return false;
         	}
     		if(!this.isVisible() || this.getAnimationState() == 1 || this.getAnimationState() == 3 || this.isClone() || this.isTeleport())

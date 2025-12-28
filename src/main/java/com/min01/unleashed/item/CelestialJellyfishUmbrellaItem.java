@@ -104,7 +104,7 @@ public class CelestialJellyfishUmbrellaItem extends SwordItem
 			{
 				Vec3 lookPos = UnleashedUtil.getLookPos(new Vec2(0.0F, pPlayer.getYHeadRot()), pPlayer.position(), 0, 2, 100.0F);
 				pPlayer.setDeltaMovement(UnleashedUtil.getVelocityTowards(pPlayer.position(), lookPos, 4.0F).add(0.0F, 0.25F, 0.0F));
-				pPlayer.playSound(UnleashedSounds.CELESTIAL_JELLYFISH_DASH.get());
+				pPlayer.playSound(UnleashedSounds.CELESTIAL_JELLYFISH_DASH.get(), 1.5F, 1.0F);
 				UnleashedUtil.setDashTick(pPlayer, 20);
 				pPlayer.getCooldowns().addCooldown(this, 60);
 			}
