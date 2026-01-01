@@ -136,8 +136,14 @@ public abstract class AbstractAnimatableFlyingMonster extends AbstractFlyingMons
     {
     	super.readAdditionalSaveData(pCompound);
     	this.setUsingSkill(pCompound.getBoolean("isUsingSkill"));
-    	this.setCanLook(pCompound.getBoolean("CanLook"));
-    	this.setCanMove(pCompound.getBoolean("CanMove"));
+    	if(pCompound.contains("CanLook"))
+    	{
+        	this.setCanLook(pCompound.getBoolean("CanLook"));
+    	}
+    	if(pCompound.contains("CanMove"))
+    	{
+        	this.setCanMove(pCompound.getBoolean("CanMove"));
+    	}
     	this.setAnimationTick(pCompound.getInt("AnimationTick"));
     	this.setAnimationState(pCompound.getInt("AnimationState"));
     }
