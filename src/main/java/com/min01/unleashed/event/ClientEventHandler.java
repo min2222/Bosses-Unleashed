@@ -8,9 +8,11 @@ import com.min01.unleashed.entity.UnleashedEntities;
 import com.min01.unleashed.entity.model.ModelCelestialJellyfish;
 import com.min01.unleashed.entity.model.ModelCelestialOrb;
 import com.min01.unleashed.entity.model.ModelJellyfish;
+import com.min01.unleashed.entity.model.ModelMadLumberjack;
 import com.min01.unleashed.entity.renderer.CelestialBeamRenderer;
 import com.min01.unleashed.entity.renderer.CelestialJellyfishRenderer;
 import com.min01.unleashed.entity.renderer.CelestialOrbRenderer;
+import com.min01.unleashed.entity.renderer.MadLumberjackRenderer;
 import com.min01.unleashed.entity.renderer.NoneRenderer;
 import com.min01.unleashed.entity.renderer.layer.CelestialJellyfishArmorLayer;
 import com.min01.unleashed.item.CelestialJellyfishUmbrellaItem;
@@ -49,9 +51,9 @@ public class ClientEventHandler
 	public static void onFMLClientSetup(FMLClientSetupEvent event)
 	{
 		UnleashedArmPoses.registerArmPoses();
-        ItemProperties.register(UnleashedItems.CELESTIAL_JELLYFISH_UMBRELLA.get(), ResourceLocation.parse("folded"), (p_174585_, p_174586_, p_174587_, p_174588_) ->
+        ItemProperties.register(UnleashedItems.CELESTIAL_JELLYFISH_UMBRELLA.get(), ResourceLocation.parse("folded"), (pStack, pLevel, pEntity, pSeed) ->
         {
-        	return CelestialJellyfishUmbrellaItem.isUnfolded(p_174585_) ? 0.0F : 1.0F;
+        	return CelestialJellyfishUmbrellaItem.isUnfolded(pStack) ? 0.0F : 1.0F;
         });
 		/*try
 		{
@@ -88,17 +90,22 @@ public class ClientEventHandler
     	event.registerLayerDefinition(ModelCelestialJellyfish.LAYER_LOCATION, ModelCelestialJellyfish::createBodyLayer);
     	event.registerLayerDefinition(ModelCelestialOrb.LAYER_LOCATION, ModelCelestialOrb::createBodyLayer);
     	event.registerLayerDefinition(ModelCelestialJellyfishArmor.LAYER_LOCATION, ModelCelestialJellyfishArmor::createBodyLayer);
+    	
+    	event.registerLayerDefinition(ModelMadLumberjack.LAYER_LOCATION, ModelMadLumberjack::createBodyLayer);
     }
     
     @SubscribeEvent
     public static void onRegisterEntityRenderers(EntityRenderersEvent.RegisterRenderers event)
     {
+    	event.registerEntityRenderer(UnleashedEntities.CAMERA_SHAKE.get(), NoneRenderer::new);
+    	
     	event.registerEntityRenderer(UnleashedEntities.CELESTIAL_JELLYFISH.get(), CelestialJellyfishRenderer::new);
     	event.registerEntityRenderer(UnleashedEntities.CELESTIAL_ORB.get(), CelestialOrbRenderer::new);
     	event.registerEntityRenderer(UnleashedEntities.CELESTIAL_BEAM.get(), CelestialBeamRenderer::new);
-    	event.registerEntityRenderer(UnleashedEntities.CAMERA_SHAKE.get(), NoneRenderer::new);
     	event.registerEntityRenderer(UnleashedEntities.WORMHOLE.get(), NoneRenderer::new);
     	event.registerEntityRenderer(UnleashedEntities.BLACKHOLE.get(), NoneRenderer::new);
+    	
+    	event.registerEntityRenderer(UnleashedEntities.MAD_LUMBERJACK.get(), MadLumberjackRenderer::new);
     }
     
 	@SuppressWarnings({ "unchecked", "deprecation" })

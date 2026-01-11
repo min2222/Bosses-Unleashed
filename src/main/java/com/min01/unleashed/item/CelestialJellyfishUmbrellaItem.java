@@ -43,7 +43,7 @@ public class CelestialJellyfishUmbrellaItem extends SwordItem
 	
 	public CelestialJellyfishUmbrellaItem()
 	{
-		super(Tiers.NETHERITE, 0, 0, new Item.Properties().stacksTo(1).rarity(Rarity.EPIC));
+		super(Tiers.NETHERITE, 0, 0, new Item.Properties().stacksTo(1).rarity(Rarity.EPIC).fireResistant());
 		ImmutableMultimap.Builder<Attribute, AttributeModifier> builder = ImmutableMultimap.builder();
 		builder.put(Attributes.ATTACK_DAMAGE, new AttributeModifier(BASE_ATTACK_DAMAGE_UUID, "Umbrella Attack Damage", 7.0F, AttributeModifier.Operation.ADDITION));
 		builder.put(Attributes.ATTACK_SPEED, new AttributeModifier(BASE_ATTACK_SPEED_UUID, "Umbrella Attack Speed", -3.2F, AttributeModifier.Operation.ADDITION));

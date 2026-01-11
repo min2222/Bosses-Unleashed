@@ -1,0 +1,14 @@
+{
+	"placement": {
+		"type": "minecraft:random_spread",
+		"salt": 28459594,
+		"separation": 12,
+		"spacing": 41
+	},
+	"structures": [
+		{
+			"structure": "bossesunleashed:lumberjack_hut",
+			"weight": 1
+		}
+	]
+}

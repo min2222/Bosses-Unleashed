@@ -5,6 +5,9 @@
 	"entity.bossesunleashed.celestial_jellyfish": "Celestial Jellyfish",
 	"entity.bossesunleashed.celestial_orb": "Celestial Orb",
 	"entity.bossesunleashed.celestial_beam": "Celestial Beam",
+	"entity.bossesunleashed.the_mad_lumberjack": "The Mad Lumberjack",
+	"entity.bossesunleashed.the_starving_lumberjack": "The Starving Lumberjack",
+	"entity.bossesunleashed.the_infected_brute": "The Infected Brute",
 	"entity.bossesunleashed.camera_shake": "Camera Shake",
 	"entity.bossesunleashed.wormhole": "Wormhole",
 	"entity.bossesunleashed.blackhole": "Blackhole",
@@ -17,5 +20,14 @@
 	"item.bossesunleashed.celestial_jellyfish_chestplate": "Celestial Jellyfish Chestplate",
 	"item.bossesunleashed.celestial_jellyfish_leggings": "Celestial Jellyfish Leggings",
 	"item.bossesunleashed.celestial_jellyfish_boots": "Celestial Jellyfish Boots",
-	"item.bossesunleashed.celestial_jellyfish_spawn_egg": "Celestial Jellyfish Spawn Egg"
+	"item.bossesunleashed.giant_axe_head": "Giant Axe Head",
+	"item.bossesunleashed.soaked_cloth": "Piece of Soaked Cloth",
+	"item.bossesunleashed.heavy_gun_barrel": "Heavy Gun Barrel",
+	"item.bossesunleashed.rusty_bear_trap_part": "Rusty Bear Trap Part",
+	"item.bossesunleashed.old_log": "Old Log",
+	"item.bossesunleashed.beheader": "Beheader",
+	"item.bossesunleashed.bfg": "B.F.G",
+	"item.bossesunleashed.guillotine": "Guillotine",
+	"item.bossesunleashed.celestial_jellyfish_spawn_egg": "Celestial Jellyfish Spawn Egg",
+	"item.bossesunleashed.the_mad_lumberjack_spawn_egg": "The Mad Lumberjack Spawn Egg"
 }

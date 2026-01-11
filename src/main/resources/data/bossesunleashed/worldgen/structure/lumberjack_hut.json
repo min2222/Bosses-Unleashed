@@ -1,0 +1,8 @@
+{
+	"type": "bossesunleashed:lumberjack_hut",
+	"biomes": "minecraft:snowy_taiga",
+	"terrain_adaptation": "beard_thin",
+	"spawn_overrides": {
+	},
+	"step": "surface_structures"
+}

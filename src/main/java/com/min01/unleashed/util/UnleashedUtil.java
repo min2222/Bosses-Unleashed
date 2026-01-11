@@ -1,12 +1,15 @@
 package com.min01.unleashed.util;
 
 import java.lang.reflect.Method;
+import java.util.List;
 import java.util.UUID;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 import org.joml.Math;
 
+import com.google.common.collect.ImmutableList;
 import com.min01.unleashed.capabilities.DashCapabilityImpl;
 import com.min01.unleashed.capabilities.IDashCapability;
 import com.min01.unleashed.capabilities.UnleashedCapabilities;
@@ -22,10 +25,22 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelHeightAccessor;
+import net.minecraft.world.level.NoiseColumn;
+import net.minecraft.world.level.block.Mirror;
+import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.chunk.ChunkGenerator;
 import net.minecraft.world.level.entity.LevelEntityGetter;
+import net.minecraft.world.level.levelgen.Heightmap;
+import net.minecraft.world.level.levelgen.RandomState;
+import net.minecraft.world.level.levelgen.structure.BoundingBox;
+import net.minecraft.world.level.levelgen.structure.Structure;
+import net.minecraft.world.level.levelgen.structure.StructurePiece;
+import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec2;
@@ -37,6 +52,58 @@ import net.minecraftforge.fml.util.ObfuscationReflectionHelper;
 public class UnleashedUtil 
 {
 	public static final Method GET_ENTITY = ObfuscationReflectionHelper.findMethod(Level.class, "m_142646_");
+	
+	public static void moveStructurePiece(Structure.GenerationContext pContext, Heightmap.Types types, StructurePiece piece, StructureTemplate template, Rotation rotation, Mirror mirror, Consumer<Integer> consumer)
+	{
+		ChunkPos chunkPos = pContext.chunkPos();
+		ChunkGenerator chunkGenerator = pContext.chunkGenerator();
+		RandomSource random = pContext.random();
+		RandomState randomState = pContext.randomState();
+		LevelHeightAccessor heightAccessor = pContext.heightAccessor();
+		BlockPos blockPos = chunkPos.getWorldPosition();
+		BlockPos blockPos1 = new BlockPos(template.getSize().getX() / 2, 0, template.getSize().getZ() / 2);
+		BoundingBox boundingBox = template.getBoundingBox(blockPos, rotation, blockPos1, mirror);
+		BlockPos blockPos2 = boundingBox.getCenter();
+		int i = chunkGenerator.getBaseHeight(blockPos2.getX(), blockPos2.getZ(), types, heightAccessor, randomState);
+		int j = findSuitableY(types, random, chunkGenerator, i, piece.getBoundingBox(), heightAccessor, randomState);
+		consumer.accept(j);
+	}
+	
+	//copied from RuinedPortalStructure
+	public static int findSuitableY(Heightmap.Types types, RandomSource pRandom, ChunkGenerator pChunkGenerator, int pHeight, BoundingBox pBox, LevelHeightAccessor pLevel, RandomState pRandomState)
+	{
+		int j = pLevel.getMinBuildHeight() + 15;
+		int i = pHeight;
+		List<BlockPos> list1 = ImmutableList.of(new BlockPos(pBox.minX(), 0, pBox.minZ()), new BlockPos(pBox.maxX(), 0, pBox.minZ()), new BlockPos(pBox.minX(), 0, pBox.maxZ()), new BlockPos(pBox.maxX(), 0, pBox.maxZ()));
+		List<NoiseColumn> list = list1.stream().map(t ->
+		{
+			return pChunkGenerator.getBaseColumn(t.getX(), t.getZ(), pLevel, pRandomState);
+		}).collect(Collectors.toList());
+		
+		int l;
+		for(l = i; l > j; --l) 
+		{
+			int i1 = 0;
+			for(NoiseColumn noisecolumn : list)
+			{
+				//fix for ceiling dimension like deep abyss
+				if(l > 150)
+				{
+					continue;
+				}
+				BlockState blockstate = noisecolumn.getBlock(l);
+				if(types.isOpaque().test(blockstate)) 
+				{
+					++i1;
+					if(i1 == 3)
+					{
+						return l;
+					}
+				}
+			}
+		}
+		return l;
+	}
 	
     public static Vec3 generateNewTarget(Mob mob, Predicate<BlockState> predicate) 
     {

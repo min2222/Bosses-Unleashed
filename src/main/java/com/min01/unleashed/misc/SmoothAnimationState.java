@@ -48,15 +48,16 @@ public class SmoothAnimationState extends AnimationState
 	@OnlyIn(Dist.CLIENT)
 	public void animate(HierarchicalModel<?> model, AnimationDefinition definition, float ageInTicks) 
 	{
-		this.animate(model, definition, ageInTicks, 0.0F);
+		this.animate(model, definition, ageInTicks, 0.0F, 0.0F);
 	}
 	
 	@OnlyIn(Dist.CLIENT)
-	public void animate(HierarchicalModel<?> model, AnimationDefinition definition, float ageInTicks, float factor) 
+	public void animate(HierarchicalModel<?> model, AnimationDefinition definition, float ageInTicks, float limbSwingAmount, float animationScale) 
 	{
 		this.updateTime(ageInTicks, 1.0F);
 		this.ifStarted(t -> 
 		{
+			float factor = Math.min(limbSwingAmount * animationScale, 1.0F);
 			float totalFactor = factor + this.factor(UnleashedClientUtil.MC.getFrameTime());
 			KeyframeAnimations.animate(model, definition, t.getAccumulatedTime(), 1.0F - totalFactor, ANIMATION_VECTOR_CACHE);
 		});

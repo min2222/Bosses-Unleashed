@@ -5,6 +5,9 @@
 	"entity.bossesunleashed.celestial_jellyfish": "천상의 해파리",
 	"entity.bossesunleashed.celestial_orb": "천상의 오브",
 	"entity.bossesunleashed.celestial_beam": "천상의 광선",
+	"entity.bossesunleashed.the_mad_lumberjack": "미치광이 나무꾼",
+	"entity.bossesunleashed.the_starving_lumberjack": "굶주린 나무꾼",
+	"entity.bossesunleashed.the_infected_brute": "감염된 거한",
 	"entity.bossesunleashed.camera_shake": "카메라 흔들림",
 	"entity.bossesunleashed.wormhole": "웜홀",
 	"entity.bossesunleashed.blackhole": "블랙홀",
@@ -17,5 +20,14 @@
 	"item.bossesunleashed.celestial_jellyfish_chestplate": "천상의 해파리 흉갑",
 	"item.bossesunleashed.celestial_jellyfish_leggings": "천상의 해파리 레깅스",
 	"item.bossesunleashed.celestial_jellyfish_boots": "천상의 해파리 부츠",
-	"item.bossesunleashed.celestial_jellyfish_spawn_egg": "천상의 해파리 생성 알"
+	"item.bossesunleashed.giant_axe_head": "거대한 도끼머리",
+	"item.bossesunleashed.soaked_cloth": "흠뻑 젖은 천 조각",
+	"item.bossesunleashed.heavy_gun_barrel": "무거운 총열",
+	"item.bossesunleashed.rusty_bear_trap_part": "녹슨 곰덫 부품",
+	"item.bossesunleashed.old_log": "오래된 통나무",
+	"item.bossesunleashed.beheader": "비헤더",
+	"item.bossesunleashed.bfg": "B.F.G",
+	"item.bossesunleashed.guillotine": "길로틴",
+	"item.bossesunleashed.celestial_jellyfish_spawn_egg": "천상의 해파리 생성 알",
+	"item.bossesunleashed.the_mad_lumberjack_spawn_egg": "미치광이 나무꾼 생성 알"
 }

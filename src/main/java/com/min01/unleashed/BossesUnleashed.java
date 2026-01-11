@@ -9,6 +9,7 @@ import com.min01.unleashed.misc.UnleashedEntityDataSerializers;
 import com.min01.unleashed.network.UnleashedNetwork;
 import com.min01.unleashed.particle.UnleashedParticles;
 import com.min01.unleashed.sound.UnleashedSounds;
+import com.min01.unleashed.world.UnleashedStructures;
 
 import net.minecraft.world.entity.Entity;
 import net.minecraftforge.common.MinecraftForge;
@@ -32,6 +33,8 @@ public class BossesUnleashed
 		UnleashedEntityDataSerializers.SERIALIZERS.register(bus);
 		UnleashedParticles.PARTICLES.register(bus);
 		UnleashedSounds.SOUNDS.register(bus);
+		UnleashedStructures.STRUCTURE_TYPES.register(bus);
+		UnleashedStructures.STRUCTURE_PIECE_TYPES.register(bus);
 		
 		UnleashedNetwork.registerMessages();
 		ctx.registerConfig(Type.COMMON, UnleashedConfig.CONFIG_SPEC, "bosses-unleashed.toml");
