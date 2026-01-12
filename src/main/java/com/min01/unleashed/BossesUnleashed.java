@@ -38,6 +38,6 @@ public class BossesUnleashed
 		
 		UnleashedNetwork.registerMessages();
 		ctx.registerConfig(Type.COMMON, UnleashedConfig.CONFIG_SPEC, "bosses-unleashed.toml");
-		MinecraftForge.EVENT_BUS.addGenericListener(Entity.class, UnleashedCapabilities::attachEntityCapability);
+		MinecraftForge.EVENT_BUS.addGenericListener(Entity.class, UnleashedCapabilities::onAttachEntityCapabilities);
 	}
 }

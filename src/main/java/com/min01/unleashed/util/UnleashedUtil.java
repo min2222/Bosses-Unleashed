@@ -12,7 +12,6 @@ import org.joml.Math;
 import com.google.common.collect.ImmutableList;
 import com.min01.unleashed.capabilities.DashCapabilityImpl;
 import com.min01.unleashed.capabilities.IDashCapability;
-import com.min01.unleashed.capabilities.UnleashedCapabilities;
 
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;
@@ -139,25 +138,25 @@ public class UnleashedUtil
 	
 	public static void tickDash(LivingEntity entity)
 	{
-		IDashCapability cap = entity.getCapability(UnleashedCapabilities.DASH).orElse(new DashCapabilityImpl());
+		IDashCapability cap = entity.getCapability(DashCapabilityImpl.DASH).orElse(new DashCapabilityImpl(entity));
 		cap.tick(entity);
 	}
 	
 	public static void setDashTick(LivingEntity entity, int tick)
 	{
-		IDashCapability cap = entity.getCapability(UnleashedCapabilities.DASH).orElse(new DashCapabilityImpl());
+		IDashCapability cap = entity.getCapability(DashCapabilityImpl.DASH).orElse(new DashCapabilityImpl(entity));
 		cap.setDashTick(tick);
 	}
 	
 	public static boolean isDash(LivingEntity entity)
 	{
-		IDashCapability cap = entity.getCapability(UnleashedCapabilities.DASH).orElse(new DashCapabilityImpl());
+		IDashCapability cap = entity.getCapability(DashCapabilityImpl.DASH).orElse(new DashCapabilityImpl(entity));
 		return cap.isDash();
 	}
 	
 	public static int getDashTick(LivingEntity entity)
 	{
-		IDashCapability cap = entity.getCapability(UnleashedCapabilities.DASH).orElse(new DashCapabilityImpl());
+		IDashCapability cap = entity.getCapability(DashCapabilityImpl.DASH).orElse(new DashCapabilityImpl(entity));
 		return cap.getDashTick();
 	}
 	

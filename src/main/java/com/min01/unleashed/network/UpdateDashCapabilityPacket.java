@@ -3,7 +3,7 @@ package com.min01.unleashed.network;
 import java.util.UUID;
 import java.util.function.Supplier;
 
-import com.min01.unleashed.capabilities.UnleashedCapabilities;
+import com.min01.unleashed.capabilities.DashCapabilityImpl;
 import com.min01.unleashed.util.UnleashedUtil;
 
 import net.minecraft.network.FriendlyByteBuf;
@@ -41,7 +41,7 @@ public class UpdateDashCapabilityPacket
 				UnleashedUtil.getClientLevel(level -> 
 				{
 					Entity entity = UnleashedUtil.getEntityByUUID(level, message.entityUUID);
-					entity.getCapability(UnleashedCapabilities.DASH).ifPresent(cap -> 
+					entity.getCapability(DashCapabilityImpl.DASH).ifPresent(cap -> 
 					{
 						cap.setDashTick(message.dashTick);
 					});
