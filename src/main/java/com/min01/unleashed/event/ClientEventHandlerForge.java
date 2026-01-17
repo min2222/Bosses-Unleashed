@@ -1,27 +1,19 @@
 package com.min01.unleashed.event;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import com.min01.unleashed.BossesUnleashed;
 import com.min01.unleashed.config.UnleashedConfig;
 import com.min01.unleashed.entity.EntityCameraShake;
-import com.min01.unleashed.misc.UnleashedBossBarType;
+import com.min01.unleashed.misc.UnleashedBossBar;
 import com.min01.unleashed.shader.UnleashedShaderEffects;
 import com.min01.unleashed.util.UnleashedClientUtil;
 import com.min01.unleashed.util.UnleashedUtil;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
 
-import net.minecraft.ChatFormatting;
-import net.minecraft.client.gui.Font;
-import net.minecraft.client.renderer.LightTexture;
-import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.CustomizeGuiOverlayEvent;
@@ -36,11 +28,7 @@ import net.minecraftforge.fml.common.Mod;
 public class ClientEventHandlerForge
 {
 	public static final AtomicBoolean STARFIELD = new AtomicBoolean();
-    public static final Map<UUID, UnleashedBossBarType> BOSS_BAR_MAP = new HashMap<>();
-    public static final Map<UUID, Entity> BOSS_MAP = new HashMap<>();
-    public static final ResourceLocation JELLYFISH_BOSS_BAR_FRAME_TEXTURE = ResourceLocation.fromNamespaceAndPath(BossesUnleashed.MODID, "textures/gui/celestial_jellyfish_bossbar_frame.png");
-    public static final ResourceLocation JELLYFISH_BOSS_BAR_BAR_TEXTURE = ResourceLocation.fromNamespaceAndPath(BossesUnleashed.MODID, "textures/gui/celestial_jellyfish_bossbar_bar.png");
-    
+
     @SubscribeEvent
     public static void onComputeCameraAngles(ViewportEvent.ComputeCameraAngles event) 
     {
@@ -103,27 +91,16 @@ public class ClientEventHandlerForge
         }
     }
     
-    @SubscribeEvent(priority = EventPriority.LOWEST)
+    @SubscribeEvent(priority = EventPriority.HIGHEST)
     public static void onBossEventProgress(CustomizeGuiOverlayEvent.BossEventProgress event)
     {
-        if(BOSS_BAR_MAP.containsKey(event.getBossEvent().getId()))
-        {
-            PoseStack poseStack = event.getGuiGraphics().pose();
-            Component component = event.getBossEvent().getName();
-            int width = UnleashedClientUtil.MC.getWindow().getGuiScaledWidth();
-            int y = event.getY();
-            int progressScaled = (int)(event.getBossEvent().getProgress() * 127.0F);
-            int componentWidth = UnleashedClientUtil.MC.font.width(component);
-            int x = width / 2 - componentWidth / 2;
-            event.setCanceled(true);
-            poseStack.pushPose();
-            poseStack.translate(x / 11.5F, y - 23, 0);
-            event.getGuiGraphics().blit(JELLYFISH_BOSS_BAR_FRAME_TEXTURE, event.getX(), event.getY(), 0, 0, 140, 32, 140, 32);
-            event.getGuiGraphics().blit(JELLYFISH_BOSS_BAR_BAR_TEXTURE, event.getX(), event.getY(), 0, 0, 9 + progressScaled, 32, 140, 32);
-            poseStack.translate(x - 20.0F, y + 35, 0);
-            UnleashedClientUtil.MC.font.drawInBatch(component.plainCopy().withStyle(ChatFormatting.AQUA).getVisualOrderText(), 0.0F, 0.0F, 16777215, true, poseStack.last().pose(), UnleashedClientUtil.MC.renderBuffers().bufferSource(), Font.DisplayMode.POLYGON_OFFSET, 0, LightTexture.FULL_BRIGHT);
-            poseStack.popPose();
-            event.setIncrement(event.getIncrement() + 7);
-        }
+        ResourceLocation location = UnleashedBossBar.BOSS_MAP.getOrDefault(event.getBossEvent().getId(), null);
+        if(location == null)
+        	return;
+        UnleashedBossBar bossBar = UnleashedBossBar.BOSS_BAR_MAP.getOrDefault(location, null);
+        if(bossBar == null)
+        	return;
+        event.setCanceled(true);
+        bossBar.draw(event);
     }
 }

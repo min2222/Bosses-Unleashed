@@ -22,7 +22,6 @@ import com.min01.unleashed.entity.projectile.EntityCelestialBeam;
 import com.min01.unleashed.entity.projectile.EntityCelestialOrb;
 import com.min01.unleashed.misc.AfterImage;
 import com.min01.unleashed.misc.SmoothAnimationState;
-import com.min01.unleashed.misc.UnleashedBossBarType;
 import com.min01.unleashed.misc.UnleashedBossEvent;
 import com.min01.unleashed.misc.UnleashedEntityDataSerializers;
 import com.min01.unleashed.shader.UnleashedShaderEffects;
@@ -96,7 +95,7 @@ public class EntityCelestialJellyfish extends AbstractAnimatableFlyingMonster im
 	
 	public final AfterImage<EntityCelestialJellyfish> afterImage;
 	
-	public final UnleashedBossEvent bossEvent = (UnleashedBossEvent) new UnleashedBossEvent(this.getDisplayName(), UnleashedBossBarType.CELESTIAL_JELLY_FISH, this).setDarkenScreen(true);
+	public final UnleashedBossEvent bossEvent = (UnleashedBossEvent) new UnleashedBossEvent(this.getDisplayName(), this).setDarkenScreen(true);
 	   
 	public EntityCelestialJellyfish(EntityType<? extends Monster> pEntityType, Level pLevel)
 	{
@@ -684,9 +683,9 @@ public class EntityCelestialJellyfish extends AbstractAnimatableFlyingMonster im
     	{
     		if(this.isHitTime())
     		{
-        		return EntityDimensions.fixed(3.0F, 7.875F);
+        		return EntityDimensions.scalable(3.0F, 7.875F);
     		}
-    		return EntityDimensions.fixed(3.0F, 2.0F);
+    		return EntityDimensions.scalable(3.0F, 2.0F);
     	}
     	return super.getDimensions(pPose);
     }

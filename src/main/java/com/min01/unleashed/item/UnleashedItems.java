@@ -30,13 +30,14 @@ public class UnleashedItems
 	public static final RegistryObject<Item> CELESTIAL_JELLYFISH_LEGGINGS = ITEMS.register("celestial_jellyfish_leggings", () -> new CelestialJellyfishArmorItem(Type.LEGGINGS));
 	public static final RegistryObject<Item> CELESTIAL_JELLYFISH_BOOTS = ITEMS.register("celestial_jellyfish_boots", () -> new CelestialJellyfishArmorItem(Type.BOOTS));
 	
+	public static final RegistryObject<Item> CELESTIAL_JELLYFISH_SPAWN_EGG = registerSpawnEgg("celestial_jellyfish_spawn_egg", () -> UnleashedEntities.CELESTIAL_JELLYFISH.get(), 9757695, 10841311);
+	
 	public static final RegistryObject<Item> GIANT_AXE_HEAD = ITEMS.register("giant_axe_head", () -> new Item(new Item.Properties()));
 	public static final RegistryObject<Item> HEAVY_GUN_BARREL = ITEMS.register("heavy_gun_barrel", () -> new Item(new Item.Properties()));
 	public static final RegistryObject<Item> OLD_LOG = ITEMS.register("old_log", () -> new Item(new Item.Properties()));
 	public static final RegistryObject<Item> RUSTY_BEAR_TRAP_PART = ITEMS.register("rusty_bear_trap_part", () -> new Item(new Item.Properties()));
 	public static final RegistryObject<Item> SOAKED_CLOTH = ITEMS.register("soaked_cloth", () -> new Item(new Item.Properties()));
 	
-	public static final RegistryObject<Item> CELESTIAL_JELLYFISH_SPAWN_EGG = registerSpawnEgg("celestial_jellyfish_spawn_egg", () -> UnleashedEntities.CELESTIAL_JELLYFISH.get(), 9757695, 10841311);
 	public static final RegistryObject<Item> MAD_LUMBERJACK_SPAWN_EGG = registerSpawnEgg("the_mad_lumberjack_spawn_egg", () -> UnleashedEntities.MAD_LUMBERJACK.get(), 6496538, 3804425);
 	
 	public static RegistryObject<Item> registerBlockItem(String name, Supplier<Block> block, Item.Properties properties)
