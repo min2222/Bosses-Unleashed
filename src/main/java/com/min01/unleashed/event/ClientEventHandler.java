@@ -50,11 +50,14 @@ public class ClientEventHandler
 	@SubscribeEvent
 	public static void onFMLClientSetup(FMLClientSetupEvent event)
 	{
-		UnleashedArmPoses.registerArmPoses();
-        ItemProperties.register(UnleashedItems.CELESTIAL_JELLYFISH_UMBRELLA.get(), ResourceLocation.parse("folded"), (pStack, pLevel, pEntity, pSeed) ->
-        {
-        	return CelestialJellyfishUmbrellaItem.isUnfolded(pStack) ? 0.0F : 1.0F;
-        });
+		event.enqueueWork(() ->
+		{
+			UnleashedArmPoses.registerArmPoses();
+	        ItemProperties.register(UnleashedItems.CELESTIAL_JELLYFISH_UMBRELLA.get(), ResourceLocation.parse("folded"), (pStack, pLevel, pEntity, pSeed) ->
+	        {
+	        	return CelestialJellyfishUmbrellaItem.isUnfolded(pStack) ? 0.0F : 1.0F;
+	        });
+		});
 		/*try
 		{
 			AESUtil.encryptFiles(".png");

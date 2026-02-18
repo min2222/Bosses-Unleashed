@@ -73,11 +73,21 @@ public class EntityMadLumberjack extends AbstractAnimatableMonster
     	{
     		this.axeIdleAnimationState.updateWhen(this.getAnimationState() == 0 && !this.isGun(), this.tickCount);
     		this.gunIdleAnimationState.updateWhen(this.getAnimationState() == 0 && this.isGun(), this.tickCount);
-    		this.gunWalkAnimationState.updateWhen(this.isGun() && !this.hasTarget(), this.tickCount);
+    		this.gunWalkAnimationState.updateWhen(this.isGun() && !this.isTargetValid(), this.tickCount);
     		
-    		this.axeSprintAnimationState.updateWhen(!this.isGun() && this.hasTarget(), this.tickCount);
-    		this.gunSprintAnimationState.updateWhen(this.isGun() && this.hasTarget(), this.tickCount);
+    		this.axeSprintAnimationState.updateWhen(!this.isGun() && this.isTargetValid(), this.tickCount);
+    		this.gunSprintAnimationState.updateWhen(this.isGun() && this.isTargetValid(), this.tickCount);
     	}
+    }
+    
+    @Override
+    public float getSpeed()
+    {
+    	if(this.isTargetValid())
+    	{
+    		return 1.15F;
+    	}
+    	return super.getSpeed();
     }
     
     @Override

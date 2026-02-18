@@ -28,7 +28,7 @@ public class UnleashedArmPoses
 			if(entity.getDeltaMovement().y < -0.1F && CelestialJellyfishUmbrellaItem.isUnfolded(stack))
 			{
 				ModelPart armPart = arm == HumanoidArm.RIGHT ? model.rightArm : model.leftArm;
-				armPart.xRot = 80.0F;
+				armPart.xRot += Math.toRadians(-80.0F);
 			}
 		}
 	}

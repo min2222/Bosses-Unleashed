@@ -6,9 +6,12 @@ import net.minecraft.world.entity.ai.control.LookControl;
 
 public class FlyingLookControl extends LookControl 
 {
-	public FlyingLookControl(Mob mob) 
+	private final int maxYRotFromCenter;
+	
+	public FlyingLookControl(Mob mob, int maxYRotFromCenter) 
 	{
 		super(mob);
+		this.maxYRotFromCenter = maxYRotFromCenter;
 	}
 
 	@Override
@@ -35,11 +38,11 @@ public class FlyingLookControl extends LookControl
 			this.mob.yHeadRot = this.rotateTowards(this.mob.yHeadRot, this.mob.yBodyRot, this.yMaxRotSpeed);
 		}
 		float f = Mth.wrapDegrees(this.mob.yHeadRot - this.mob.yBodyRot);
-		if(f < -10) 
+		if(f < -this.maxYRotFromCenter) 
 		{
 			this.mob.yBodyRot -= 4.0F;
-		}
-		else if(f > 10)
+		} 
+		else if(f > this.maxYRotFromCenter)
 		{
 			this.mob.yBodyRot += 4.0F;
 		}

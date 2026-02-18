@@ -2,7 +2,7 @@ package com.min01.unleashed.entity.ai.goal;
 
 import com.min01.unleashed.entity.living.EntityCelestialJellyfish;
 
-public abstract class AbstractCelestialJellyfishSkillGoal extends BasicAnimationSkillGoal<EntityCelestialJellyfish>
+public abstract class AbstractCelestialJellyfishSkillGoal extends AbstractAnimationGoal<EntityCelestialJellyfish>
 {
 	public AbstractCelestialJellyfishSkillGoal(EntityCelestialJellyfish mob)
 	{
@@ -16,7 +16,7 @@ public abstract class AbstractCelestialJellyfishSkillGoal extends BasicAnimation
 		{
 			return false;
 		}
-		if(this.mob.getTarget() == null || !this.mob.getTarget().isAlive() || this.mob.isUsingSkill())
+		if(this.mob.getTarget() == null || !this.mob.getTarget().isAlive() || this.mob.isAnimationPlaying())
 		{
 			return false;
 		}

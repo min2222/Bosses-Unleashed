@@ -3,6 +3,7 @@ package com.min01.unleashed.entity.model;
 import com.min01.unleashed.BossesUnleashed;
 import com.min01.unleashed.entity.animation.JellyfishAnimation;
 import com.min01.unleashed.entity.living.EntityCelestialJellyfish;
+import com.min01.unleashed.misc.SmoothAnimationState;
 import com.min01.unleashed.util.UnleashedClientUtil;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
@@ -50,7 +51,7 @@ public class ModelJellyfish extends HierarchicalModel<EntityCelestialJellyfish>
 	{
 		this.root().getAllParts().forEach(ModelPart::resetPose);
 		UnleashedClientUtil.animateHead(this.jellyfish, netHeadYaw, headPitch + 90.0F);
-		this.animateWalk(JellyfishAnimation.JELLYFISH_SWIM, limbSwing, limbSwingAmount, 3.5F, 3.5F);
+		SmoothAnimationState.animateWalk(this, JellyfishAnimation.JELLYFISH_SWIM, ageInTicks, limbSwing, limbSwingAmount, 3.5F, 3.5F);
 	}
 	
 	@Override

@@ -52,6 +52,13 @@ public class UnleashedUtil
 {
 	public static final Method GET_ENTITY = ObfuscationReflectionHelper.findMethod(Level.class, "m_142646_");
 	
+    public static float rotlerp(float start, float end, float maxStep) 
+    {
+        float delta = Mth.wrapDegrees(end - start);
+        float clampedDelta = Mth.clamp(delta, -maxStep, maxStep);
+        return Mth.wrapDegrees(start + clampedDelta);
+    }
+    
 	public static void moveStructurePiece(Structure.GenerationContext pContext, Heightmap.Types types, StructurePiece piece, StructureTemplate template, Rotation rotation, Mirror mirror, Consumer<Integer> consumer)
 	{
 		ChunkPos chunkPos = pContext.chunkPos();

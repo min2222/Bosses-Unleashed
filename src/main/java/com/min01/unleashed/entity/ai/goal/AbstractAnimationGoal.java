@@ -6,24 +6,30 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.ai.goal.Goal;
 
-public abstract class AbstractAnimationSkillGoal<T extends Mob & IAnimatable> extends Goal
+public abstract class AbstractAnimationGoal<T extends Mob & IAnimatable> extends Goal
 {
 	public int skillWarmupDelay;
 	public int nextSkillTickCount;
+	public final T mob;
+	
+	public AbstractAnimationGoal(T mob) 
+	{
+		this.mob = mob;
+	}
 	
     @Override
     public boolean canUse() 
     {
-    	LivingEntity target = this.getMob().getTarget();
+    	LivingEntity target = this.mob.getTarget();
     	if(target != null && target.isAlive()) 
     	{
-    		if(this.getMob().isUsingSkill())
+    		if(this.mob.isAnimationPlaying())
     		{
     			return false;
     		}
     		else 
     		{
-    			return this.getMob().tickCount >= this.nextSkillTickCount;
+    			return this.mob.tickCount >= this.nextSkillTickCount;
     		}
     	}
     	else 
@@ -35,22 +41,21 @@ public abstract class AbstractAnimationSkillGoal<T extends Mob & IAnimatable> ex
     @Override
     public boolean canContinueToUse() 
     {
-    	return this.getMob().getAnimationTick() > 0;
+    	return this.mob.getAnimationTick() > 0;
     }
     
     @Override
     public void start()
     {
+    	this.mob.setAggressive(true);
+    	this.mob.setAnimationPlaying(true);
+    	this.skillWarmupDelay = this.adjustedTickDelay(this.getSkillWarmupTime());
+    	this.mob.setAnimationTick(this.getSkillUsingTime());
     	if(this.stopMovingWhenStart())
     	{
-        	this.getMob().setCanMove(false);
-        	this.getMob().getNavigation().stop();
+        	this.mob.setStopMoveTick(this.getSkillUsingTime());
+        	this.mob.getNavigation().stop();
     	}
-    	
-    	this.getMob().setAggressive(true);
-    	this.getMob().setUsingSkill(true);
-    	this.skillWarmupDelay = this.adjustedTickDelay(this.getSkillWarmupTime());
-    	this.getMob().setAnimationTick(this.getSkillUsingTime());
     }
     
     public boolean stopMovingWhenStart()
@@ -61,13 +66,10 @@ public abstract class AbstractAnimationSkillGoal<T extends Mob & IAnimatable> ex
 	@Override
 	public void stop()
 	{
-		if(this.stopMovingWhenStart())
-		{
-			this.getMob().setCanMove(true);
-		}
-		this.getMob().setAggressive(false);
-    	this.getMob().setUsingSkill(false);
-    	this.nextSkillTickCount = this.getMob().tickCount + this.getSkillUsingInterval();
+		this.mob.setStopMoveTick(0);
+		this.mob.setAggressive(false);
+    	this.mob.setAnimationPlaying(false);
+    	this.nextSkillTickCount = this.mob.tickCount + this.getSkillUsingInterval();
 	}
 	
     @Override
@@ -93,6 +95,4 @@ public abstract class AbstractAnimationSkillGoal<T extends Mob & IAnimatable> ex
     public abstract int getSkillUsingTime();
 
     public abstract int getSkillUsingInterval();
-    
-    public abstract T getMob();
 }

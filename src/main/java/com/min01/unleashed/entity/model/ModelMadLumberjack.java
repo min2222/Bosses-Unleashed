@@ -3,7 +3,7 @@ package com.min01.unleashed.entity.model;
 import com.min01.unleashed.BossesUnleashed;
 import com.min01.unleashed.entity.animation.MadLumberjackAnimation;
 import com.min01.unleashed.entity.living.EntityMadLumberjack;
-import com.min01.unleashed.util.UnleashedClientUtil;
+import com.min01.unleashed.misc.SmoothAnimationState;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 
@@ -133,21 +133,13 @@ public class ModelMadLumberjack extends HierarchicalModel<EntityMadLumberjack>
 		this.shotgun.visible = entity.isGun();
 		this.axe.visible = !entity.isGun();
 
-		float gunWalkFactor = entity.gunWalkAnimationState.factor(UnleashedClientUtil.MC.getFrameTime());
-		float axeSprintFactor = entity.axeSprintAnimationState.factor(UnleashedClientUtil.MC.getFrameTime());
-		float gunSprintFactor = entity.gunSprintAnimationState.factor(UnleashedClientUtil.MC.getFrameTime());
+		entity.axeIdleAnimationState.animateIdle(this, MadLumberjackAnimation.AXE_IDLE, ageInTicks, limbSwingAmount, 2.5F, entity.gunWalkAnimationState, entity.axeSprintAnimationState, entity.gunSprintAnimationState);
+		entity.gunIdleAnimationState.animateIdle(this, MadLumberjackAnimation.GUN_IDLE, ageInTicks, limbSwingAmount, 2.5F, entity.gunWalkAnimationState, entity.axeSprintAnimationState, entity.gunSprintAnimationState);
 		
-		float totalFactor = gunWalkFactor * axeSprintFactor * gunSprintFactor;
-		
-		float totalLimb = Math.max(limbSwingAmount * totalFactor, 0.0F) + Math.max(limbSwingAmount - gunWalkFactor, 0.0F) + Math.max(limbSwingAmount - axeSprintFactor, 0.0F) + Math.max(limbSwingAmount - gunSprintFactor, 0.0F);
-
-		entity.axeIdleAnimationState.animate(this, MadLumberjackAnimation.AXE_IDLE, ageInTicks, totalLimb, 2.5F);
-		entity.gunIdleAnimationState.animate(this, MadLumberjackAnimation.GUN_IDLE, ageInTicks, totalLimb, 2.5F);
-		
-		this.animateWalk(MadLumberjackAnimation.AXE_WALK, limbSwing, Math.max(limbSwingAmount * totalFactor, 0.0F), 2.5F, 2.5F);
-		this.animateWalk(MadLumberjackAnimation.GUN_WALK, limbSwing, Math.max(limbSwingAmount - gunWalkFactor, 0.0F), 2.5F, 2.5F);
-		this.animateWalk(MadLumberjackAnimation.AXE_SPRINT, limbSwing, Math.max(limbSwingAmount - axeSprintFactor, 0.0F), 2.5F, 2.5F);
-		this.animateWalk(MadLumberjackAnimation.GUN_SPRINT, limbSwing, Math.max(limbSwingAmount - gunSprintFactor, 0.0F), 2.5F, 2.5F);
+		SmoothAnimationState.animateWalk(this, MadLumberjackAnimation.AXE_WALK, ageInTicks, limbSwing, limbSwingAmount, 2.5F, 2.5F, entity.gunWalkAnimationState, entity.axeSprintAnimationState, entity.gunSprintAnimationState);
+		entity.gunWalkAnimationState.animateWalkWithFactor(this, MadLumberjackAnimation.GUN_WALK, ageInTicks, limbSwing, limbSwingAmount, 2.5F, 2.5F);
+		entity.axeSprintAnimationState.animateWalkWithFactor(this, MadLumberjackAnimation.AXE_SPRINT, ageInTicks, limbSwing, limbSwingAmount, 1.0F, 1.0F);
+		entity.gunSprintAnimationState.animateWalkWithFactor(this, MadLumberjackAnimation.GUN_SPRINT, ageInTicks, limbSwing, limbSwingAmount, 1.0F, 1.0F);
 	}
 	
 	@Override

@@ -3,7 +3,7 @@ package com.min01.unleashed.network;
 import java.util.UUID;
 import java.util.function.Supplier;
 
-import com.min01.unleashed.entity.IPosArray;
+import com.min01.unleashed.entity.IAnimatable;
 import com.min01.unleashed.misc.UnleashedEntityDataSerializers;
 import com.min01.unleashed.util.UnleashedUtil;
 
@@ -44,7 +44,7 @@ public class UpdatePosArrayPacket
 			if(ctx.get().getDirection().getReceptionSide().isServer())
 			{
 				Entity entity = UnleashedUtil.getEntityByUUID(ctx.get().getSender().level, message.entityUUID);
-				if(entity instanceof IPosArray mob) 
+				if(entity instanceof IAnimatable mob) 
 				{
 					mob.getPosArray()[message.array] = message.pos;
 				}
@@ -54,7 +54,7 @@ public class UpdatePosArrayPacket
 				UnleashedUtil.getClientLevel(t -> 
 				{
 					Entity entity = UnleashedUtil.getEntityByUUID(t, message.entityUUID);
-					if(entity instanceof IPosArray mob) 
+					if(entity instanceof IAnimatable mob) 
 					{
 						mob.getPosArray()[message.array] = message.pos;
 					}

@@ -97,7 +97,7 @@ public class EntityCelestialJellyfish extends AbstractAnimatableFlyingMonster im
 	
 	public final UnleashedBossEvent bossEvent = (UnleashedBossEvent) new UnleashedBossEvent(this.getDisplayName(), this).setDarkenScreen(true);
 	   
-	public EntityCelestialJellyfish(EntityType<? extends Monster> pEntityType, Level pLevel)
+	public EntityCelestialJellyfish(EntityType<? extends AbstractAnimatableFlyingMonster> pEntityType, Level pLevel)
 	{
 		super(pEntityType, pLevel);
 		this.afterImage = new AfterImage<>(this, 2, 1);
@@ -113,7 +113,8 @@ public class EntityCelestialJellyfish extends AbstractAnimatableFlyingMonster im
         		.add(Attributes.ARMOR, 12.0F)
         		.add(Attributes.ARMOR_TOUGHNESS, 12.0F)
         		.add(Attributes.KNOCKBACK_RESISTANCE, 10.0F)
-    			.add(Attributes.MOVEMENT_SPEED, 0.5F);
+    			.add(Attributes.MOVEMENT_SPEED, 0.5F)
+    			.add(Attributes.FLYING_SPEED, 0.5F);
     }
     
     @Override
@@ -219,7 +220,7 @@ public class EntityCelestialJellyfish extends AbstractAnimatableFlyingMonster im
     			}
     		}
 			
-			if(!this.entityData.get(IS_USING_SKILL) && this.isEnd())
+			if(!this.entityData.get(IS_ANIMATION_PLAYING) && this.isEnd())
 			{
 				this.setEnd(false);
 			}
@@ -235,7 +236,7 @@ public class EntityCelestialJellyfish extends AbstractAnimatableFlyingMonster im
         				this.setDeltaMovement(Vec3.ZERO);
             			this.setHitTime(this.getHitTime() - 1);
             			this.setDeltaMovement(Vec3.ZERO.subtract(0.0F, 0.01F, 0.0F));
-            			if(this.tickCount % 40 == 0 && !this.entityData.get(IS_USING_SKILL) && !this.isClone())
+            			if(this.tickCount % 40 == 0 && !this.entityData.get(IS_ANIMATION_PLAYING) && !this.isClone())
             			{
             				UnleashedShaderEffects.addEffect(this.level, "Shockwave", this.position().add(0, 4.5F, 0), 100, 1.0F);
             			}
@@ -260,6 +261,12 @@ public class EntityCelestialJellyfish extends AbstractAnimatableFlyingMonster im
     			this.addDeltaMovement(new Vec3(0.0F, 0.005F, 0.0F));
     		}
     	}
+    }
+    
+    @Override
+    public float maxMoveTurnY() 
+    {
+    	return 5.0F;
     }
     
     @Override
@@ -441,6 +448,7 @@ public class EntityCelestialJellyfish extends AbstractAnimatableFlyingMonster im
 			{
 				this.swell = 0;
 	    		this.setAnimationState(0);
+        		this.setAnimationTick(0);
 	    		this.setShowEffect(false);
 	    		this.setStarfield(true);
                 this.bossEvent.setVisible(true);
@@ -655,6 +663,7 @@ public class EntityCelestialJellyfish extends AbstractAnimatableFlyingMonster im
         	if(pSource.getDirectEntity() != null && this.getAnimationState() == 0 && !this.isTransform())
         	{
         		this.setAnimationState(1);
+        		this.setAnimationTick(Integer.MAX_VALUE);
         		this.setShowEffect(true);
         		this.playSound(UnleashedSounds.CELESTIAL_JELLYFISH_TRANSFORM.get(), 2.0F, 1.0F);
         		return false;

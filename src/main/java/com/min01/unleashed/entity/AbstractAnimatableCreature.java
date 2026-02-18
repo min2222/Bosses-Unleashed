@@ -1,5 +1,7 @@
 package com.min01.unleashed.entity;
 
+import com.min01.unleashed.entity.ai.control.AnimationBodyRotationControl;
+import com.min01.unleashed.entity.ai.control.AnimationMoveControl;
 import com.min01.unleashed.entity.ai.navigation.FixedPathNavigation;
 
 import net.minecraft.nbt.CompoundTag;
@@ -9,6 +11,7 @@ import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.PathfinderMob;
+import net.minecraft.world.entity.ai.control.BodyRotationControl;
 import net.minecraft.world.entity.ai.goal.FloatGoal;
 import net.minecraft.world.entity.ai.goal.LookAtPlayerGoal;
 import net.minecraft.world.entity.ai.goal.RandomLookAroundGoal;
@@ -18,20 +21,21 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 
-public abstract class AbstractAnimatableCreature extends PathfinderMob implements IAnimatable, IPosArray
+public abstract class AbstractAnimatableCreature extends PathfinderMob implements IAnimatable
 {
 	public static final EntityDataAccessor<Integer> ANIMATION_STATE = SynchedEntityData.defineId(AbstractAnimatableCreature.class, EntityDataSerializers.INT);
 	public static final EntityDataAccessor<Integer> ANIMATION_TICK = SynchedEntityData.defineId(AbstractAnimatableCreature.class, EntityDataSerializers.INT);
-	public static final EntityDataAccessor<Boolean> CAN_LOOK = SynchedEntityData.defineId(AbstractAnimatableCreature.class, EntityDataSerializers.BOOLEAN);
-	public static final EntityDataAccessor<Boolean> CAN_MOVE = SynchedEntityData.defineId(AbstractAnimatableCreature.class, EntityDataSerializers.BOOLEAN);
-	public static final EntityDataAccessor<Boolean> HAS_TARGET = SynchedEntityData.defineId(AbstractAnimatableCreature.class, EntityDataSerializers.BOOLEAN);
-	public static final EntityDataAccessor<Boolean> IS_USING_SKILL = SynchedEntityData.defineId(AbstractAnimatableCreature.class, EntityDataSerializers.BOOLEAN);
+	public static final EntityDataAccessor<Integer> STOP_LOOK_TICK = SynchedEntityData.defineId(AbstractAnimatableCreature.class, EntityDataSerializers.INT);
+	public static final EntityDataAccessor<Integer> STOP_MOVE_TICK = SynchedEntityData.defineId(AbstractAnimatableCreature.class, EntityDataSerializers.INT);
+	public static final EntityDataAccessor<Boolean> IS_TARGET_VALID = SynchedEntityData.defineId(AbstractAnimatableCreature.class, EntityDataSerializers.BOOLEAN);
+	public static final EntityDataAccessor<Boolean> IS_ANIMATION_PLAYING = SynchedEntityData.defineId(AbstractAnimatableCreature.class, EntityDataSerializers.BOOLEAN);
 
 	public Vec3[] posArray;
 	
 	public AbstractAnimatableCreature(EntityType<? extends PathfinderMob> pEntityType, Level pLevel)
 	{
 		super(pEntityType, pLevel);
+		this.moveControl = new AnimationMoveControl<>(this);
 		this.noCulling = true;
 	}
 	
@@ -41,10 +45,10 @@ public abstract class AbstractAnimatableCreature extends PathfinderMob implement
 		super.defineSynchedData();
 		this.entityData.define(ANIMATION_STATE, 0);
 		this.entityData.define(ANIMATION_TICK, 0);
-		this.entityData.define(CAN_LOOK, true);
-		this.entityData.define(CAN_MOVE, true);
-		this.entityData.define(HAS_TARGET, false);
-		this.entityData.define(IS_USING_SKILL, false);
+		this.entityData.define(STOP_LOOK_TICK, 0);
+		this.entityData.define(STOP_MOVE_TICK, 0);
+		this.entityData.define(IS_TARGET_VALID, false);
+		this.entityData.define(IS_ANIMATION_PLAYING, false);
 	}
 	
 	@Override
@@ -97,7 +101,7 @@ public abstract class AbstractAnimatableCreature extends PathfinderMob implement
 
 		if(!this.level.isClientSide)
 		{
-			this.setHasTarget(this.getTarget() != null && this.getTarget().isAlive());
+			this.setTargetValid(this.getTarget() != null && this.getTarget().isAlive());
 		}
 		
 		if(this.getAnimationTick() > 0)
@@ -105,12 +109,28 @@ public abstract class AbstractAnimatableCreature extends PathfinderMob implement
 			this.setAnimationTick(this.getAnimationTick() - 1);
 		}
 		
-		if(this.entityData.get(IS_USING_SKILL) && this.getAnimationTick() <= 0)
+		if(this.getStopLookTick() > 0)
+		{
+			this.setStopLookTick(this.getStopLookTick() - 1);
+		}
+		
+		if(this.getStopMoveTick() > 0)
+		{
+			this.setStopMoveTick(this.getStopMoveTick() - 1);
+		}
+		
+		if(this.getAnimationState() != 0 && this.getAnimationTick() <= 0)
 		{
 			this.onAnimationEnd(this.getAnimationState());
 			this.setAnimationState(0);
-			this.setUsingSkill(false);
+			this.setAnimationPlaying(false);
 		}
+    }
+    
+    @Override
+    protected BodyRotationControl createBodyControl() 
+    {
+    	return new AnimationBodyRotationControl<>(this);
     }
     
     @Override
@@ -138,27 +158,21 @@ public abstract class AbstractAnimatableCreature extends PathfinderMob implement
 	
 	public boolean canLookAround()
 	{
-		return this.canLook() && !this.isUsingSkill() && !this.hasTarget();
+		return this.canLook() && !this.isAnimationPlaying() && !this.isTargetValid();
 	}
 	
 	public boolean canMoveAround()
 	{
-		return this.canMove() && !this.isUsingSkill() && !this.hasTarget();
+		return this.canMove() && !this.isAnimationPlaying() && !this.isTargetValid();
 	}
 	
     @Override
     public void readAdditionalSaveData(CompoundTag pCompound) 
     {
     	super.readAdditionalSaveData(pCompound);
-    	this.setUsingSkill(pCompound.getBoolean("isUsingSkill"));
-    	if(pCompound.contains("CanLook"))
-    	{
-        	this.setCanLook(pCompound.getBoolean("CanLook"));
-    	}
-    	if(pCompound.contains("CanMove"))
-    	{
-        	this.setCanMove(pCompound.getBoolean("CanMove"));
-    	}
+    	this.setAnimationPlaying(pCompound.getBoolean("isAnimationPlaying"));
+    	this.setStopLookTick(pCompound.getInt("StopLookTick"));
+    	this.setStopMoveTick(pCompound.getInt("StopMoveTick"));
     	this.setAnimationTick(pCompound.getInt("AnimationTick"));
     	this.setAnimationState(pCompound.getInt("AnimationState"));
     }
@@ -167,9 +181,9 @@ public abstract class AbstractAnimatableCreature extends PathfinderMob implement
     public void addAdditionalSaveData(CompoundTag pCompound) 
     {
     	super.addAdditionalSaveData(pCompound);
-    	pCompound.putBoolean("isUsingSkill", this.isUsingSkill());
-    	pCompound.putBoolean("CanLook", this.canLook());
-    	pCompound.putBoolean("CanMove", this.canMove());
+    	pCompound.putBoolean("isAnimationPlaying", this.isAnimationPlaying());
+    	pCompound.putInt("StopLookTick", this.getStopLookTick());
+    	pCompound.putInt("StopMoveTick", this.getStopMoveTick());
     	pCompound.putInt("AnimationTick", this.getAnimationTick());
     	pCompound.putInt("AnimationState", this.getAnimationState());
     }
@@ -180,49 +194,62 @@ public abstract class AbstractAnimatableCreature extends PathfinderMob implement
     	return this.posArray;
     }
 	
-	public void setHasTarget(boolean value)
+	public void setTargetValid(boolean value)
 	{
-		this.entityData.set(HAS_TARGET, value);
+		this.entityData.set(IS_TARGET_VALID, value);
 	}
 	
-	public boolean hasTarget()
+	public boolean isTargetValid()
 	{
-		return this.entityData.get(HAS_TARGET);
-	}
-	
-	@Override
-	public void setUsingSkill(boolean value) 
-	{
-		this.entityData.set(IS_USING_SKILL, value);
+		return this.entityData.get(IS_TARGET_VALID);
 	}
 	
 	@Override
-	public boolean isUsingSkill() 
+	public void setAnimationPlaying(boolean value) 
 	{
-		return this.getAnimationTick() > 0 || this.entityData.get(IS_USING_SKILL);
+		this.entityData.set(IS_ANIMATION_PLAYING, value);
 	}
 	
-    public void setCanLook(boolean value)
+	@Override
+	public boolean isAnimationPlaying() 
+	{
+		return this.getAnimationTick() > 0 || this.entityData.get(IS_ANIMATION_PLAYING);
+	}
+	
+	@Override
+    public void setStopLookTick(int value)
     {
-    	this.entityData.set(CAN_LOOK, value);
+    	this.entityData.set(STOP_LOOK_TICK, value);
+    }
+    
+    @Override
+    public int getStopLookTick()
+    {
+    	return this.entityData.get(STOP_LOOK_TICK);
     }
     
     @Override
     public boolean canLook()
     {
-    	return this.entityData.get(CAN_LOOK);
+    	return this.getStopLookTick() <= 0;
     }
     
     @Override
-    public void setCanMove(boolean value)
+    public void setStopMoveTick(int value)
     {
-    	this.entityData.set(CAN_MOVE, value);
+    	this.entityData.set(STOP_MOVE_TICK, value);
+    }
+    
+    @Override
+    public int getStopMoveTick()
+    {
+    	return this.entityData.get(STOP_MOVE_TICK);
     }
     
     @Override
     public boolean canMove()
     {
-    	return this.entityData.get(CAN_MOVE);
+    	return this.getStopMoveTick() <= 0;
     }
     
     @Override
@@ -247,8 +274,8 @@ public abstract class AbstractAnimatableCreature extends PathfinderMob implement
         return this.entityData.get(ANIMATION_STATE);
     }
     
-    public boolean isUsingSkill(int state)
+    public boolean isAnimationPlaying(int state)
     {
-    	return this.getAnimationState() == state && this.isUsingSkill();
+    	return this.getAnimationState() == state && this.isAnimationPlaying();
     }
 }
