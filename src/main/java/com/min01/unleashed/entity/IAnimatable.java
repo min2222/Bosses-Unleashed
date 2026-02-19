@@ -30,6 +30,11 @@ public interface IAnimatable
 	
 	Vec3[] getPosArray();
 	
+	default boolean isSemiWater()
+	{
+		return false;
+	}
+	
 	default float maxSwimTurnX()
 	{
 		return 85.0F;
