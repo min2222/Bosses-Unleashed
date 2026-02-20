@@ -101,6 +101,7 @@ public class CelestialJellyfishDashGoal extends AbstractCelestialJellyfishSkillG
 				}
 				else
 				{
+					this.mob.lookAtTarget();
 		            this.mob.setShowWarning(true);
 				}
 				this.mob.setMove(false);
