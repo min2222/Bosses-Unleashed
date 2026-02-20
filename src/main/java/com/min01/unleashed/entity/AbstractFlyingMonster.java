@@ -34,7 +34,7 @@ public abstract class AbstractFlyingMonster extends Monster
 	protected void defineSynchedData() 
 	{
 		super.defineSynchedData();
-		this.entityData.define(IS_FLYING, false);
+		this.entityData.define(IS_FLYING, true);
 	}
 
 	@Override
@@ -46,40 +46,47 @@ public abstract class AbstractFlyingMonster extends Monster
 	@Override
 	public void travel(Vec3 pTravelVector)
 	{
-		if(this.isControlledByLocalInstance())
+		if(this.isFlying())
 		{
-			if(this.isInWater() && this.isAffectedByFluids())
+			if(this.isControlledByLocalInstance())
 			{
-				this.moveRelative(0.02F, pTravelVector);
-				this.move(MoverType.SELF, this.getDeltaMovement());
-				this.setDeltaMovement(this.getDeltaMovement().scale((double) 0.8F));
-			} 
-			else if(this.isInLava() && this.isAffectedByFluids()) 
-			{
-				this.moveRelative(0.02F, pTravelVector);
-				this.move(MoverType.SELF, this.getDeltaMovement());
-				this.setDeltaMovement(this.getDeltaMovement().scale(0.5D));
-			}
-			else 
-			{
-				BlockPos ground = this.getBlockPosBelowThatAffectsMyMovement();
-				float f = 0.91F;
-				if(this.onGround())
+				if(this.isInWater() && this.isAffectedByFluids())
 				{
-					f = this.level.getBlockState(ground).getFriction(this.level, ground, this) * 0.91F;
-				}
-				float f1 = 0.16277137F / (f * f * f);
-				f = 0.91F;
-				if(this.onGround())
+					this.moveRelative(0.02F, pTravelVector);
+					this.move(MoverType.SELF, this.getDeltaMovement());
+					this.setDeltaMovement(this.getDeltaMovement().scale((double) 0.8F));
+				} 
+				else if(this.isInLava() && this.isAffectedByFluids()) 
 				{
-					f = this.level.getBlockState(ground).getFriction(this.level, ground, this) * 0.91F;
+					this.moveRelative(0.02F, pTravelVector);
+					this.move(MoverType.SELF, this.getDeltaMovement());
+					this.setDeltaMovement(this.getDeltaMovement().scale(0.5D));
 				}
-				this.moveRelative(this.onGround() ? 0.1F * f1 : this.getRelativeSpeed(), pTravelVector);
-				this.move(MoverType.SELF, this.getDeltaMovement());
-				this.setDeltaMovement(this.getDeltaMovement().scale((double) f));
+				else 
+				{
+					BlockPos ground = this.getBlockPosBelowThatAffectsMyMovement();
+					float f = 0.91F;
+					if(this.onGround())
+					{
+						f = this.level.getBlockState(ground).getFriction(this.level, ground, this) * 0.91F;
+					}
+					float f1 = 0.16277137F / (f * f * f);
+					f = 0.91F;
+					if(this.onGround())
+					{
+						f = this.level.getBlockState(ground).getFriction(this.level, ground, this) * 0.91F;
+					}
+					this.moveRelative(this.onGround() ? 0.1F * f1 : this.getRelativeSpeed(), pTravelVector);
+					this.move(MoverType.SELF, this.getDeltaMovement());
+					this.setDeltaMovement(this.getDeltaMovement().scale((double) f));
+				}
 			}
+			this.calculateEntityAnimation(false);
 		}
-		this.calculateEntityAnimation(false);
+		else
+		{
+			super.travel(pTravelVector);
+		}
 	}
 	
 	@Override
