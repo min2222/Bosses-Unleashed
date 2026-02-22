@@ -18,12 +18,23 @@ public class SmoothAnimationState extends AnimationState
 	
 	public float factorOld;
 	public float factor;
+	public final float lerpSpeed;
+	
+	public SmoothAnimationState(float lerpSpeed)
+	{
+		this.lerpSpeed = lerpSpeed;
+	}
+	
+	public SmoothAnimationState() 
+	{
+		this(0.5F);
+	}
 	
 	@OnlyIn(Dist.CLIENT)
 	public void updateWhen(boolean updateWhen, int tickCount)
 	{
 	    this.factorOld = this.factor;
-	    this.factor = Mth.lerp(UnleashedClientUtil.MC.getPartialTick(), this.factor, updateWhen ? 1.0F : 0.0F);
+	    this.factor = Mth.lerp(UnleashedClientUtil.MC.getPartialTick() * this.lerpSpeed, this.factor, updateWhen ? 1.0F : 0.0F);
 	    this.factor = Mth.clamp(this.factor, 0.0F, 1.0F);
 	    this.animateWhen(this.factor > 0.0F, tickCount);
 	}
