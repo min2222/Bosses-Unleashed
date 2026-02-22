@@ -121,9 +121,11 @@ public abstract class AbstractAnimatableMonster extends Monster implements IAnim
 		
 		if(this.getAnimationState() != 0 && this.getAnimationTick() <= 0)
 		{
-			this.onAnimationEnd(this.getAnimationState());
-			this.setAnimationState(0);
-			this.setAnimationPlaying(false);
+			if(this.onAnimationEnd(this.getAnimationState()))
+			{
+				this.setAnimationState(0);
+				this.setAnimationPlaying(false);
+			}
 		}
     }
     
@@ -139,9 +141,9 @@ public abstract class AbstractAnimatableMonster extends Monster implements IAnim
     	return new FixedPathNavigation(this, pLevel);
     }
     
-    public void onAnimationEnd(int animationState)
+    public boolean onAnimationEnd(int animationState)
     {
-    	
+    	return true;
     }
     
     @Override
