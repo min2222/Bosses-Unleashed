@@ -108,7 +108,7 @@ public class AfterImage<T extends LivingEntity>
 	public void addAfterImage()
 	{
 		T living = this.entity;
-		float partialTicks = UnleashedClientUtil.MC.getFrameTime();
+		float partialTicks = UnleashedClientUtil.MC.getPartialTick();
         boolean shouldSit = living.isPassenger() && (living.getVehicle() != null && living.getVehicle().shouldRiderSit());
         double x = Mth.lerp((double)partialTicks, living.xOld, living.getX());
         double y = Mth.lerp((double)partialTicks, living.yOld, living.getY());

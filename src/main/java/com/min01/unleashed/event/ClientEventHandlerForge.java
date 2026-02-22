@@ -33,7 +33,7 @@ public class ClientEventHandlerForge
     public static void onComputeCameraAngles(ViewportEvent.ComputeCameraAngles event) 
     {
         Player player = UnleashedClientUtil.MC.player;
-        float delta = UnleashedClientUtil.MC.getFrameTime();
+        float delta = UnleashedClientUtil.MC.getPartialTick();
         float ticksExistedDelta = player.tickCount + delta;
         if(player != null)
         {

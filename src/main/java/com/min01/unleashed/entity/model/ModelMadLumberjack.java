@@ -137,9 +137,9 @@ public class ModelMadLumberjack extends HierarchicalModel<EntityMadLumberjack>
 		entity.gunIdleAnimationState.animateIdle(this, MadLumberjackAnimation.GUN_IDLE, ageInTicks, limbSwingAmount, 2.5F, entity.gunWalkAnimationState, entity.axeSprintAnimationState, entity.gunSprintAnimationState);
 		
 		SmoothAnimationState.animateWalk(this, MadLumberjackAnimation.AXE_WALK, ageInTicks, limbSwing, limbSwingAmount, 2.5F, 2.5F, entity.gunWalkAnimationState, entity.axeSprintAnimationState, entity.gunSprintAnimationState);
-		entity.gunWalkAnimationState.animateWalkWithFactor(this, MadLumberjackAnimation.GUN_WALK, ageInTicks, limbSwing, limbSwingAmount, 2.5F, 2.5F);
-		entity.axeSprintAnimationState.animateWalkWithFactor(this, MadLumberjackAnimation.AXE_SPRINT, ageInTicks, limbSwing, limbSwingAmount, 1.0F, 1.0F);
-		entity.gunSprintAnimationState.animateWalkWithFactor(this, MadLumberjackAnimation.GUN_SPRINT, ageInTicks, limbSwing, limbSwingAmount, 1.0F, 1.0F);
+		entity.gunWalkAnimationState.animateWalk(this, MadLumberjackAnimation.GUN_WALK, ageInTicks, limbSwing, limbSwingAmount, 2.5F, 2.5F);
+		entity.axeSprintAnimationState.animateWalk(this, MadLumberjackAnimation.AXE_SPRINT, ageInTicks, limbSwing, limbSwingAmount, 1.0F, 1.0F);
+		entity.gunSprintAnimationState.animateWalk(this, MadLumberjackAnimation.GUN_SPRINT, ageInTicks, limbSwing, limbSwingAmount, 1.0F, 1.0F);
 	}
 	
 	@Override
