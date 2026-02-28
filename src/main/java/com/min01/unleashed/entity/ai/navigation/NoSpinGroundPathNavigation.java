@@ -77,7 +77,7 @@ public class NoSpinGroundPathNavigation extends GroundPathNavigation
     private boolean isAt(Path path, float threshold) 
     {
         final Vec3 pathPos = path.getNextEntityPos(this.mob);
-        return Mth.abs((float) (this.mob.getX() - pathPos.x)) < threshold && Mth.abs((float) (this.mob.getZ() - pathPos.z)) < threshold && Math.abs(this.mob.getY() - pathPos.y) < 1.0D;
+        return Mth.abs((float) (this.mob.getX() - pathPos.x)) < threshold && Mth.abs((float) (this.mob.getZ() - pathPos.z)) < threshold;
     }
 
     private boolean atElevationChange(Path path) 
