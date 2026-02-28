@@ -30,13 +30,13 @@ public class SmoothAnimationState extends AnimationState
 		this(0.5F);
 	}
 	
-	@OnlyIn(Dist.CLIENT)
 	public void updateWhen(boolean updateWhen, int tickCount)
 	{
+    	float target = updateWhen ? 1.0F : 0.0F;
 	    this.factorOld = this.factor;
-	    this.factor = Mth.lerp(UnleashedClientUtil.MC.getPartialTick() * this.lerpSpeed, this.factor, updateWhen ? 1.0F : 0.0F);
+	    this.factor += (target - this.factor) * this.lerpSpeed;
 	    this.factor = Mth.clamp(this.factor, 0.0F, 1.0F);
-	    this.animateWhen(this.factor > 0.0F, tickCount);
+	    this.animateWhen(updateWhen, tickCount);
 	}
 
 	@OnlyIn(Dist.CLIENT)
@@ -60,12 +60,6 @@ public class SmoothAnimationState extends AnimationState
 	@OnlyIn(Dist.CLIENT)
 	public void animateIdle(HierarchicalModel<?> model, AnimationDefinition definition, float ageInTicks, float limbSwingAmount, float animationScaleFactor, SmoothAnimationState... states) 
 	{
-		this.animateIdle(model, definition, ageInTicks, limbSwingAmount, animationScaleFactor, 0.01F, states);
-	}
-	
-	@OnlyIn(Dist.CLIENT)
-	public void animateIdle(HierarchicalModel<?> model, AnimationDefinition definition, float ageInTicks, float limbSwingAmount, float animationScaleFactor, float threshold, SmoothAnimationState... states) 
-	{
 		float totalFactor = 1.0F;
 		float extraFactor = 0.0F;
 		for(SmoothAnimationState state : states)
@@ -75,11 +69,11 @@ public class SmoothAnimationState extends AnimationState
 			extraFactor += factor;
 		}
 		float limb = Math.min((limbSwingAmount * (totalFactor + extraFactor)) * animationScaleFactor, 1.0F);
-		this.animate(model, definition, ageInTicks, Math.max(this.factor() * (1.0F - limb), threshold), 1.0F);
+		this.animate(model, definition, ageInTicks, this.factor() * (1.0F - limb), 1.0F);
 	}
 	
 	@OnlyIn(Dist.CLIENT)
-	public static void animateWalk(HierarchicalModel<?> model, AnimationDefinition definition, float ageInTicks, float limbSwing, float limbSwingAmount, float maxAnimationSpeed, float animationScaleFactor, SmoothAnimationState... states)
+	public static void animateWalk(HierarchicalModel<?> model, AnimationDefinition definition, float limbSwing, float limbSwingAmount, float maxAnimationSpeed, float animationScaleFactor, SmoothAnimationState... states)
 	{
 		float totalFactor = 1.0F;
 		for(SmoothAnimationState state : states)
@@ -87,20 +81,20 @@ public class SmoothAnimationState extends AnimationState
 			float factor = state.factor();
 			totalFactor *= 1.0F - factor;
 		}
-		animateWalk(model, definition, limbSwing, limbSwingAmount, maxAnimationSpeed, totalFactor * animationScaleFactor);
+		animateWalk(model, definition, limbSwing, limbSwingAmount, maxAnimationSpeed, animationScaleFactor, totalFactor);
 	}
 
 	@OnlyIn(Dist.CLIENT)
-	public void animateWalk(HierarchicalModel<?> model, AnimationDefinition definition, float ageInTicks, float limbSwing, float limbSwingAmount, float maxAnimationSpeed, float animationScaleFactor)
+	public void animateWalkWithFactor(HierarchicalModel<?> model, AnimationDefinition definition, float limbSwing, float limbSwingAmount, float maxAnimationSpeed, float animationScaleFactor)
 	{
-		animateWalk(model, definition, limbSwing, limbSwingAmount, maxAnimationSpeed, this.factor() * animationScaleFactor);
+		animateWalk(model, definition, limbSwing, limbSwingAmount, maxAnimationSpeed, animationScaleFactor, this.factor());
 	}
 	
 	@OnlyIn(Dist.CLIENT)
-	public static void animateWalk(HierarchicalModel<?> model, AnimationDefinition definition, float limbSwing, float limbSwingAmount, float maxAnimationSpeed, float animationScaleFactor)
+	public static void animateWalk(HierarchicalModel<?> model, AnimationDefinition definition, float limbSwing, float limbSwingAmount, float maxAnimationSpeed, float animationScaleFactor, float factor)
 	{
 		long i = (long)(limbSwing * 50.0F * maxAnimationSpeed);
-		float f = Math.min(limbSwingAmount * animationScaleFactor, 1.0F);
+		float f = Math.min(limbSwingAmount * animationScaleFactor, 1.0F) * factor;
 		KeyframeAnimations.animate(model, definition, i, f, ANIMATION_VECTOR_CACHE);
 	}
 	
@@ -108,9 +102,6 @@ public class SmoothAnimationState extends AnimationState
 	public void animate(HierarchicalModel<?> model, AnimationDefinition definition, float ageInTicks, float factor, float speed) 
 	{
 		this.updateTime(ageInTicks, speed);
-		this.ifStarted(t -> 
-		{
-			KeyframeAnimations.animate(model, definition, t.getAccumulatedTime(), factor, ANIMATION_VECTOR_CACHE);
-		});
+		KeyframeAnimations.animate(model, definition, this.getAccumulatedTime(), factor, ANIMATION_VECTOR_CACHE);
 	}
 }

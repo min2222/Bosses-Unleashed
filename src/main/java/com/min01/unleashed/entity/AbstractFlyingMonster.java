@@ -1,7 +1,5 @@
 package com.min01.unleashed.entity;
 
-import com.min01.unleashed.entity.ai.control.FlyingLookControl;
-
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
@@ -10,8 +8,7 @@ import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MoverType;
-import net.minecraft.world.entity.ai.navigation.FlyingPathNavigation;
-import net.minecraft.world.entity.ai.navigation.PathNavigation;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
@@ -27,7 +24,6 @@ public abstract class AbstractFlyingMonster extends Monster
 	public AbstractFlyingMonster(EntityType<? extends Monster> pEntityType, Level pLevel) 
 	{
 		super(pEntityType, pLevel);
-		this.lookControl = new FlyingLookControl(this, 10);
 	}
 	
 	@Override
@@ -76,7 +72,8 @@ public abstract class AbstractFlyingMonster extends Monster
 					{
 						f = this.level.getBlockState(ground).getFriction(this.level, ground, this) * 0.91F;
 					}
-					this.moveRelative(this.onGround() ? 0.1F * f1 : this.getRelativeSpeed(), pTravelVector);
+					float flySpeed = (float) (this.getAttributes().hasAttribute(Attributes.FLYING_SPEED) ? this.getAttributeValue(Attributes.FLYING_SPEED) : 1.0F);
+					this.moveRelative(this.onGround() ? 0.1F * f1 : this.getSpeed() * flySpeed, pTravelVector);
 					this.move(MoverType.SELF, this.getDeltaMovement());
 					this.setDeltaMovement(this.getDeltaMovement().scale((double) f));
 				}
@@ -93,6 +90,7 @@ public abstract class AbstractFlyingMonster extends Monster
 	public void tick() 
 	{
 		super.tick();
+		this.switchControl(this.isFlying());
 	    Vec3 movement = this.getDeltaMovement();
 	    float speed = (float) movement.length();
 	    this.rollAngleO = this.rollAngle;
@@ -124,12 +122,6 @@ public abstract class AbstractFlyingMonster extends Monster
 	public boolean onClimbable()
 	{
 		return false;
-	}
-	
-	@Override
-	protected PathNavigation createNavigation(Level pLevel) 
-	{
-		return new FlyingPathNavigation(this, pLevel);
 	}
 	
 	public void switchControl(boolean isFlying)
@@ -165,10 +157,5 @@ public abstract class AbstractFlyingMonster extends Monster
 	public float getRollAmount()
 	{
 		return 0.01F;
-	}
-	
-	public float getRelativeSpeed()
-	{
-		return 0.02F;
 	}
 }

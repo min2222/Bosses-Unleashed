@@ -1,36 +1,51 @@
 package com.min01.unleashed.entity.ai.navigation;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
+import java.util.Set;
+
+import javax.annotation.Nullable;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.Mth;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.Mob;
-import net.minecraft.world.entity.MobType;
-import net.minecraft.world.entity.ai.navigation.GroundPathNavigation;
+import net.minecraft.world.entity.ai.navigation.FlyingPathNavigation;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.PathNavigationRegion;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.pathfinder.BlockPathTypes;
+import net.minecraft.world.level.pathfinder.FlyNodeEvaluator;
+import net.minecraft.world.level.pathfinder.Node;
+import net.minecraft.world.level.pathfinder.NodeEvaluator;
 import net.minecraft.world.level.pathfinder.Path;
 import net.minecraft.world.level.pathfinder.PathComputationType;
 import net.minecraft.world.level.pathfinder.PathFinder;
-import net.minecraft.world.level.pathfinder.WalkNodeEvaluator;
 import net.minecraft.world.phys.Vec3;
 
-public class FixedPathNavigation extends GroundPathNavigation
+public class NoSpinFlyingPathNavigation extends FlyingPathNavigation
 {
-    protected static final float EPSILON = 1.0E-8F;
+	public static final float EPSILON = 1.0E-8F;
+    public float distanceModifier = 0.5F;
     
-    public FixedPathNavigation(Mob entity, Level world) 
+    public NoSpinFlyingPathNavigation(Mob entity, Level world) 
     {
         super(entity, world);
+    }
+    
+    public NoSpinFlyingPathNavigation(Mob entity, Level world, float distanceModifier) 
+    {
+        super(entity, world);
+        this.distanceModifier = distanceModifier;
     }
 
     @Override
     protected PathFinder createPathFinder(int maxVisitedNodes)
     {
-        this.nodeEvaluator = new WalkNodeEvaluator();
+        this.nodeEvaluator = new FlyNodeEvaluator();
         this.nodeEvaluator.setCanPassDoors(true);
-        return new FixedPathFinder(this.nodeEvaluator, maxVisitedNodes);
+        return new PatchedPathFinder(this.nodeEvaluator, maxVisitedNodes);
     }
 
     @Override
@@ -47,11 +62,11 @@ public class FixedPathNavigation extends GroundPathNavigation
                 break;
             }
         }
-        Vec3 base = entityPos.add(-this.mob.getBbWidth() * 0.5F, 0.0F, -this.mob.getBbWidth() * 0.5F);
+        Vec3 base = entityPos.add(-this.mob.getBbWidth() * this.distanceModifier, 0.0F, -this.mob.getBbWidth() * this.distanceModifier);
         Vec3 max = base.add(this.mob.getBbWidth(), this.mob.getBbHeight(), this.mob.getBbWidth());
         if(this.tryShortcut(path, new Vec3(this.mob.getX(), this.mob.getY(), this.mob.getZ()), pathLength, base, max)) 
         {
-            if(this.isAt(path, 0.5F) || this.atElevationChange(path) && this.isAt(path, this.mob.getBbWidth() * 0.5F)) 
+            if(this.isAt(path, this.distanceModifier) || this.atElevationChange(path) && this.isAt(path, this.mob.getBbWidth() * this.distanceModifier)) 
             {
                 path.setNextNodeIndex(path.getNextNodeIndex() + 1);
             }
@@ -62,13 +77,13 @@ public class FixedPathNavigation extends GroundPathNavigation
     private boolean isAt(Path path, float threshold) 
     {
         final Vec3 pathPos = path.getNextEntityPos(this.mob);
-        return Mth.abs((float) (this.mob.getX() - pathPos.x)) < threshold && Mth.abs((float) (this.mob.getZ() - pathPos.z)) < threshold && Math.abs(this.mob.getY() - pathPos.y) < 1.0D;
+        return Mth.abs((float) (this.mob.getX() - pathPos.x)) < threshold && Mth.abs((float) (this.mob.getZ() - pathPos.z)) < threshold;
     }
 
     private boolean atElevationChange(Path path) 
     {
         int curr = path.getNextNodeIndex();
-        int end = Math.min(path.getNodeCount(), curr + Mth.ceil(this.mob.getBbWidth() * 0.5F) + 1);
+        int end = Math.min(path.getNodeCount(), curr + Mth.ceil(this.mob.getBbWidth() * this.distanceModifier) + 1);
         int currY = path.getNode(curr).y;
         for(int i = curr + 1; i < end; i++) 
         {
@@ -95,10 +110,10 @@ public class FixedPathNavigation extends GroundPathNavigation
     }
 
     // Based off of https://github.com/andyhall/voxel-aabb-sweep/blob/d3ef85b19c10e4c9d2395c186f9661b052c50dc7/index.js
-    private boolean sweep(Vec3 vec, Vec3 base, Vec3 max)
+    private boolean sweep(Vec3 vec3, Vec3 base, Vec3 max)
     {
         float t = 0.0F;
-        float max_t = (float) vec.length();
+        float max_t = (float) vec3.length();
         if(max_t < EPSILON) 
         {
         	return true;
@@ -112,7 +127,7 @@ public class FixedPathNavigation extends GroundPathNavigation
         float[] normed = new float[3];
         for(int i = 0; i < 3; i++) 
         {
-            float value = element(vec, i);
+            float value = element(vec3, i);
             boolean dir = value >= 0.0F;
             step[i] = dir ? 1 : -1;
             float lead = element(dir ? max : base, i);
@@ -155,7 +170,7 @@ public class FixedPathNavigation extends GroundPathNavigation
                     for(int y = y0; y != y1; y += stepy) 
                     {
                         BlockState block = this.level.getBlockState(pos.set(x, y, z));
-                        if(!block.isPathfindable(this.level, pos, PathComputationType.LAND))
+                        if(!block.isPathfindable(this.level, pos, PathComputationType.AIR))
                         {
                         	return false;
                         }
@@ -163,17 +178,6 @@ public class FixedPathNavigation extends GroundPathNavigation
                     BlockPathTypes below = this.nodeEvaluator.getBlockPathType(this.level, x, y0 - 1, z);
                     BlockPathTypes in = this.nodeEvaluator.getBlockPathType(this.level, x, y0, z, this.mob);
                     float priority = this.mob.getPathfindingMalus(in);
-                    if(this.mob.getMobType() != MobType.WATER)
-                    {
-                        if(below == BlockPathTypes.WATER)
-                        {
-                        	return false;
-                        }
-                    }
-                    if(below == BlockPathTypes.OPEN)
-                    {
-                    	return false;
-                    }
                     if(priority < 0.0F || priority >= 8.0F)
                     {
                     	return false;
@@ -210,6 +214,50 @@ public class FixedPathNavigation extends GroundPathNavigation
             case 1: return (float) v.y;
             case 2: return (float) v.z;
             default: return 0.0F;
+        }
+    }
+    
+    public static class PatchedPathFinder extends PathFinder
+    {
+        public PatchedPathFinder(NodeEvaluator processor, int maxVisitedNodes) 
+        {
+            super(processor, maxVisitedNodes);
+        }
+
+        @Nullable
+        @Override
+        public Path findPath(PathNavigationRegion regionIn, Mob mob, Set<BlockPos> targetPositions, float maxRange, int accuracy, float searchDepthMultiplier)
+        {
+            Path path = super.findPath(regionIn, mob, targetPositions, maxRange, accuracy, searchDepthMultiplier);
+            return path == null ? null : new PatchedPath(path);
+        }
+
+        static class PatchedPath extends Path 
+        {
+            public PatchedPath(Path original)
+            {
+                super(copyPathPoints(original), original.getTarget(), original.canReach());
+            }
+
+            @Override
+            public Vec3 getEntityPosAtNode(Entity entity, int index)
+            {
+                Node point = this.getNode(index);
+                double d0 = point.x + Mth.floor(entity.getBbWidth() + 1.0F) * 0.5D;
+                double d1 = point.y;
+                double d2 = point.z + Mth.floor(entity.getBbWidth() + 1.0F) * 0.5D;
+                return new Vec3(d0, d1, d2);
+            }
+
+            private static List<Node> copyPathPoints(Path original)
+            {
+                List<Node> points = new ArrayList<>();
+                for(int i = 0; i < original.getNodeCount(); i++)
+                {
+                    points.add(original.getNode(i));
+                }
+                return points;
+            }
         }
     }
 }

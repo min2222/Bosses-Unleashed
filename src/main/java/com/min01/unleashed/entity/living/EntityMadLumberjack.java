@@ -26,9 +26,7 @@ public class EntityMadLumberjack extends AbstractAnimatableMonster
 	
 	public final SmoothAnimationState axeIdleAnimationState = new SmoothAnimationState();
 	public final SmoothAnimationState gunIdleAnimationState = new SmoothAnimationState();
-
 	public final SmoothAnimationState gunWalkAnimationState = new SmoothAnimationState();
-	
 	public final SmoothAnimationState axeSprintAnimationState = new SmoothAnimationState();
 	public final SmoothAnimationState gunSprintAnimationState = new SmoothAnimationState();
 	
@@ -74,20 +72,15 @@ public class EntityMadLumberjack extends AbstractAnimatableMonster
     		this.axeIdleAnimationState.updateWhen(this.getAnimationState() == 0 && !this.isGun(), this.tickCount);
     		this.gunIdleAnimationState.updateWhen(this.getAnimationState() == 0 && this.isGun(), this.tickCount);
     		this.gunWalkAnimationState.updateWhen(this.isGun() && !this.isTargetValid(), this.tickCount);
-    		
     		this.axeSprintAnimationState.updateWhen(!this.isGun() && this.isTargetValid(), this.tickCount);
     		this.gunSprintAnimationState.updateWhen(this.isGun() && this.isTargetValid(), this.tickCount);
     	}
     }
     
     @Override
-    public float getSpeed()
+    public void moveToTarget() 
     {
-    	if(this.isTargetValid())
-    	{
-    		return 1.15F;
-    	}
-    	return super.getSpeed();
+		this.getNavigation().moveTo(this.getTarget(), 1.25F);
     }
     
     @Override

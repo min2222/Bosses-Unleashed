@@ -2,6 +2,10 @@ package com.min01.unleashed.entity;
 
 import com.min01.unleashed.entity.ai.control.AnimationBodyRotationControl;
 import com.min01.unleashed.entity.ai.control.AnimationFlyingMoveControl;
+import com.min01.unleashed.entity.ai.control.AnimationMoveControl;
+import com.min01.unleashed.entity.ai.control.FlyingLookControl;
+import com.min01.unleashed.entity.ai.navigation.NoSpinFlyingPathNavigation;
+import com.min01.unleashed.entity.ai.navigation.NoSpinGroundPathNavigation;
 
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
@@ -9,10 +13,15 @@ import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.ai.control.BodyRotationControl;
+import net.minecraft.world.entity.ai.control.LookControl;
 import net.minecraft.world.entity.ai.goal.FloatGoal;
-import net.minecraft.world.entity.ai.goal.WaterAvoidingRandomFlyingGoal;
-import net.minecraft.world.entity.ai.goal.WaterAvoidingRandomStrollGoal;
+import net.minecraft.world.entity.ai.goal.RandomStrollGoal;
+import net.minecraft.world.entity.ai.navigation.PathNavigation;
+import net.minecraft.world.entity.ai.util.AirAndWaterRandomPos;
+import net.minecraft.world.entity.ai.util.HoverRandomPos;
+import net.minecraft.world.entity.ai.util.LandRandomPos;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.Vec2;
 import net.minecraft.world.phys.Vec3;
 
 public abstract class AbstractAnimatableFlyingMonster extends AbstractFlyingMonster implements IAnimatable
@@ -30,6 +39,7 @@ public abstract class AbstractAnimatableFlyingMonster extends AbstractFlyingMons
 	{
 		super(pEntityType, pLevel);
 		this.moveControl = new AnimationFlyingMoveControl<>(this);
+		this.lookControl = new FlyingLookControl(this, 10);
 		this.noCulling = true;
 	}
 	
@@ -54,20 +64,36 @@ public abstract class AbstractAnimatableFlyingMonster extends AbstractFlyingMons
 	public void registerDefaultGoals()
 	{
 		this.goalSelector.addGoal(0, new FloatGoal(this));
-		this.goalSelector.addGoal(0, new WaterAvoidingRandomStrollGoal(this, 1.0F)
+		this.goalSelector.addGoal(0, new RandomStrollGoal(this, 1.0F, this.getMoveInterval(), false)
 		{
 			@Override
 			public boolean canUse()
 			{
 				return super.canUse() && AbstractAnimatableFlyingMonster.this.canMoveAround() && !AbstractAnimatableFlyingMonster.this.isFlying();
 			}
+			
+			@Override
+			protected Vec3 getPosition()
+			{
+				Vec2 radius = AbstractAnimatableFlyingMonster.this.getMoveRadius();
+				return LandRandomPos.getPos(this.mob, (int) radius.x, (int) radius.y);
+			}
 		});
-		this.goalSelector.addGoal(0, new WaterAvoidingRandomFlyingGoal(this, 1.0F)
+		this.goalSelector.addGoal(0, new RandomStrollGoal(this, 1.0F, this.getFlyInterval(), false)
 		{
 			@Override
 			public boolean canUse()
 			{
 				return super.canUse() && AbstractAnimatableFlyingMonster.this.canMoveAround() && AbstractAnimatableFlyingMonster.this.isFlying();
+			}
+			
+			@Override
+			protected Vec3 getPosition()
+			{
+				Vec2 radius = AbstractAnimatableFlyingMonster.this.getFlyRadius();
+				Vec3 vec3 = this.mob.getViewVector(0.0F);
+				Vec3 vec31 = HoverRandomPos.getPos(this.mob, (int) radius.x, (int) radius.y, vec3.x, vec3.z, ((float)Math.PI / 2.0F), 3, 1);
+				return vec31 != null ? vec31 : AirAndWaterRandomPos.getPos(this.mob, (int) radius.x, (int) radius.y, -2, vec3.x, vec3.z, (double)((float)Math.PI / 2.0F));
 			}
 		});
 	}
@@ -112,6 +138,12 @@ public abstract class AbstractAnimatableFlyingMonster extends AbstractFlyingMons
     {
     	return new AnimationBodyRotationControl<>(this);
     }
+    
+	@Override
+	protected PathNavigation createNavigation(Level pLevel) 
+	{
+		return new NoSpinFlyingPathNavigation(this, pLevel);
+	}
     
     public boolean onAnimationEnd(int animationState)
     {
@@ -160,6 +192,23 @@ public abstract class AbstractAnimatableFlyingMonster extends AbstractFlyingMons
     	pCompound.putInt("StopMoveTick", this.getStopMoveTick());
     	pCompound.putInt("AnimationTick", this.getAnimationTick());
     	pCompound.putInt("AnimationState", this.getAnimationState());
+    }
+    
+    @Override
+    public void switchControl(boolean isFlying)
+    {
+    	if(!isFlying && !(this.moveControl instanceof AnimationMoveControl))
+    	{
+    		this.moveControl = new AnimationMoveControl<>(this);
+    		this.lookControl = new LookControl(this);
+    		this.navigation = new NoSpinGroundPathNavigation(this, this.level);
+    	}
+    	if(isFlying && !(this.moveControl instanceof AnimationFlyingMoveControl))
+    	{
+    		this.moveControl = new AnimationFlyingMoveControl<>(this);
+    		this.lookControl = new FlyingLookControl(this, 10);
+    		this.navigation = this.createNavigation(this.level);
+    	}
     }
     
     @Override

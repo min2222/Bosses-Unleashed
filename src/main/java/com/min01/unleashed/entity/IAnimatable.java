@@ -1,5 +1,6 @@
 package com.min01.unleashed.entity;
 
+import net.minecraft.world.phys.Vec2;
 import net.minecraft.world.phys.Vec3;
 
 public interface IAnimatable
@@ -30,9 +31,34 @@ public interface IAnimatable
 	
 	Vec3[] getPosArray();
 	
-	default boolean isSemiWater()
+	default int getMoveInterval()
 	{
-		return false;
+		return 60;
+	}
+	
+	default int getSwimInterval()
+	{
+		return 60;
+	}
+	
+	default int getFlyInterval()
+	{
+		return 60;
+	}
+	
+	default Vec2 getMoveRadius()
+	{
+		return new Vec2(10, 7);
+	}
+	
+	default Vec2 getSwimRadius()
+	{
+		return new Vec2(10, 7);
+	}
+	
+	default Vec2 getFlyRadius()
+	{
+		return new Vec2(10, 7);
 	}
 	
 	default float maxSwimTurnX()

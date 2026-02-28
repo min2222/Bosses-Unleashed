@@ -2,7 +2,7 @@ package com.min01.unleashed.entity;
 
 import com.min01.unleashed.entity.ai.control.AnimationBodyRotationControl;
 import com.min01.unleashed.entity.ai.control.AnimationMoveControl;
-import com.min01.unleashed.entity.ai.navigation.FixedPathNavigation;
+import com.min01.unleashed.entity.ai.navigation.NoSpinGroundPathNavigation;
 
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
@@ -14,11 +14,13 @@ import net.minecraft.world.entity.ai.control.BodyRotationControl;
 import net.minecraft.world.entity.ai.goal.FloatGoal;
 import net.minecraft.world.entity.ai.goal.LookAtPlayerGoal;
 import net.minecraft.world.entity.ai.goal.RandomLookAroundGoal;
-import net.minecraft.world.entity.ai.goal.WaterAvoidingRandomStrollGoal;
+import net.minecraft.world.entity.ai.goal.RandomStrollGoal;
 import net.minecraft.world.entity.ai.navigation.PathNavigation;
+import net.minecraft.world.entity.ai.util.LandRandomPos;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.Vec2;
 import net.minecraft.world.phys.Vec3;
 
 public abstract class AbstractAnimatableMonster extends Monster implements IAnimatable
@@ -60,12 +62,19 @@ public abstract class AbstractAnimatableMonster extends Monster implements IAnim
 	public void registerDefaultGoals()
 	{
 		this.goalSelector.addGoal(0, new FloatGoal(this));
-		this.goalSelector.addGoal(0, new WaterAvoidingRandomStrollGoal(this, 1.0F)
+		this.goalSelector.addGoal(0, new RandomStrollGoal(this, 1.0F, this.getMoveInterval(), false)
 		{
 			@Override
 			public boolean canUse()
 			{
 				return super.canUse() && AbstractAnimatableMonster.this.canMoveAround();
+			}
+			
+			@Override
+			protected Vec3 getPosition()
+			{
+				Vec2 radius = AbstractAnimatableMonster.this.getMoveRadius();
+				return LandRandomPos.getPos(this.mob, (int) radius.x, (int) radius.y);
 			}
 		});
 		this.goalSelector.addGoal(0, new RandomLookAroundGoal(this)
@@ -138,7 +147,7 @@ public abstract class AbstractAnimatableMonster extends Monster implements IAnim
     @Override
     protected PathNavigation createNavigation(Level pLevel)
     {
-    	return new FixedPathNavigation(this, pLevel);
+    	return new NoSpinGroundPathNavigation(this, pLevel);
     }
     
     public boolean onAnimationEnd(int animationState)

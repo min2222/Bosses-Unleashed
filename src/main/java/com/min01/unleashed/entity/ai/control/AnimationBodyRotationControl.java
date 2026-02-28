@@ -1,7 +1,6 @@
 package com.min01.unleashed.entity.ai.control;
 
 import com.min01.unleashed.entity.IAnimatable;
-import com.min01.unleashed.util.UnleashedUtil;
 
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Mob;
@@ -37,14 +36,14 @@ public class AnimationBodyRotationControl<T extends Mob & IAnimatable> extends B
 				{
 					this.headStableTime = 0;
 					this.lastStableYHeadRot = this.mob.yHeadRot;
-					this.rotateHeadTowardsFront();
+					this.rotateBodyIfNecessary();
 				} 
 				else 
 				{
 					++this.headStableTime;
 					if(this.headStableTime > 10) 
 					{
-						this.rotateBodyIfNecessary();
+						this.rotateHeadTowardsFront();
 					}
 				}
 			}
@@ -53,12 +52,12 @@ public class AnimationBodyRotationControl<T extends Mob & IAnimatable> extends B
 
 	private void rotateBodyIfNecessary() 
 	{
-		this.mob.yBodyRot = UnleashedUtil.rotlerp(this.mob.yBodyRot, this.mob.yHeadRot, this.mob.maxBodyTurnY());
+		this.mob.yBodyRot = Mth.rotateIfNecessary(this.mob.yBodyRot, this.mob.yHeadRot, this.mob.maxBodyTurnY());
 	}
 
 	private void rotateHeadIfNecessary() 
 	{
-		this.mob.yHeadRot = UnleashedUtil.rotlerp(this.mob.yHeadRot, this.mob.yBodyRot, this.mob.maxBodyTurnY());
+		this.mob.yHeadRot = Mth.rotateIfNecessary(this.mob.yHeadRot, this.mob.yBodyRot, this.mob.maxBodyTurnY());
 	}
 
 	private void rotateHeadTowardsFront() 
@@ -66,7 +65,7 @@ public class AnimationBodyRotationControl<T extends Mob & IAnimatable> extends B
 		int i = this.headStableTime - 10;
 		float f = Mth.clamp((float) i / 10.0F, 0.0F, 1.0F);
 		float f1 = (float) this.mob.maxBodyTurnY() * (1.0F - f);
-		this.mob.yBodyRot = UnleashedUtil.rotlerp(this.mob.yBodyRot, this.mob.yHeadRot, f1);
+		this.mob.yBodyRot = Mth.rotateIfNecessary(this.mob.yBodyRot, this.mob.yHeadRot, f1);
 	}
 
 	private boolean notCarryingMobPassengers()
