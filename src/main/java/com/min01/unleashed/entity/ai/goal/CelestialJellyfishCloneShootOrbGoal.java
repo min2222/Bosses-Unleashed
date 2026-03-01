@@ -2,18 +2,11 @@ package com.min01.unleashed.entity.ai.goal;
 
 import com.min01.unleashed.entity.living.EntityCelestialJellyfish;
 
-public class CelestialJellyfishCloneShootOrbGoal extends AbstractCelestialJellyfishSkillGoal
+public class CelestialJellyfishCloneShootOrbGoal extends AbstractCelestialJellyfishGoal
 {
 	public CelestialJellyfishCloneShootOrbGoal(EntityCelestialJellyfish mob) 
 	{
 		super(mob);
-	}
-	
-	@Override
-	public void start() 
-	{
-		super.start();
-		this.mob.setAnimationState(2);
 	}
 	
 	@Override
@@ -51,6 +44,6 @@ public class CelestialJellyfishCloneShootOrbGoal extends AbstractCelestialJellyf
 	@Override
 	public int getSkillUsingInterval() 
 	{
-		return 1000;
+		return Integer.MAX_VALUE;
 	}
 }

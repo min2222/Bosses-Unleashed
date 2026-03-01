@@ -7,7 +7,7 @@ import com.min01.unleashed.util.UnleashedUtil;
 import net.minecraft.world.phys.Vec2;
 import net.minecraft.world.phys.Vec3;
 
-public class CelestialJellyfishSummonDashCloneGoal extends AbstractCelestialJellyfishSkillGoal
+public class CelestialJellyfishSummonDashCloneGoal extends AbstractCelestialJellyfishGoal
 {
 	public boolean canContinueToUse = true;
 	public int cloneTick;
@@ -23,12 +23,13 @@ public class CelestialJellyfishSummonDashCloneGoal extends AbstractCelestialJell
 		super.start();
 		this.mob.setAnimationState(3);
 		this.mob.doTeleport();
+		this.mob.runningGoal = this.getClass();
 	}
 	
 	@Override
 	public boolean canUse() 
 	{
-		return super.canUse() && this.mob.isSecondPhase() && !this.mob.isClone();
+		return super.canUse() && this.mob.getPhase() == 2 && !this.mob.isClone();
 	}
 	
 	@Override
@@ -47,12 +48,13 @@ public class CelestialJellyfishSummonDashCloneGoal extends AbstractCelestialJell
 			EntityCelestialJellyfish jellyfish = new EntityCelestialJellyfish(UnleashedEntities.CELESTIAL_JELLYFISH.get(), this.mob.level);
 			jellyfish.setClone(true);
 			jellyfish.setTransform(true);
-			jellyfish.setHitTime(true);
-			jellyfish.setHitTime(100);
+			jellyfish.setAnimationState(4);
+			jellyfish.setAnimationTick(Integer.MAX_VALUE);
 			jellyfish.setPos(this.mob.position());
 			Vec3 lookPos = UnleashedUtil.getLookPos(new Vec2(0.0F, this.mob.getYHeadRot()), this.mob.position(), this.mob.getRandom().nextBoolean() ? 2 : -2, 0, 0);
 			jellyfish.setDeltaMovement(UnleashedUtil.getVelocityTowards(this.mob.position(), lookPos, 0.2F));
 			jellyfish.goal = CelestialJellyfishCloneDashGoal.class;
+			jellyfish.setOwner(this.mob);
 			jellyfish.setTarget(this.mob.getTarget());
 			this.mob.level.addFreshEntity(jellyfish);
 		}
@@ -61,17 +63,19 @@ public class CelestialJellyfishSummonDashCloneGoal extends AbstractCelestialJell
 			this.mob.goal = CelestialJellyfishDashGoal.class;
 			this.canContinueToUse = false;
 		}
-		if(this.mob.isMove())
-		{
-			this.mob.setHitTime(true);
-			this.mob.setHitTime(100);
-			this.mob.setMove(false);
-		}
-		if(this.mob.isEnd())
-		{
-			this.cloneTick = this.adjustedTickDelay(60);
-			this.mob.setEnd(false);
-		}
+	}
+	
+	@Override
+	public void onTeleport() 
+	{
+		this.mob.setAnimationState(4);
+		this.mob.setAnimationTick(Integer.MAX_VALUE);
+	}
+	
+	@Override
+	public void onTeleportEnd()
+	{
+		this.cloneTick = this.adjustedTickDelay(60);
 	}
 	
 	@Override
@@ -80,6 +84,7 @@ public class CelestialJellyfishSummonDashCloneGoal extends AbstractCelestialJell
 		super.stop();
 		this.mob.setAnimationState(0);
 		this.mob.setAnimationTick(0);
+		this.mob.runningGoal = null;
 		this.canContinueToUse = true;
 		this.cloneTick = 0;
 	}

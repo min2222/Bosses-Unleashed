@@ -9,11 +9,12 @@ import com.min01.unleashed.entity.projectile.EntityCelestialOrb;
 import com.min01.unleashed.sound.UnleashedSounds;
 import com.min01.unleashed.util.UnleashedUtil;
 
+import net.minecraft.commands.arguments.EntityAnchorArgument.Anchor;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.phys.Vec2;
 import net.minecraft.world.phys.Vec3;
 
-public class CelestialJellyfishDashGoal extends AbstractCelestialJellyfishSkillGoal
+public class CelestialJellyfishDashGoal extends AbstractCelestialJellyfishGoal
 {
 	private int dashCount;
 	private int dashTick;
@@ -29,24 +30,14 @@ public class CelestialJellyfishDashGoal extends AbstractCelestialJellyfishSkillG
 	public void start()
 	{
 		super.start();
-		this.mob.setAnimationState(2);
+		this.mob.setInvincible(true);
 		this.mob.doTeleport();
-	}
-	
-	@Override
-	public boolean canUse() 
-	{
-		return super.canUse() && this.mob.getRandom().nextBoolean();
+		this.mob.runningGoal = this.getClass();
 	}
 	
 	@Override
 	public boolean canContinueToUse()
 	{
-		if(this.mob.getTarget() == null || !this.mob.getTarget().isAlive() || !this.mob.isAlive())
-		{
-			this.nextSkillTickCount = 0;
-			return false;
-		}
 		return super.canContinueToUse() && this.canContinueToUse;
 	}
 	
@@ -57,7 +48,7 @@ public class CelestialJellyfishDashGoal extends AbstractCelestialJellyfishSkillG
 		--this.dashTick;
 		if(this.dashCount == 5)
 		{
-			this.mob.setFloat(true);
+			this.mob.setTeleportAbove(true);
 		}
 		if(this.dashTick == 0)
 		{
@@ -85,40 +76,6 @@ public class CelestialJellyfishDashGoal extends AbstractCelestialJellyfishSkillG
 		else
 		{
 			this.mob.setDeltaMovement(Vec3.ZERO);
-			if(this.mob.isMove())
-			{
-				if(this.dashCount >= 5)
-				{
-					if(this.mob.isClone())
-					{
-						this.mob.discard();
-					}
-					else
-					{
-						this.mob.setHitTime(true);
-						this.mob.setHitTime(this.mob.isSecondPhase() ? UnleashedConfig.phaseTwoDealTime.get() : UnleashedConfig.phaseOneDealTime.get());
-					}
-				}
-				else
-				{
-					this.mob.lookAtTarget();
-		            this.mob.setShowWarning(true);
-				}
-				this.mob.setMove(false);
-			}
-			if(this.mob.isEnd())
-			{
-				this.mob.setLastLookPos(UnleashedUtil.getLookPos(new Vec2(this.mob.getXRot(), this.mob.getYHeadRot()), this.mob.position(), 0, 2, 100));
-				if(this.mob.isClone() || this.mob.goal == this.getClass())
-				{
-					this.skillWarmupDelay = this.adjustedTickDelay(12);
-				}
-				else
-				{
-					this.skillWarmupDelay = this.adjustedTickDelay(10);
-				}
-				this.mob.setEnd(false);
-			}
 		}
 	}
 
@@ -142,15 +99,53 @@ public class CelestialJellyfishDashGoal extends AbstractCelestialJellyfishSkillG
 	}
 	
 	@Override
+	public void onTeleport()
+	{
+		if(this.dashCount >= 5)
+		{
+			if(this.mob.isClone())
+			{
+				this.mob.discard();
+			}
+			else
+			{
+				this.mob.setAnimationState(4);
+				this.mob.setAnimationTick(this.mob.getPhase() == 2 ? UnleashedConfig.phaseTwoDealTime.get() : UnleashedConfig.phaseOneDealTime.get());
+			}
+		}
+		else
+		{
+			if(this.mob.getTarget() != null)
+			{
+				this.mob.lookAt(Anchor.FEET, this.mob.getTarget().position());
+			}
+            this.mob.setShowWarning(true);
+		}
+	}
+	
+	@Override
+	public void onTeleportEnd()
+	{
+		this.mob.setLastLookPos(UnleashedUtil.getLookPos(new Vec2(this.mob.getXRot(), this.mob.yBodyRot), this.mob.position(), 0, 2, 100));
+		if(this.mob.isClone() || this.mob.goal == this.getClass())
+		{
+			this.skillWarmupDelay = this.adjustedTickDelay(12);
+		}
+		else
+		{
+			this.skillWarmupDelay = this.adjustedTickDelay(10);
+		}
+	}
+	
+	@Override
 	public void stop() 
 	{
 		super.stop();
-		this.mob.setAnimationState(0);
-		this.mob.setAnimationTick(0);
 		this.mob.setLastLookPos(Vec3.ZERO);
+		this.mob.setInvincible(false);
 		this.mob.setShowAfterImage(false);
 		this.mob.setShowWarning(false);
-		this.mob.setFloat(false);
+		this.mob.runningGoal = null;
 		this.canContinueToUse = true;
 		this.isDash = false;
 		this.dashCount = 0;
@@ -172,6 +167,6 @@ public class CelestialJellyfishDashGoal extends AbstractCelestialJellyfishSkillG
 	@Override
 	public int getSkillUsingInterval() 
 	{
-		return 600;
+		return 300;
 	}
 }

@@ -10,6 +10,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
@@ -81,6 +82,13 @@ public class EntityMadLumberjack extends AbstractAnimatableMonster
     public void moveToTarget() 
     {
 		this.getNavigation().moveTo(this.getTarget(), 1.25F);
+    }
+    
+    @Override
+    public boolean hurt(DamageSource pSource, float pAmount) 
+    {
+    	this.walkAnimation.setSpeed(0.0F);
+    	return super.hurt(pSource, pAmount);
     }
     
     @Override

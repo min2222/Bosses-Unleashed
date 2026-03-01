@@ -10,12 +10,13 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.phys.Vec2;
 import net.minecraft.world.phys.Vec3;
 
-public class CelestialJellyfishShootOrbGoal extends AbstractCelestialJellyfishSkillGoal
+public class CelestialJellyfishShootOrbGoal extends AbstractCelestialJellyfishGoal
 {
 	public float xRot;
 	public float yRot;
 	public int dir = 1;
 	public boolean isShoot;
+	public boolean isRewind;
 	
 	public CelestialJellyfishShootOrbGoal(EntityCelestialJellyfish mob) 
 	{
@@ -26,28 +27,20 @@ public class CelestialJellyfishShootOrbGoal extends AbstractCelestialJellyfishSk
 	public void start() 
 	{
 		super.start();
-		if(this.mob.goal == null)
+		if(!this.mob.isClone())
 		{
 			this.mob.setAnimationState(3);
 		}
-		if(!this.mob.isClone())
-		{
-			this.mob.doTeleport();
-		}
-		this.mob.setFloat(true);
-	}
-	
-	@Override
-	public boolean canUse() 
-	{
-		return super.canUse() && this.mob.getRandom().nextBoolean();
+		this.mob.setInvincible(true);
+		this.mob.doTeleport();
+		this.mob.runningGoal = this.getClass();
 	}
 	
 	@Override
 	public void tick() 
 	{
 		super.tick();
-		if(this.isShoot && !this.mob.isRewind())
+		if(this.isShoot && !this.isRewind)
 		{
 			if(this.mob.isClone() || this.mob.goal == this.getClass())
 			{
@@ -60,6 +53,7 @@ public class CelestialJellyfishShootOrbGoal extends AbstractCelestialJellyfishSk
 				orb.setOwner(this.mob);
 				orb.setTrail(true);
 				this.mob.level.addFreshEntity(orb);
+				this.mob.setInvincible(false);
 			}
 			else
 			{
@@ -96,33 +90,37 @@ public class CelestialJellyfishShootOrbGoal extends AbstractCelestialJellyfishSk
 				}
 			}
 		}
-		if(this.mob.isMove())
+		if(this.skillWarmupDelay == -15)
 		{
-			this.mob.setHitTime(true);
-			this.mob.setHitTime(this.getSkillUsingTime());
-			this.mob.setMove(false);
-		}
-		if(this.mob.isEnd() || this.mob.isClone())
-		{
-			this.isShoot = true;
-			this.mob.setEnd(false);
-		}
-		if(this.mob.isRewind())
-		{
-			if(this.skillWarmupDelay == -15)
+			if(this.isRewind)
 			{
 				this.mob.playSound(UnleashedSounds.CELESTIAL_JELLYFISH_REWIND.get(), 2.0F, 1.0F);
 			}
+			this.mob.setAnimationTick(this.getSkillUsingTime() - this.getSkillWarmupTime());
 		}
+	}
+	
+	@Override
+	public void onTeleport() 
+	{
+		this.mob.setAnimationState(4);
+		this.mob.setAnimationTick(Integer.MAX_VALUE);
+	}
+	
+	@Override
+	public void onTeleportEnd() 
+	{
+		this.isShoot = true;
 	}
 
 	@Override
 	public void performSkill()
 	{
-		if(!this.mob.isClone() && this.mob.goal == null)
+		if(!this.mob.isClone())
 		{
 			this.mob.explosion();
-			this.mob.setRewind(true);
+			this.isRewind = true;
+			this.mob.isRewind = true;
 		}
 	}
 	
@@ -130,13 +128,17 @@ public class CelestialJellyfishShootOrbGoal extends AbstractCelestialJellyfishSk
 	public void stop()
 	{
 		super.stop();
-		this.mob.setAnimationState(0);
-		this.mob.setRewind(false);
-		this.mob.setFloat(false);
 		if(this.mob.isClone())
 		{
 			this.mob.doTeleport();
+			this.mob.setDiscard(true);
 		}
+		this.mob.setAnimationState(0);
+		this.mob.setAnimationTick(0);
+		this.mob.setInvincible(false);
+		this.mob.runningGoal = null;
+		this.mob.isRewind = false;
+		this.isRewind = false;
 		this.isShoot = false;
 		this.dir = 1;
 		this.xRot = 0.0F;
@@ -158,6 +160,6 @@ public class CelestialJellyfishShootOrbGoal extends AbstractCelestialJellyfishSk
 	@Override
 	public int getSkillUsingInterval() 
 	{
-		return 800;
+		return 500;
 	}
 }

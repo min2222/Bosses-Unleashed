@@ -12,6 +12,7 @@ import com.min01.unleashed.entity.EntityCameraShake;
 import com.min01.unleashed.entity.EntityWormhole;
 import com.min01.unleashed.entity.IShaderEffect;
 import com.min01.unleashed.entity.UnleashedEntities;
+import com.min01.unleashed.entity.ai.goal.AbstractCelestialJellyfishGoal;
 import com.min01.unleashed.entity.ai.goal.CelestialJellyfishCloneDashGoal;
 import com.min01.unleashed.entity.ai.goal.CelestialJellyfishCloneShootOrbGoal;
 import com.min01.unleashed.entity.ai.goal.CelestialJellyfishDashGoal;
@@ -52,6 +53,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Pose;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
 import net.minecraft.world.entity.monster.Monster;
@@ -69,32 +71,28 @@ public class EntityCelestialJellyfish extends AbstractAnimatableFlyingMonster im
 	public static final EntityDataAccessor<Boolean> SHOW_WARNING = SynchedEntityData.defineId(EntityCelestialJellyfish.class, EntityDataSerializers.BOOLEAN);
 	public static final EntityDataAccessor<Boolean> SHOW_AFTER_IMAGE = SynchedEntityData.defineId(EntityCelestialJellyfish.class, EntityDataSerializers.BOOLEAN);
 	public static final EntityDataAccessor<Boolean> IS_VISIBLE = SynchedEntityData.defineId(EntityCelestialJellyfish.class, EntityDataSerializers.BOOLEAN);
-	public static final EntityDataAccessor<Boolean> IS_HIT_TIME = SynchedEntityData.defineId(EntityCelestialJellyfish.class, EntityDataSerializers.BOOLEAN);
-	public static final EntityDataAccessor<Boolean> IS_TELEPORT = SynchedEntityData.defineId(EntityCelestialJellyfish.class, EntityDataSerializers.BOOLEAN);
-	public static final EntityDataAccessor<Boolean> IS_REWIND = SynchedEntityData.defineId(EntityCelestialJellyfish.class, EntityDataSerializers.BOOLEAN);
-	public static final EntityDataAccessor<Boolean> IS_MOVE = SynchedEntityData.defineId(EntityCelestialJellyfish.class, EntityDataSerializers.BOOLEAN);
-	public static final EntityDataAccessor<Boolean> IS_END = SynchedEntityData.defineId(EntityCelestialJellyfish.class, EntityDataSerializers.BOOLEAN);
-	public static final EntityDataAccessor<Boolean> IS_FLOAT = SynchedEntityData.defineId(EntityCelestialJellyfish.class, EntityDataSerializers.BOOLEAN);
 	public static final EntityDataAccessor<Boolean> IS_CLONE = SynchedEntityData.defineId(EntityCelestialJellyfish.class, EntityDataSerializers.BOOLEAN);
-	public static final EntityDataAccessor<Boolean> IS_SECOND_PHASE = SynchedEntityData.defineId(EntityCelestialJellyfish.class, EntityDataSerializers.BOOLEAN);
-	public static final EntityDataAccessor<Boolean> IS_FINAL_PHASE = SynchedEntityData.defineId(EntityCelestialJellyfish.class, EntityDataSerializers.BOOLEAN);
+	public static final EntityDataAccessor<Boolean> IS_TELEPORT = SynchedEntityData.defineId(EntityCelestialJellyfish.class, EntityDataSerializers.BOOLEAN);
+	public static final EntityDataAccessor<Boolean> IS_INVINCIBLE = SynchedEntityData.defineId(EntityCelestialJellyfish.class, EntityDataSerializers.BOOLEAN);
+	public static final EntityDataAccessor<Boolean> IS_TELEPORT_ABOVE = SynchedEntityData.defineId(EntityCelestialJellyfish.class, EntityDataSerializers.BOOLEAN);
+	public static final EntityDataAccessor<Boolean> IS_DISCARD = SynchedEntityData.defineId(EntityCelestialJellyfish.class, EntityDataSerializers.BOOLEAN);
 	public static final EntityDataAccessor<Float> EFFECT_SCALE = SynchedEntityData.defineId(EntityCelestialJellyfish.class, EntityDataSerializers.FLOAT);
-	public static final EntityDataAccessor<Integer> SCALE_DIR = SynchedEntityData.defineId(EntityCelestialJellyfish.class, EntityDataSerializers.INT);
-	public static final EntityDataAccessor<Integer> HIT_TIME = SynchedEntityData.defineId(EntityCelestialJellyfish.class, EntityDataSerializers.INT);
+	public static final EntityDataAccessor<Integer> PHASE = SynchedEntityData.defineId(EntityCelestialJellyfish.class, EntityDataSerializers.INT);
+	public static final EntityDataAccessor<Integer> PHASE_TIME = SynchedEntityData.defineId(EntityCelestialJellyfish.class, EntityDataSerializers.INT);
 	public static final EntityDataAccessor<Optional<UUID>> OWNER_UUID = SynchedEntityData.defineId(EntityCelestialJellyfish.class, EntityDataSerializers.OPTIONAL_UUID);
 	public static final EntityDataAccessor<Vec3> LAST_LOOK_POS = SynchedEntityData.defineId(EntityCelestialJellyfish.class, UnleashedEntityDataSerializers.VEC3.get());
 	
 	public int oldSwell;
 	public int swell;
 	public final int maxSwell = 320;
-	public int phaseTime;
-	
+
 	public Class<?> goal;
+	public Class<?> runningGoal;
+	public int effectScaleDir = 1;
+	public boolean isRewind;
 	
 	public final SmoothAnimationState swimAnimationState = new SmoothAnimationState();
-	
 	public final AfterImage<EntityCelestialJellyfish> afterImage;
-	
 	public final UnleashedBossEvent bossEvent = (UnleashedBossEvent) new UnleashedBossEvent(this.getDisplayName(), this).setDarkenScreen(true);
 	   
 	public EntityCelestialJellyfish(EntityType<? extends AbstractAnimatableFlyingMonster> pEntityType, Level pLevel)
@@ -112,9 +110,9 @@ public class EntityCelestialJellyfish extends AbstractAnimatableFlyingMonster im
         		.add(Attributes.FOLLOW_RANGE, 200.0F)
         		.add(Attributes.ARMOR, 12.0F)
         		.add(Attributes.ARMOR_TOUGHNESS, 12.0F)
-        		.add(Attributes.KNOCKBACK_RESISTANCE, 10.0F)
-    			.add(Attributes.MOVEMENT_SPEED, 0.5F)
-    			.add(Attributes.FLYING_SPEED, 0.5F);
+        		.add(Attributes.KNOCKBACK_RESISTANCE, 1.0F)
+    			.add(Attributes.MOVEMENT_SPEED, 0.1F)
+    			.add(Attributes.FLYING_SPEED, 0.1F);
     }
     
     @Override
@@ -127,8 +125,8 @@ public class EntityCelestialJellyfish extends AbstractAnimatableFlyingMonster im
     	this.goalSelector.addGoal(0, new CelestialJellyfishCloneDashGoal(this));
     	this.goalSelector.addGoal(0, new CelestialJellyfishSummonOrbCloneGoal(this));
     	this.goalSelector.addGoal(0, new CelestialJellyfishCloneShootOrbGoal(this));
-    	this.targetSelector.addGoal(4, new HurtByTargetGoal(this));
-    	this.targetSelector.addGoal(4, new NearestAttackableTargetGoal<>(this, Player.class, false));
+    	this.targetSelector.addGoal(0, new HurtByTargetGoal(this));
+    	this.targetSelector.addGoal(0, new NearestAttackableTargetGoal<>(this, Player.class, false));
     }
     
     @Override
@@ -140,18 +138,14 @@ public class EntityCelestialJellyfish extends AbstractAnimatableFlyingMonster im
     	this.entityData.define(SHOW_WARNING, false);
     	this.entityData.define(SHOW_AFTER_IMAGE, false);
     	this.entityData.define(IS_VISIBLE, true);
-    	this.entityData.define(IS_HIT_TIME, false);
     	this.entityData.define(IS_TELEPORT, false);
-    	this.entityData.define(IS_REWIND, false);
-    	this.entityData.define(IS_MOVE, false);
-    	this.entityData.define(IS_END, false);
-    	this.entityData.define(IS_FLOAT, false);
     	this.entityData.define(IS_CLONE, false);
-    	this.entityData.define(IS_SECOND_PHASE, false);
-    	this.entityData.define(IS_FINAL_PHASE, false);
+    	this.entityData.define(IS_INVINCIBLE, false);
+    	this.entityData.define(IS_TELEPORT_ABOVE, false);
+    	this.entityData.define(IS_DISCARD, false);
+    	this.entityData.define(PHASE, 1);
+    	this.entityData.define(PHASE_TIME, 0);
     	this.entityData.define(EFFECT_SCALE, 0.0F);
-    	this.entityData.define(SCALE_DIR, 1);
-    	this.entityData.define(HIT_TIME, 0);
 		this.entityData.define(OWNER_UUID, Optional.empty());
     	this.entityData.define(LAST_LOOK_POS, Vec3.ZERO);
     }
@@ -159,18 +153,18 @@ public class EntityCelestialJellyfish extends AbstractAnimatableFlyingMonster im
     @Override
     public void tick() 
     {
-    	this.refreshDimensions();
-    	this.tickTransform();
-        
     	super.tick();
     	
-    	if(!this.level.isClientSide)
+    	this.refreshDimensions();
+    	this.tickTransform();
+
+    	if(this.level.isClientSide)
     	{
-            this.bossEvent.setProgress(this.getHealth() / this.getMaxHealth());
+    		this.swimAnimationState.updateWhen(this.isAlive(), this.tickCount);
     	}
     	else
     	{
-    		this.swimAnimationState.updateWhen(this.isAlive(), this.tickCount);
+            this.bossEvent.setProgress(this.getHealth() / this.getMaxHealth());
     	}
     	
     	this.afterImage.tick(this.showAfterImage());
@@ -189,67 +183,51 @@ public class EntityCelestialJellyfish extends AbstractAnimatableFlyingMonster im
 				this.lookAt(Anchor.EYES, this.getTarget().getEyePosition());
 			}
 			
+			if(this.getTarget() != null)
+			{
+				if(!this.getTarget().isAlive())
+				{
+    				this.goalSelector.getRunningGoals().forEach(t ->
+    				{
+    					Goal goal = t.getGoal();
+    					if(goal instanceof AbstractCelestialJellyfishGoal jellyfishGoal)
+    					{
+    						jellyfishGoal.stop();
+    					}
+    				});
+				}
+			}
+			
     		if(this.isClone())
     		{
     			if(this.getOwner() != null)
     			{
-       				if(this.getOwner().hurtTime > 0)
+    				if(this.goal == CelestialJellyfishShootOrbGoal.class)
     				{
-        				this.getOwner().setAnimationTick(0);
-        				this.getOwner().doTeleport();
-        				this.discard();
+           				if(this.getOwner().hurtTime > 0)
+        				{
+           					this.getOwner().setAnimationState(0);
+            				this.getOwner().setAnimationTick(0);
+            				this.getOwner().setAnimationPlaying(false);
+            				this.getOwner().doTeleport();
+            				this.discard();
+        				}
     				}
         			if(!this.getOwner().isAlive())
         			{
         				this.discard();
         			}
     			}
-    			if(!this.level.isClientSide)
-    			{
-    				if(this.goal == null)
-    				{
-        				if(!this.isTeleport())
-        				{
-            				this.doTeleport();
-        				}
-        	    		if(this.isMove())
-        	    		{
-        	    			this.discard();
-        	    		}
-    				}
-    			}
     		}
-			
-			if(!this.entityData.get(IS_ANIMATION_PLAYING) && this.isEnd())
-			{
-				this.setEnd(false);
-			}
     		
-    		if(this.isHitTime())
+    		if(this.isAnimationPlaying(4))
     		{
-    			if(this.isAlive())
+    			this.setYBodyRot(0.0F);
+    			this.setYRot(0.0F);
+				this.setDeltaMovement(Vec3.ZERO);
+    			if(this.tickCount % 40 == 0 && !this.isClone())
     			{
-        			this.setYBodyRot(0.0F);
-        			this.setYRot(0.0F);
-        			if(this.getHitTime() > 0)
-        			{
-        				this.setDeltaMovement(Vec3.ZERO);
-            			this.setHitTime(this.getHitTime() - 1);
-            			this.setDeltaMovement(Vec3.ZERO.subtract(0.0F, 0.01F, 0.0F));
-            			if(this.tickCount % 40 == 0 && !this.entityData.get(IS_ANIMATION_PLAYING) && !this.isClone())
-            			{
-            				UnleashedShaderEffects.addEffect(this.level, "Shockwave", this.position().add(0, 4.5F, 0), 100, 1.0F);
-            			}
-        			}
-        			else if(this.isMove() && this.getHealth() > 1.0F)
-        			{
-        				this.setHitTime(false);
-        			}
-    			}
-    			else
-    			{
-    				this.setHitTime(false);
-    				this.setHitTime(0);
+    				UnleashedShaderEffects.addEffect(this.level, "Shockwave", this.position().add(0, 4.5F, 0), 100, 1.0F);
     			}
     		}
     	}
@@ -261,12 +239,6 @@ public class EntityCelestialJellyfish extends AbstractAnimatableFlyingMonster im
     			this.addDeltaMovement(new Vec3(0.0F, 0.005F, 0.0F));
     		}
     	}
-    }
-    
-    @Override
-    public float maxMoveTurnY() 
-    {
-    	return 5.0F;
     }
     
     @Override
@@ -295,27 +267,13 @@ public class EntityCelestialJellyfish extends AbstractAnimatableFlyingMonster im
     
     public void tickFinalPhase()
     {
-    	if(this.isSecondPhase() && this.getHealth() <= 1.0F)
-    	{
-    		if(this.isMove())
-    		{
-    			this.setFloat(true);
-    			this.setHitTime(true);
-    			this.setHitTime(500);
-    		}
-    		if(this.isEnd())
-    		{
-    			this.setFinalPhase(true);
-    		}
-    	}
-    	if(this.isFinalPhase())
+    	if(this.getPhase() == 3)
     	{
     		this.setDeltaMovement(Vec3.ZERO);
-    		int tick = this.getHitTime();
-			float strength = 500 - this.getHitTime();
-    		tick /= 20;
-    		tick = Math.max(tick, 1);
-    		if(this.tickCount % tick == 0)
+    		int tick = this.getAnimationTick();
+			float strength = 500 - tick;
+    		int tick1 = Math.max(tick / 20, 1);
+    		if(this.tickCount % tick1 == 0)
     		{
     			EntityCelestialBeam beam = new EntityCelestialBeam(UnleashedEntities.CELESTIAL_BEAM.get(), this.level);
     			beam.setPos(this.getEyePosition());
@@ -343,25 +301,27 @@ public class EntityCelestialJellyfish extends AbstractAnimatableFlyingMonster im
 	    			player.connection.send(new ClientboundSetEntityMotionPacket(t));
 	    		}
 			});
-    		if(this.hurtTime > 0)
-    		{
-    			this.level.explode(this, this.getX(), this.getEyeY(), this.getZ(), 5.0F, ExplosionInteraction.NONE);
-    			this.setHealth(0.0F);
-    			this.setHitTime(false);
-    			this.setHitTime(0);
-    			this.setFinalPhase(false);
-    			this.spawnWormhole();
-    		}
-    		else if(this.getHitTime() <= 0)
-    		{
-    			EntityBlackhole blackHole = new EntityBlackhole(UnleashedEntities.BLACKHOLE.get(), this.level);
-    			blackHole.setPos(this.position());
-    			this.level.addFreshEntity(blackHole);
-    			this.playSound(SoundEvents.GENERIC_EXPLODE);
-    			EntityCameraShake.cameraShake(this.level, this.position(), 100.0F, 0.1F, 0, 10);
-    			this.dropAllDeathLoot(this.damageSources().generic());
-    			this.discard();
-    		}
+			if(!this.level.isClientSide)
+			{
+	    		if(this.hurtTime > 0)
+	    		{
+	    			this.level.explode(this, this.getX(), this.getEyeY(), this.getZ(), 5.0F, ExplosionInteraction.NONE);
+	    			EntityCameraShake.cameraShake(this.level, this.position(), 100.0F, 0.1F, 0, 10);
+	    			this.dropAllDeathLoot(this.damageSources().generic());
+	    			this.spawnWormhole();
+	    			this.discard();
+	    		}
+	    		else if(this.getAnimationTick() <= 0)
+	    		{
+	    			EntityBlackhole blackHole = new EntityBlackhole(UnleashedEntities.BLACKHOLE.get(), this.level);
+	    			blackHole.setPos(this.position());
+	    			this.level.addFreshEntity(blackHole);
+	    			this.playSound(SoundEvents.GENERIC_EXPLODE);
+	    			EntityCameraShake.cameraShake(this.level, this.position(), 100.0F, 0.1F, 0, 10);
+	    			this.dropAllDeathLoot(this.damageSources().generic());
+	    			this.discard();
+	    		}
+			}
     	}
     }
     
@@ -372,12 +332,6 @@ public class EntityCelestialJellyfish extends AbstractAnimatableFlyingMonster im
     		return EntitySelector.NO_CREATIVE_OR_SPECTATOR.test(player);
     	}
     	return entity instanceof Projectile projectile && !(projectile.getOwner() instanceof EntityCelestialJellyfish);
-    }
-    
-    @Override
-    public boolean isEffectiveAi() 
-    {
-    	return super.isEffectiveAi() && !this.isFinalPhase();
     }
     
     public void spawnWormhole()
@@ -396,7 +350,7 @@ public class EntityCelestialJellyfish extends AbstractAnimatableFlyingMonster im
     {
 		this.oldSwell = this.swell;
 
-		if(this.getAnimationState() == 1)
+		if(this.isAnimationPlaying(1))
 		{
 			this.swell++;
 			
@@ -433,7 +387,7 @@ public class EntityCelestialJellyfish extends AbstractAnimatableFlyingMonster im
 				this.setEffectScale(this.swell);
 			}
 
-    		if(!this.isSecondPhase() && !this.isAlive() && this.swell < 250)
+    		if(this.getPhase() == 1 && !this.isAlive() && this.swell < 250)
 			{
     			Vec3 spreadPos = UnleashedUtil.getSpreadPosition(this, new Vec3(50, 15, 50));
 				EntityCelestialOrb orb = new EntityCelestialOrb(UnleashedEntities.CELESTIAL_ORB.get(), this.level);
@@ -452,9 +406,9 @@ public class EntityCelestialJellyfish extends AbstractAnimatableFlyingMonster im
 	    		this.setShowEffect(false);
 	    		this.setStarfield(true);
                 this.bossEvent.setVisible(true);
-	    		if(!this.isSecondPhase() && !this.isAlive())
+	    		if(this.getPhase() == 1 && !this.isAlive())
 	    		{
-	    			this.setSecondPhase(true);
+	    			this.setPhase(2);
 	    			this.setHealth(this.getMaxHealth());
 	    			this.doTeleport();
 	    		}
@@ -466,7 +420,7 @@ public class EntityCelestialJellyfish extends AbstractAnimatableFlyingMonster im
     public void die(DamageSource pDamageSource)
     {
 		this.setStarfield(false);
-    	if(this.isSecondPhase())
+    	if(this.getPhase() == 2)
     	{
         	super.die(pDamageSource);
     	}
@@ -495,19 +449,20 @@ public class EntityCelestialJellyfish extends AbstractAnimatableFlyingMonster im
     @Override
     protected void tickDeath()
     {
-    	if(this.isSecondPhase())
+    	if(this.getPhase() == 2 || this.isClone())
     	{
         	super.tickDeath();
     	}
     	else
     	{
-    		this.phaseTime++;
+    		this.setPhaseTime(this.getPhaseTime() + 1);
     		this.setShowWarning(false);
             this.setDeltaMovement(this.getDeltaMovement().add(0.0D, -0.08D, 0.0D));
             this.bossEvent.setVisible(false);
-    		if(this.phaseTime == 200)
+    		if(this.getPhaseTime() == 200)
     		{
     			this.setAnimationState(1);
+    			this.setAnimationTick(Integer.MAX_VALUE);
     			this.setShowEffect(true);
         		this.playSound(UnleashedSounds.CELESTIAL_JELLYFISH_TRANSFORM.get(), 2.0F, 1.0F);
     		}
@@ -538,23 +493,22 @@ public class EntityCelestialJellyfish extends AbstractAnimatableFlyingMonster im
 		}
     }
     
+    //FIXME position desync
     public void tickTeleport()
     {
     	if(this.isTeleport())
     	{
-    		this.setEffectScale(this.getEffectScale() + (20 * this.getScaleDirection()));
+    		this.setEffectScale(this.getEffectScale() + (20 * this.effectScaleDir));
     		this.setEffectScale(Mth.clamp(this.getEffectScale(), 0.0F, 200.0F));
     		this.setDeltaMovement(Vec3.ZERO);
     		
-    		if(this.getScaleDirection() == -1)
+    		if(this.effectScaleDir == -1)
     		{
     			if(!this.isVisible())
     			{
     				if(this.getEffectScale() == 60.0F)
     				{
         				this.setShowEffect(false);
-        				this.setHitTime(false);
-        				this.setHitTime(0);
     				}
         			if(this.getEffectScale() == 40.0F)
         			{
@@ -562,15 +516,31 @@ public class EntityCelestialJellyfish extends AbstractAnimatableFlyingMonster im
         				{
         					float yRot = this.getRandom().nextFloat() * 360.0F;
         					Vec3 lookPos = UnleashedUtil.getLookPos(new Vec2(0.0F, this.getTarget().getYHeadRot() + yRot), this.getTarget().position(), 0, 0, this.getRandom().nextInt(10, 20));
-        					if(this.isFloat())
+        					if(this.isTeleportAbove())
         					{
         						lookPos = lookPos.add(0, 4.5F, 0);
-        						this.setFloat(false);
+        						this.setTeleportAbove(false);
         					}
-            				this.moveTo(lookPos);
+            				this.setPos(lookPos);
         				}
-        				this.setMove(true);
-        				if(this.isClone() && this.getOwner() != null && !this.level.isClientSide && this.goal == null)
+        				this.goalSelector.getRunningGoals().forEach(t ->
+        				{
+        					Goal goal = t.getGoal();
+        					if(goal instanceof AbstractCelestialJellyfishGoal jellyfishGoal)
+        					{
+        						if(this.runningGoal == jellyfishGoal.getClass())
+        						{
+            						jellyfishGoal.onTeleport();
+        						}
+        					}
+        				});
+        		    	if(this.getPhase() == 2 && this.getHealth() <= 1.0F)
+        		    	{
+    						this.setTeleportAbove(true);
+    		    			this.setAnimationState(4);
+    		    			this.setAnimationTick(500);
+        		    	}
+        				if(this.isClone() && this.isDiscard())
         				{
         					this.discard();
         				}
@@ -578,19 +548,29 @@ public class EntityCelestialJellyfish extends AbstractAnimatableFlyingMonster im
         			if(this.getEffectScale() <= 0.0F)
         			{
         				this.setShowEffect(true);
-        				this.setScaleDirection(1);
+        				this.effectScaleDir = 1;
         			}
     			}
-    			else
+    			else if(this.getEffectScale() <= 0.0F)
     			{
-        			if(this.getEffectScale() <= 0.0F)
-        			{
-        				this.setScaleDirection(1);
-        				this.setTeleport(false);
-        				this.setShowEffect(false);
-        				this.setMove(false);
-        				this.setEnd(true);
-        			}
+    				this.effectScaleDir = 1;
+    				this.setTeleport(false);
+    				this.setShowEffect(false);
+    		    	if(this.getPhase() == 2 && this.getHealth() <= 1.0F)
+    		    	{
+		    			this.setPhase(3);
+    		    	}
+    				this.goalSelector.getRunningGoals().forEach(t ->
+    				{
+    					Goal goal = t.getGoal();
+    					if(goal instanceof AbstractCelestialJellyfishGoal jellyfishGoal)
+    					{
+    						if(this.runningGoal == jellyfishGoal.getClass())
+    						{
+        						jellyfishGoal.onTeleportEnd();
+    						}
+    					}
+    				});
     			}
     		}
     		else
@@ -602,7 +582,7 @@ public class EntityCelestialJellyfish extends AbstractAnimatableFlyingMonster im
     			}
     			if(this.getEffectScale() >= 200.0F)
     			{
-    				this.setScaleDirection(-1);
+    				this.effectScaleDir = -1;
     			}
     		}
     	}
@@ -611,7 +591,7 @@ public class EntityCelestialJellyfish extends AbstractAnimatableFlyingMonster im
     public void explosion()
     {
     	Vec3 pos = this.position();
-    	if(this.isHitTime())
+    	if(this.isAnimationPlaying(4))
     	{
     		pos = pos.add(0, 4.5F, 0);
     	}
@@ -668,11 +648,11 @@ public class EntityCelestialJellyfish extends AbstractAnimatableFlyingMonster im
         		this.playSound(UnleashedSounds.CELESTIAL_JELLYFISH_TRANSFORM.get(), 2.0F, 1.0F);
         		return false;
         	}
-    		if(!this.isVisible() || this.getAnimationState() == 1 || this.getAnimationState() == 3 || this.isClone() || this.isTeleport())
+    		if(!this.isVisible() || this.isClone() || this.isTeleport() || this.showWarning() || this.isInvincible())
     		{
     			return false;
     		}
-    		else if(this.isSecondPhase() && this.getHealth() - pAmount <= 1.0F && !this.isFinalPhase())
+    		else if(this.getPhase() == 2 && this.getHealth() - pAmount <= 1.0F)
     		{
     			if(pSource.getDirectEntity() != null)
     			{
@@ -686,11 +666,23 @@ public class EntityCelestialJellyfish extends AbstractAnimatableFlyingMonster im
     }
     
     @Override
+    public boolean canMoveAround()
+    {
+    	return !this.isTransform() && this.getAnimationState() == 0;
+    }
+    
+    @Override
+    public boolean canLookAround() 
+    {
+    	return !this.isTransform() && this.getAnimationState() == 0;
+    }
+    
+    @Override
     public EntityDimensions getDimensions(Pose pPose) 
     {
     	if(this.isTransform())
     	{
-    		if(this.isHitTime())
+    		if(this.isAnimationPlaying(4) && this.isAlive())
     		{
         		return EntityDimensions.scalable(3.0F, 7.875F);
     		}
@@ -712,7 +704,7 @@ public class EntityCelestialJellyfish extends AbstractAnimatableFlyingMonster im
     @Override
     public float getOffset() 
     {
-    	if(this.isHitTime())
+    	if(this.isAnimationPlaying(4))
     	{
     		return 4.5F;
     	}
@@ -763,26 +755,20 @@ public class EntityCelestialJellyfish extends AbstractAnimatableFlyingMonster im
     public void readAdditionalSaveData(CompoundTag pCompound) 
     {
     	super.readAdditionalSaveData(pCompound);
-    	this.setTransform(pCompound.getBoolean("isTransform"));
     	this.bossEvent.setVisible(pCompound.getBoolean("isTransform"));
+    	this.setTransform(pCompound.getBoolean("isTransform"));
     	this.setShowEffect(pCompound.getBoolean("ShowEffect"));
     	this.setVisible(pCompound.getBoolean("isVisible"));
     	this.setShowWarning(pCompound.getBoolean("ShowWarning"));
     	this.setShowAfterImage(pCompound.getBoolean("ShowAfterImage"));
-    	this.setHitTime(pCompound.getBoolean("isHitTime"));
     	this.setTeleport(pCompound.getBoolean("isTeleport"));
-    	this.setRewind(pCompound.getBoolean("isRewind"));
-    	this.setMove(pCompound.getBoolean("isMove"));
-    	this.setEnd(pCompound.getBoolean("isEnd"));
-    	this.setFloat(pCompound.getBoolean("isFloat"));
-    	this.setClone(pCompound.getBoolean("isClone"));
-    	this.setSecondPhase(pCompound.getBoolean("isSecondPhase"));
-    	this.setFinalPhase(pCompound.getBoolean("isFinalPhase"));
+    	this.setTeleportAbove(pCompound.getBoolean("isTeleportAbove"));
+    	this.setInvincible(pCompound.getBoolean("isClone"));
+    	this.setClone(pCompound.getBoolean("isInvincible"));
+    	this.setDiscard(pCompound.getBoolean("isDiscard"));
     	this.setEffectScale(pCompound.getFloat("EffectScale"));
-    	this.setScaleDirection(pCompound.getInt("ScaleDirection"));
-    	this.setHitTime(pCompound.getInt("HitTime"));
-    	this.phaseTime = pCompound.getInt("PhaseTime");
-    	this.swell = pCompound.getInt("Swell");
+    	this.setPhase(pCompound.getInt("Phase"));
+    	this.setPhaseTime(pCompound.getInt("PhaseTime"));
 		if(pCompound.hasUUID("Owner")) 
 		{
 			this.entityData.set(OWNER_UUID, Optional.of(pCompound.getUUID("Owner")));
@@ -802,20 +788,14 @@ public class EntityCelestialJellyfish extends AbstractAnimatableFlyingMonster im
     	pCompound.putBoolean("isVisible", this.isVisible());
     	pCompound.putBoolean("ShowWarning", this.showWarning());
     	pCompound.putBoolean("ShowAfterImage", this.showAfterImage());
-    	pCompound.putBoolean("isHitTime", this.isHitTime());
     	pCompound.putBoolean("isTeleport", this.isTeleport());
-    	pCompound.putBoolean("isRewind", this.isRewind());
-    	pCompound.putBoolean("isMove", this.isMove());
-    	pCompound.putBoolean("isEnd", this.isEnd());
-    	pCompound.putBoolean("isFloat", this.isFloat());
     	pCompound.putBoolean("isClone", this.isClone());
-    	pCompound.putBoolean("isSecondPhase", this.isSecondPhase());
-    	pCompound.putBoolean("isFinalPhase", this.isFinalPhase());
+    	pCompound.putBoolean("isInvincible", this.isInvincible());
+    	pCompound.putBoolean("isTeleportAbove", this.isTeleportAbove());
+    	pCompound.putBoolean("isDiscard", this.isDiscard());
     	pCompound.putFloat("EffectScale", this.getEffectScale());
-    	pCompound.putInt("ScaleDirection", this.getScaleDirection());
-    	pCompound.putInt("HitTime", this.getHitTime());
-    	pCompound.putInt("PhaseTime", this.phaseTime);
-    	pCompound.putInt("Swell", this.swell);
+    	pCompound.putInt("Phase", this.getPhase());
+    	pCompound.putInt("PhaseTime", this.getPhaseTime());
 		if(this.entityData.get(OWNER_UUID).isPresent())
 		{
 			pCompound.putUUID("Owner", this.entityData.get(OWNER_UUID).get());
@@ -860,6 +840,26 @@ public class EntityCelestialJellyfish extends AbstractAnimatableFlyingMonster im
 		}
 		return null;
 	}
+	
+	public void setPhaseTime(int value)
+	{
+		this.entityData.set(PHASE_TIME, value);
+	}
+	
+	public int getPhaseTime()
+	{
+		return this.entityData.get(PHASE_TIME);
+	}
+    
+    public void setPhase(int phase)
+    {
+    	this.entityData.set(PHASE, phase);
+    }
+    
+    public int getPhase()
+    {
+    	return this.entityData.get(PHASE);
+    }
     
     public void setLastLookPos(Vec3 pos)
     {
@@ -871,49 +871,19 @@ public class EntityCelestialJellyfish extends AbstractAnimatableFlyingMonster im
     	return this.entityData.get(LAST_LOOK_POS);
     }
     
-    public void setHitTime(int value)
-    {
-    	this.entityData.set(HIT_TIME, value);
-    }
-    
-    public int getHitTime()
-    {
-    	return this.entityData.get(HIT_TIME);
-    }
-    
-    public void setScaleDirection(int value)
-    {
-    	this.entityData.set(SCALE_DIR, value);
-    }
-    
-    public int getScaleDirection()
-    {
-    	return this.entityData.get(SCALE_DIR);
-    }
-    
     public void setEffectScale(float value)
     {
     	this.entityData.set(EFFECT_SCALE, value);
     }
     
-    public void setFinalPhase(boolean value)
+    public void setDiscard(boolean value)
     {
-    	this.entityData.set(IS_FINAL_PHASE, value);
+    	this.entityData.set(IS_DISCARD, value);
     }
     
-    public boolean isFinalPhase()
+    public boolean isDiscard()
     {
-    	return this.entityData.get(IS_FINAL_PHASE);
-    }
-    
-    public void setSecondPhase(boolean value)
-    {
-    	this.entityData.set(IS_SECOND_PHASE, value);
-    }
-    
-    public boolean isSecondPhase()
-    {
-    	return this.entityData.get(IS_SECOND_PHASE);
+    	return this.entityData.get(IS_DISCARD);
     }
     
     public void setClone(boolean value)
@@ -924,66 +894,6 @@ public class EntityCelestialJellyfish extends AbstractAnimatableFlyingMonster im
     public boolean isClone()
     {
     	return this.entityData.get(IS_CLONE);
-    }
-    
-    public void setFloat(boolean value)
-    {
-    	this.entityData.set(IS_FLOAT, value);
-    }
-    
-    public boolean isFloat()
-    {
-    	return this.entityData.get(IS_FLOAT);
-    }
-    
-    public void setEnd(boolean value)
-    {
-    	this.entityData.set(IS_END, value);
-    }
-    
-    public boolean isEnd()
-    {
-    	return this.entityData.get(IS_END);
-    }
-    
-    public void setMove(boolean value)
-    {
-    	this.entityData.set(IS_MOVE, value);
-    }
-    
-    public boolean isMove()
-    {
-    	return this.entityData.get(IS_MOVE);
-    }
-    
-    public void setRewind(boolean value)
-    {
-    	this.entityData.set(IS_REWIND, value);
-    }
-    
-    public boolean isRewind()
-    {
-    	return this.entityData.get(IS_REWIND);
-    }
-    
-    public void setTeleport(boolean value)
-    {
-    	this.entityData.set(IS_TELEPORT, value);
-    }
-    
-    public boolean isTeleport()
-    {
-    	return this.entityData.get(IS_TELEPORT);
-    }
-    
-    public void setHitTime(boolean value)
-    {
-    	this.entityData.set(IS_HIT_TIME, value);
-    }
-    
-    public boolean isHitTime()
-    {
-    	return this.entityData.get(IS_HIT_TIME);
     }
     
     public void setShowAfterImage(boolean value)
@@ -1006,6 +916,16 @@ public class EntityCelestialJellyfish extends AbstractAnimatableFlyingMonster im
     	return this.entityData.get(SHOW_WARNING);
     }
     
+    public void setInvincible(boolean value)
+    {
+    	this.entityData.set(IS_INVINCIBLE, value);
+    }
+    
+    public boolean isInvincible()
+    {
+    	return this.entityData.get(IS_INVINCIBLE);
+    }
+    
     public void setVisible(boolean value)
     {
     	this.entityData.set(IS_VISIBLE, value);
@@ -1014,6 +934,26 @@ public class EntityCelestialJellyfish extends AbstractAnimatableFlyingMonster im
     public boolean isVisible()
     {
     	return this.entityData.get(IS_VISIBLE);
+    }
+    
+    public void setTeleportAbove(boolean value)
+    {
+    	this.entityData.set(IS_TELEPORT_ABOVE, value);
+    }
+    
+    public boolean isTeleportAbove()
+    {
+    	return this.entityData.get(IS_TELEPORT_ABOVE);
+    }
+    
+    public void setTeleport(boolean value)
+    {
+    	this.entityData.set(IS_TELEPORT, value);
+    }
+    
+    public boolean isTeleport()
+    {
+    	return this.entityData.get(IS_TELEPORT);
     }
     
     public void setShowEffect(boolean value)

@@ -2,7 +2,7 @@ package com.min01.unleashed.entity.ai.goal;
 
 import com.min01.unleashed.entity.living.EntityCelestialJellyfish;
 
-public class CelestialJellyfishCloneDashGoal extends AbstractCelestialJellyfishSkillGoal
+public class CelestialJellyfishCloneDashGoal extends AbstractCelestialJellyfishGoal
 {
 	public CelestialJellyfishCloneDashGoal(EntityCelestialJellyfish mob) 
 	{
@@ -10,16 +10,9 @@ public class CelestialJellyfishCloneDashGoal extends AbstractCelestialJellyfishS
 	}
 	
 	@Override
-	public void start() 
-	{
-		super.start();
-		this.mob.setAnimationState(2);
-	}
-	
-	@Override
 	public boolean canUse() 
 	{
-		return super.canUse() && this.mob.isClone() && this.mob.getOwner() == null;
+		return super.canUse() && this.mob.isClone() && this.mob.getOwner() != null;
 	}
 
 	@Override
@@ -51,6 +44,6 @@ public class CelestialJellyfishCloneDashGoal extends AbstractCelestialJellyfishS
 	@Override
 	public int getSkillUsingInterval() 
 	{
-		return 1000;
+		return Integer.MAX_VALUE;
 	}
 }

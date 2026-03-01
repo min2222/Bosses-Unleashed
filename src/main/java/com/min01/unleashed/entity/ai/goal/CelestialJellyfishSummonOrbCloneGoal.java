@@ -7,7 +7,7 @@ import com.min01.unleashed.util.UnleashedUtil;
 import net.minecraft.world.phys.Vec2;
 import net.minecraft.world.phys.Vec3;
 
-public class CelestialJellyfishSummonOrbCloneGoal extends AbstractCelestialJellyfishSkillGoal
+public class CelestialJellyfishSummonOrbCloneGoal extends AbstractCelestialJellyfishGoal
 {
 	public boolean canContinueToUse = true;
 	public int cloneTick;
@@ -24,12 +24,14 @@ public class CelestialJellyfishSummonOrbCloneGoal extends AbstractCelestialJelly
 		super.start();
 		this.mob.setAnimationState(3);
 		this.mob.doTeleport();
+		this.mob.setInvincible(true);
+		this.mob.runningGoal = this.getClass();
 	}
 	
 	@Override
 	public boolean canUse() 
 	{
-		return super.canUse() && this.mob.isSecondPhase() && !this.mob.isClone();
+		return super.canUse() && this.mob.getPhase() == 2 && !this.mob.isClone();
 	}
 	
 	@Override
@@ -48,8 +50,8 @@ public class CelestialJellyfishSummonOrbCloneGoal extends AbstractCelestialJelly
 			EntityCelestialJellyfish jellyfish = new EntityCelestialJellyfish(UnleashedEntities.CELESTIAL_JELLYFISH.get(), this.mob.level);
 			jellyfish.setClone(true);
 			jellyfish.setTransform(true);
-			jellyfish.setHitTime(true);
-			jellyfish.setHitTime(1000);
+			jellyfish.setAnimationState(4);
+			jellyfish.setAnimationTick(Integer.MAX_VALUE);
 			jellyfish.setPos(this.mob.position());
 			Vec3 lookPos = UnleashedUtil.getLookPos(new Vec2(0.0F, this.mob.getYHeadRot()), this.mob.position(), this.mob.getRandom().nextBoolean() ? 2 : -2, 0, 0);
 			jellyfish.setDeltaMovement(UnleashedUtil.getVelocityTowards(this.mob.position(), lookPos, 0.2F));
@@ -78,23 +80,25 @@ public class CelestialJellyfishSummonOrbCloneGoal extends AbstractCelestialJelly
 				this.canContinueToUse = false;
 			}
 		}
-		if(this.mob.isMove())
+	}
+	
+	@Override
+	public void onTeleport() 
+	{
+		this.mob.setAnimationState(4);
+		this.mob.setAnimationTick(Integer.MAX_VALUE);
+	}
+	
+	@Override
+	public void onTeleportEnd() 
+	{
+		if(this.cloneCount >= 1)
 		{
-			this.mob.setHitTime(true);
-			this.mob.setHitTime(1000);
-			this.mob.setMove(false);
+			this.cloneTick = this.adjustedTickDelay(30);
 		}
-		if(this.mob.isEnd())
+		else
 		{
-			if(this.cloneCount >= 1)
-			{
-				this.cloneTick = this.adjustedTickDelay(30);
-			}
-			else
-			{
-				this.cloneTick = this.adjustedTickDelay(60);
-			}
-			this.mob.setEnd(false);
+			this.cloneTick = this.adjustedTickDelay(60);
 		}
 	}
 	
@@ -104,6 +108,7 @@ public class CelestialJellyfishSummonOrbCloneGoal extends AbstractCelestialJelly
 		super.stop();
 		this.mob.setAnimationState(0);
 		this.mob.setAnimationTick(0);
+		this.mob.runningGoal = null;
 		this.canContinueToUse = true;
 		this.cloneTick = 0;
 		this.cloneCount = 0;
@@ -112,7 +117,7 @@ public class CelestialJellyfishSummonOrbCloneGoal extends AbstractCelestialJelly
 	@Override
 	public int getSkillUsingTime() 
 	{
-		return 1000;
+		return Integer.MAX_VALUE;
 	}
 	
 	@Override

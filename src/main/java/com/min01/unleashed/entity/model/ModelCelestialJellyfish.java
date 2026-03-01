@@ -246,25 +246,26 @@ public class ModelCelestialJellyfish extends HierarchicalModel<EntityCelestialJe
 	{
 		this.entity = entity;
 		this.root().getAllParts().forEach(ModelPart::resetPose);
-		boolean isHitTime = entity.isHitTime();
-		boolean isFirstPhase = !entity.isAlive() && !entity.isSecondPhase();
-		if(!isHitTime && entity.isAlive())
-		{
-			UnleashedClientUtil.animateHead(this.root, netHeadYaw, headPitch + 90.0F);
-		}
 		entity.swimAnimationState.animate(this, CelestialJellyfishAnimation.JELLYFISH_SWIM, ageInTicks);
-		this.root.visible = entity.isVisible();
-		this.top_umbrella.visible = !entity.isFinalPhase();
-		if(isFirstPhase)
+		if(entity.isAlive())
+		{
+			if(!entity.isAnimationPlaying(4))
+			{
+				UnleashedClientUtil.animateHead(this.root, netHeadYaw, headPitch + 90.0F);
+			}
+			else
+			{
+				this.root.y -= 95;
+			}
+		}
+		else if(entity.getPhase() == 1)
 		{
 			float pitch = headPitch + 90.0F;
-			float xRot = Mth.lerp(Math.min(entity.phaseTime / 20.0F, 1.0F), pitch, pitch < 0.0F ? -65.0F : 65.0F);
+			float xRot = Mth.lerp(Math.min(entity.getPhaseTime() / 20.0F, 1.0F), pitch, pitch < 0.0F ? -65.0F : 65.0F);
 			this.root.xRot = (float) Math.toRadians(xRot);
 		}
-		if(isHitTime)
-		{
-			this.root.y -= 95;
-		}
+		this.root.visible = entity.isVisible();
+		this.top_umbrella.visible = entity.getPhase() != 3;
 	}
 	
 	@Override

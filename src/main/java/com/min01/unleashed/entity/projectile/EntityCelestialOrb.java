@@ -62,13 +62,13 @@ public class EntityCelestialOrb extends ThrowableProjectile implements ITrail
 			{
 				if(!this.isRewind())
 				{
-					if(jellyfish.isRewind() && jellyfish.isAlive())
+					if(jellyfish.isRewind && jellyfish.isAlive())
 					{
 						this.setDeltaMovement(this.getDeltaMovement().scale(-(this.distanceToXZ(jellyfish) * 0.05F)));
 						this.setDeltaMovement(this.getDeltaMovement().scale(0.1F));
 						this.setRewind(true);
 					}
-					if(!jellyfish.isSecondPhase() && !jellyfish.isAlive())
+					if(jellyfish.getPhase() != 2 && !jellyfish.isAlive())
 					{
 						if(this.distanceToXZ(jellyfish) <= 3.0F)
 						{
