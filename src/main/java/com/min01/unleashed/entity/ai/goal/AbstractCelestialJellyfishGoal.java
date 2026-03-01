@@ -27,6 +27,10 @@ public abstract class AbstractCelestialJellyfishGoal extends AbstractAnimationGo
 	public void stop() 
 	{
 		super.stop();
+		if(this.mob.getTarget() != null && !this.mob.getTarget().isAlive())
+		{
+			this.nextSkillTickCount = 0;
+		}
 		if(this.mob.goal == this.getClass())
 		{
 			this.mob.goal = null;

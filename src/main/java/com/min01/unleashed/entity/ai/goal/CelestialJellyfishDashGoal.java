@@ -94,6 +94,7 @@ public class CelestialJellyfishDashGoal extends AbstractCelestialJellyfishGoal
 		}
 		else
 		{
+			this.mob.setTeleporting(true);
 			this.canContinueToUse = false;
 		}
 	}
@@ -126,7 +127,10 @@ public class CelestialJellyfishDashGoal extends AbstractCelestialJellyfishGoal
 	@Override
 	public void onTeleportEnd()
 	{
-		this.mob.setLastLookPos(UnleashedUtil.getLookPos(new Vec2(this.mob.getXRot(), this.mob.yBodyRot), this.mob.position(), 0, 2, 100));
+		if(this.mob.getTarget() != null)
+		{
+			this.mob.setLastLookPos(UnleashedUtil.getLookPos(new Vec2(this.mob.getXRot(), this.mob.yHeadRot),this.mob.getTarget().position(), 0, 0, 300));
+		}
 		if(this.mob.isClone() || this.mob.goal == this.getClass())
 		{
 			this.skillWarmupDelay = this.adjustedTickDelay(12);
@@ -167,6 +171,6 @@ public class CelestialJellyfishDashGoal extends AbstractCelestialJellyfishGoal
 	@Override
 	public int getSkillUsingInterval() 
 	{
-		return 300;
+		return 400;
 	}
 }

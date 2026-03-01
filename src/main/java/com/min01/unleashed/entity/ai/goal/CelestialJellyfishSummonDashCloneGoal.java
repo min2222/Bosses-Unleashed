@@ -23,6 +23,7 @@ public class CelestialJellyfishSummonDashCloneGoal extends AbstractCelestialJell
 		super.start();
 		this.mob.setAnimationState(3);
 		this.mob.doTeleport();
+		this.mob.setTeleporting(true);
 		this.mob.runningGoal = this.getClass();
 	}
 	

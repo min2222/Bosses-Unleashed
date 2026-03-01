@@ -10,6 +10,7 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.phys.Vec2;
 import net.minecraft.world.phys.Vec3;
 
+//FIXME sometimes jellyfish is broken when target is die while doing orb barrage
 public class CelestialJellyfishShootOrbGoal extends AbstractCelestialJellyfishGoal
 {
 	public float xRot;
@@ -40,6 +41,10 @@ public class CelestialJellyfishShootOrbGoal extends AbstractCelestialJellyfishGo
 	public void tick() 
 	{
 		super.tick();
+		if(this.mob.getAnimationTick() <= 10)
+		{
+			this.mob.setTeleporting(true);
+		}
 		if(this.isShoot && !this.isRewind)
 		{
 			if(this.mob.isClone() || this.mob.goal == this.getClass())

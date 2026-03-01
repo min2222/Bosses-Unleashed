@@ -25,6 +25,7 @@ public class CelestialJellyfishSummonOrbCloneGoal extends AbstractCelestialJelly
 		this.mob.setAnimationState(3);
 		this.mob.doTeleport();
 		this.mob.setInvincible(true);
+		this.mob.setTeleporting(true);
 		this.mob.runningGoal = this.getClass();
 	}
 	
@@ -117,7 +118,7 @@ public class CelestialJellyfishSummonOrbCloneGoal extends AbstractCelestialJelly
 	@Override
 	public int getSkillUsingTime() 
 	{
-		return Integer.MAX_VALUE;
+		return 1000;
 	}
 	
 	@Override
