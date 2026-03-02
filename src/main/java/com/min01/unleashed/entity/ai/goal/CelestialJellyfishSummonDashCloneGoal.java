@@ -1,5 +1,7 @@
 package com.min01.unleashed.entity.ai.goal;
 
+import org.joml.Math;
+
 import com.min01.unleashed.entity.UnleashedEntities;
 import com.min01.unleashed.entity.living.EntityCelestialJellyfish;
 import com.min01.unleashed.util.UnleashedUtil;
@@ -21,7 +23,6 @@ public class CelestialJellyfishSummonDashCloneGoal extends AbstractCelestialJell
 	public void start() 
 	{
 		super.start();
-		this.mob.setAnimationState(3);
 		this.mob.doTeleport();
 		this.mob.runningGoal = this.getClass();
 	}
@@ -29,7 +30,7 @@ public class CelestialJellyfishSummonDashCloneGoal extends AbstractCelestialJell
 	@Override
 	public boolean canUse() 
 	{
-		return super.canUse() && this.mob.getPhase() == 2 && !this.mob.isClone();
+		return super.canUse() && this.mob.getPhase() == 2 && !this.mob.isClone() && Math.random() <= 0.2;
 	}
 	
 	@Override
@@ -48,7 +49,7 @@ public class CelestialJellyfishSummonDashCloneGoal extends AbstractCelestialJell
 			EntityCelestialJellyfish jellyfish = new EntityCelestialJellyfish(UnleashedEntities.CELESTIAL_JELLYFISH.get(), this.mob.level);
 			jellyfish.setClone(true);
 			jellyfish.setTransform(true);
-			jellyfish.setAnimationState(4);
+			jellyfish.setAnimationState(2);
 			jellyfish.setAnimationTick(Integer.MAX_VALUE);
 			jellyfish.setPos(this.mob.position());
 			Vec3 lookPos = UnleashedUtil.getLookPos(new Vec2(0.0F, this.mob.getYHeadRot()), this.mob.position(), this.mob.getRandom().nextBoolean() ? 2 : -2, 0, 0);
@@ -69,7 +70,7 @@ public class CelestialJellyfishSummonDashCloneGoal extends AbstractCelestialJell
 	@Override
 	public void onTeleport() 
 	{
-		this.mob.setAnimationState(4);
+		this.mob.setAnimationState(2);
 		this.mob.setAnimationTick(Integer.MAX_VALUE);
 	}
 	

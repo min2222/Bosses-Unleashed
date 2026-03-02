@@ -249,7 +249,7 @@ public class ModelCelestialJellyfish extends HierarchicalModel<EntityCelestialJe
 		entity.swimAnimationState.animate(this, CelestialJellyfishAnimation.JELLYFISH_SWIM, ageInTicks);
 		if(entity.isAlive())
 		{
-			if(!entity.isAnimationPlaying(4) && !entity.isTeleporting())
+			if(!entity.isAnimationPlaying(2) && !entity.isTeleporting())
 			{
 				UnleashedClientUtil.animateHead(this.root, netHeadYaw, headPitch + 90.0F);
 			}

@@ -22,7 +22,6 @@ public class CelestialJellyfishSummonOrbCloneGoal extends AbstractCelestialJelly
 	public void start() 
 	{
 		super.start();
-		this.mob.setAnimationState(3);
 		this.mob.doTeleport();
 		this.mob.setInvincible(true);
 		this.mob.setTeleporting(true);
@@ -51,7 +50,7 @@ public class CelestialJellyfishSummonOrbCloneGoal extends AbstractCelestialJelly
 			EntityCelestialJellyfish jellyfish = new EntityCelestialJellyfish(UnleashedEntities.CELESTIAL_JELLYFISH.get(), this.mob.level);
 			jellyfish.setClone(true);
 			jellyfish.setTransform(true);
-			jellyfish.setAnimationState(4);
+			jellyfish.setAnimationState(2);
 			jellyfish.setAnimationTick(Integer.MAX_VALUE);
 			jellyfish.setPos(this.mob.position());
 			Vec3 lookPos = UnleashedUtil.getLookPos(new Vec2(0.0F, this.mob.getYHeadRot()), this.mob.position(), this.mob.getRandom().nextBoolean() ? 2 : -2, 0, 0);
@@ -60,6 +59,7 @@ public class CelestialJellyfishSummonOrbCloneGoal extends AbstractCelestialJelly
 			jellyfish.setOwner(this.mob);
 			jellyfish.setTarget(this.mob.getTarget());
 			this.mob.level.addFreshEntity(jellyfish);
+			this.mob.setTeleporting(true);
 		}
 		if(this.cloneTick == 0)
 		{
@@ -86,7 +86,7 @@ public class CelestialJellyfishSummonOrbCloneGoal extends AbstractCelestialJelly
 	@Override
 	public void onTeleport() 
 	{
-		this.mob.setAnimationState(4);
+		this.mob.setAnimationState(2);
 		this.mob.setAnimationTick(Integer.MAX_VALUE);
 	}
 	

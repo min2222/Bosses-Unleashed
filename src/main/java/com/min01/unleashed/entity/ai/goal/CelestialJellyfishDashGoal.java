@@ -110,7 +110,7 @@ public class CelestialJellyfishDashGoal extends AbstractCelestialJellyfishGoal
 			}
 			else
 			{
-				this.mob.setAnimationState(4);
+				this.mob.setAnimationState(2);
 				this.mob.setAnimationTick(this.mob.getPhase() == 2 ? UnleashedConfig.phaseTwoDealTime.get() : UnleashedConfig.phaseOneDealTime.get());
 			}
 		}

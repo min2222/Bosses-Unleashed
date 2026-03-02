@@ -112,7 +112,7 @@ public class EntityCelestialJellyfish extends AbstractAnimatableFlyingMonster im
     {
         return Monster.createMonsterAttributes()
         		.add(Attributes.MAX_HEALTH, 200.0F)
-        		.add(Attributes.ATTACK_DAMAGE, 15.0F)
+        		.add(Attributes.ATTACK_DAMAGE, 25.0F)
         		.add(Attributes.FOLLOW_RANGE, 200.0F)
         		.add(Attributes.ARMOR, 12.0F)
         		.add(Attributes.ARMOR_TOUGHNESS, 12.0F)
@@ -231,7 +231,7 @@ public class EntityCelestialJellyfish extends AbstractAnimatableFlyingMonster im
     			this.setYRot(0.0F);
 			}
     		
-    		if(this.isAnimationPlaying(4) || this.isTeleporting())
+    		if(this.isAnimationPlaying(2) || this.isTeleporting())
     		{
     			this.setYBodyRot(0.0F);
     			this.setYRot(0.0F);
@@ -586,7 +586,7 @@ public class EntityCelestialJellyfish extends AbstractAnimatableFlyingMonster im
         		    	if(this.getPhase() == 2 && this.getHealth() <= 1.0F)
         		    	{
     						this.setTeleportAbove(true);
-    		    			this.setAnimationState(4);
+    		    			this.setAnimationState(2);
     		    			this.setAnimationTick(500);
         		    	}
         				if(this.isClone() && this.isDiscard())
@@ -640,7 +640,7 @@ public class EntityCelestialJellyfish extends AbstractAnimatableFlyingMonster im
     public void explosion()
     {
     	Vec3 pos = this.position();
-    	if(this.isAnimationPlaying(4) || this.isTeleporting())
+    	if(this.isAnimationPlaying(2) || this.isTeleporting())
     	{
     		pos = pos.add(0, 4.5F, 0);
     	}
@@ -733,7 +733,7 @@ public class EntityCelestialJellyfish extends AbstractAnimatableFlyingMonster im
     	{
     		if(this.isAlive())
     		{
-    			if(this.isAnimationPlaying(4) || this.isTeleporting())
+    			if(this.isAnimationPlaying(2) || this.isTeleporting())
     			{
             		return EntityDimensions.scalable(3.0F, 7.875F);
     			}
@@ -756,7 +756,7 @@ public class EntityCelestialJellyfish extends AbstractAnimatableFlyingMonster im
     @Override
     public float getOffset() 
     {
-    	if(this.isAnimationPlaying(4) || this.isTeleporting())
+    	if(this.isAnimationPlaying(2) || this.isTeleporting())
     	{
     		return 4.5F;
     	}

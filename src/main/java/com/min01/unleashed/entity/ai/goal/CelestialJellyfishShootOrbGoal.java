@@ -27,10 +27,6 @@ public class CelestialJellyfishShootOrbGoal extends AbstractCelestialJellyfishGo
 	public void start() 
 	{
 		super.start();
-		if(!this.mob.isClone())
-		{
-			this.mob.setAnimationState(3);
-		}
 		this.mob.setInvincible(true);
 		this.mob.doTeleport();
 		this.mob.runningGoal = this.getClass();
@@ -107,7 +103,7 @@ public class CelestialJellyfishShootOrbGoal extends AbstractCelestialJellyfishGo
 	@Override
 	public void onTeleport() 
 	{
-		this.mob.setAnimationState(4);
+		this.mob.setAnimationState(2);
 		this.mob.setAnimationTick(Integer.MAX_VALUE);
 	}
 	
