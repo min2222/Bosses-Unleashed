@@ -129,7 +129,7 @@ public class CelestialJellyfishDashGoal extends AbstractCelestialJellyfishGoal
 	{
 		if(this.mob.getTarget() != null)
 		{
-			this.mob.setLastLookPos(UnleashedUtil.getLookPos(new Vec2(this.mob.getXRot(), this.mob.yHeadRot),this.mob.getTarget().position(), 0, 0, 300));
+			this.mob.setLastLookPos(UnleashedUtil.getLookPos(new Vec2(this.mob.getXRot(), this.mob.yBodyRot),this.mob.getTarget().position(), 0, 0, 300));
 		}
 		if(this.mob.isClone() || this.mob.goal == this.getClass())
 		{

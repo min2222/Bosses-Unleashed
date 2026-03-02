@@ -10,7 +10,6 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.phys.Vec2;
 import net.minecraft.world.phys.Vec3;
 
-//FIXME sometimes jellyfish is broken when target is die while doing orb barrage
 public class CelestialJellyfishShootOrbGoal extends AbstractCelestialJellyfishGoal
 {
 	public float xRot;

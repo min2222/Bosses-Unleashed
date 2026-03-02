@@ -2,14 +2,19 @@
 	"type": "minecraft:entity",
 	"pools": [
 		{
+			"rolls": 1,
 			"entries": [
 				{
 					"type": "minecraft:item",
-					"name": "bossesunleashed:celestial_core",
-					"weight": 1
+					"name": "bossesunleashed:celestial_core"
 				}
 			],
-			"rolls": 1
+			"functions": [
+				{
+					"function": "minecraft:set_count",
+					"count": 1
+				}
+			]
 		},
 		{
 			"rolls": 1,

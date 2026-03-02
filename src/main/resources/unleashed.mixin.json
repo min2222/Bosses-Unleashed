@@ -4,7 +4,8 @@
 	"package": "com.min01.unleashed.mixin",
 	"compatibilityLevel": "JAVA_17",
 	"mixins": [
-		"MixinResource"
+		"MixinResource",
+		"MixinPlayer"
 	],
 	"client": [
 		"MixinLevelRenderer",

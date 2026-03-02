@@ -18,6 +18,7 @@ public class CelestialJellyfishCloneDashGoal extends AbstractCelestialJellyfishG
 	@Override
 	public void performSkill() 
 	{
+		this.mob.setTeleporting(true);
 		this.mob.goal = CelestialJellyfishDashGoal.class;
 	}
 	

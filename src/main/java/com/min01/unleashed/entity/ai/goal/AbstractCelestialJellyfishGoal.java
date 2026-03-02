@@ -16,7 +16,7 @@ public abstract class AbstractCelestialJellyfishGoal extends AbstractAnimationGo
 		{
 			return false;
 		}
-		if(!this.mob.isTransform() || this.mob.getPhase() == 3)
+		if(!this.mob.isTransform() || this.mob.getPhase() == 3 || !this.mob.isAlive())
 		{
 			return false;
 		}

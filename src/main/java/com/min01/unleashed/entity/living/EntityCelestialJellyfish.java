@@ -56,6 +56,7 @@ import net.minecraft.world.entity.Pose;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.Goal;
+import net.minecraft.world.entity.ai.goal.WrappedGoal;
 import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
 import net.minecraft.world.entity.monster.Monster;
@@ -63,6 +64,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.Level.ExplosionInteraction;
+import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec2;
 import net.minecraft.world.phys.Vec3;
 
@@ -115,8 +117,8 @@ public class EntityCelestialJellyfish extends AbstractAnimatableFlyingMonster im
         		.add(Attributes.ARMOR, 12.0F)
         		.add(Attributes.ARMOR_TOUGHNESS, 12.0F)
         		.add(Attributes.KNOCKBACK_RESISTANCE, 1.0F)
-    			.add(Attributes.MOVEMENT_SPEED, 0.1F)
-    			.add(Attributes.FLYING_SPEED, 0.1F);
+    			.add(Attributes.MOVEMENT_SPEED, 0.2F)
+    			.add(Attributes.FLYING_SPEED, 0.2F);
     }
     
     @Override
@@ -130,7 +132,14 @@ public class EntityCelestialJellyfish extends AbstractAnimatableFlyingMonster im
     	this.goalSelector.addGoal(0, new CelestialJellyfishSummonOrbCloneGoal(this));
     	this.goalSelector.addGoal(0, new CelestialJellyfishCloneShootOrbGoal(this));
     	this.targetSelector.addGoal(0, new HurtByTargetGoal(this));
-    	this.targetSelector.addGoal(0, new NearestAttackableTargetGoal<>(this, Player.class, false));
+    	this.targetSelector.addGoal(0, new NearestAttackableTargetGoal<>(this, Player.class, false)
+    	{
+    		@Override
+    		protected AABB getTargetSearchArea(double pTargetDistance) 
+    		{
+    			return this.mob.getBoundingBox().inflate(pTargetDistance, pTargetDistance, pTargetDistance);
+    		}
+    	});
     }
     
     @Override
@@ -354,6 +363,8 @@ public class EntityCelestialJellyfish extends AbstractAnimatableFlyingMonster im
     	this.runningGoal = null;
     	this.effectScaleDir = 1;
     	this.isRewind = false;
+    	this.swell = 0;
+    	this.oldSwell = 0;
     	this.setShowEffect(false);
     	this.setShowWarning(false);
     	this.setShowAfterImage(false);
@@ -366,6 +377,14 @@ public class EntityCelestialJellyfish extends AbstractAnimatableFlyingMonster im
     	this.setLastLookPos(Vec3.ZERO);
     	this.setAnimationState(0);
     	this.setAnimationTick(0);
+    	for(WrappedGoal wrappedGoal : this.goalSelector.getAvailableGoals())
+    	{
+    		Goal goal = wrappedGoal.getGoal();
+    		if(goal instanceof AbstractCelestialJellyfishGoal jellyfishGoal)
+    		{
+    			jellyfishGoal.nextSkillTickCount = 0;
+    		}
+    	}
     }
     
     public void tickTransform()
@@ -446,6 +465,10 @@ public class EntityCelestialJellyfish extends AbstractAnimatableFlyingMonster im
     	{
         	super.die(pDamageSource);
     	}
+    	else if(this.getPhase() == 1)
+    	{
+			this.reset();
+    	}
     }
     
     @Override
@@ -478,9 +501,6 @@ public class EntityCelestialJellyfish extends AbstractAnimatableFlyingMonster im
     	else
     	{
     		this.setPhaseTime(this.getPhaseTime() + 1);
-    		this.setShowWarning(false);
-    		this.setTeleporting(false);
-    		this.setTeleportAbove(false);
             this.setDeltaMovement(this.getDeltaMovement().add(0.0D, -0.08D, 0.0D));
             this.bossEvent.setVisible(false);
     		if(this.getPhaseTime() == 200)
@@ -677,7 +697,7 @@ public class EntityCelestialJellyfish extends AbstractAnimatableFlyingMonster im
         		this.playSound(UnleashedSounds.CELESTIAL_JELLYFISH_TRANSFORM.get(), 2.0F, 1.0F);
         		return false;
         	}
-    		if(!this.isVisible() || this.isClone() || this.isTeleport() || this.showWarning() || this.isInvincible())
+    		if(!this.isVisible() || this.isClone() || this.isTeleport() || this.showWarning() || this.isInvincible() || this.getAnimationState() == 1)
     		{
     			return false;
     		}

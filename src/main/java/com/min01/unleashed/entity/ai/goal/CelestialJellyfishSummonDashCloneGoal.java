@@ -23,7 +23,6 @@ public class CelestialJellyfishSummonDashCloneGoal extends AbstractCelestialJell
 		super.start();
 		this.mob.setAnimationState(3);
 		this.mob.doTeleport();
-		this.mob.setTeleporting(true);
 		this.mob.runningGoal = this.getClass();
 	}
 	
@@ -58,6 +57,7 @@ public class CelestialJellyfishSummonDashCloneGoal extends AbstractCelestialJell
 			jellyfish.setOwner(this.mob);
 			jellyfish.setTarget(this.mob.getTarget());
 			this.mob.level.addFreshEntity(jellyfish);
+			this.mob.setTeleporting(true);
 		}
 		if(this.cloneTick == 0)
 		{
