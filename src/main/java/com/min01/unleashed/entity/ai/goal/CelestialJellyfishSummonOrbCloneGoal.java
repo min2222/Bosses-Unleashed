@@ -24,7 +24,6 @@ public class CelestialJellyfishSummonOrbCloneGoal extends AbstractCelestialJelly
 		super.start();
 		this.mob.doTeleport();
 		this.mob.setInvincible(true);
-		this.mob.setTeleporting(true);
 		this.mob.runningGoal = this.getClass();
 	}
 	

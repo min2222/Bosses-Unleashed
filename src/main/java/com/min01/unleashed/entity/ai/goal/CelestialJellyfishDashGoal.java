@@ -30,6 +30,11 @@ public class CelestialJellyfishDashGoal extends AbstractCelestialJellyfishGoal
 	public void start()
 	{
 		super.start();
+		if(this.mob.isClone())
+		{
+			this.mob.setAnimationState(4);
+			this.mob.setAnimationTick(Integer.MAX_VALUE);
+		}
 		this.mob.setInvincible(true);
 		this.mob.doTeleport();
 		this.mob.runningGoal = this.getClass();
@@ -129,7 +134,7 @@ public class CelestialJellyfishDashGoal extends AbstractCelestialJellyfishGoal
 	{
 		if(this.mob.getTarget() != null)
 		{
-			this.mob.setLastLookPos(UnleashedUtil.getLookPos(new Vec2(this.mob.getXRot(), this.mob.yBodyRot),this.mob.getTarget().position(), 0, 0, 300));
+			this.mob.setLastLookPos(UnleashedUtil.getLookPos(new Vec2(this.mob.getXRot(), this.mob.yBodyRot), this.mob.getTarget().position(), 0, 0, 300));
 		}
 		if(this.mob.isClone() || this.mob.goal == this.getClass())
 		{

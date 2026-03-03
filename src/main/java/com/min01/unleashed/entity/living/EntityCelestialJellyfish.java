@@ -683,7 +683,7 @@ public class EntityCelestialJellyfish extends AbstractAnimatableFlyingMonster im
     @Override
     public boolean hurt(DamageSource pSource, float pAmount)
     {
-    	if(pSource.is(DamageTypeTags.IS_EXPLOSION))
+    	if(pSource.is(DamageTypeTags.IS_EXPLOSION) || pSource.getDirectEntity() instanceof EntityCelestialOrb)
     	{
     		return false;
     	}

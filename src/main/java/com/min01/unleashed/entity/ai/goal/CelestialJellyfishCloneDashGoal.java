@@ -21,14 +21,6 @@ public class CelestialJellyfishCloneDashGoal extends AbstractCelestialJellyfishG
 		this.mob.setTeleporting(true);
 		this.mob.goal = CelestialJellyfishDashGoal.class;
 	}
-	
-	@Override
-	public void stop() 
-	{
-		super.stop();
-		this.mob.setAnimationState(0);
-		this.mob.setAnimationTick(0);
-	}
 
 	@Override
 	public int getSkillUsingTime() 

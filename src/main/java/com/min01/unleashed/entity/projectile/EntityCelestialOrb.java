@@ -102,7 +102,7 @@ public class EntityCelestialOrb extends ThrowableProjectile implements ITrail
 				List<LivingEntity> list = this.level.getEntitiesOfClass(LivingEntity.class, this.getBoundingBox().inflate(5.0F), this::canExplode);
 				list.forEach(t ->
 				{
-					t.hurt(this.damageSources().explosion(this, this.getOwner()), 35.0F);
+					t.hurt(this.damageSources().indirectMagic(this, this.getOwner()), 35.0F);
 				});
 				this.discard();
 			}
