@@ -559,7 +559,13 @@ public class EntityCelestialJellyfish extends AbstractAnimatableFlyingMonster im
         				if(this.getTarget() != null)
         				{
         					float yRot = this.getRandom().nextFloat() * 360.0F;
-        					Vec3 lookPos = UnleashedUtil.getLookPos(new Vec2(0.0F, this.getTarget().getYHeadRot() + yRot), this.getTarget().position(), 0, 0, this.getRandom().nextInt(10, 20));
+        					Vec3 targetPos = this.getTarget().position();
+        					if(targetPos.y < this.getY())
+        					{
+        						BlockPos groundPos = UnleashedUtil.getGroundPos(this.level, this.getX(), this.getY(), this.getZ());
+        						targetPos = Vec3.atBottomCenterOf(groundPos);
+        					}
+        					Vec3 lookPos = UnleashedUtil.getLookPos(new Vec2(0.0F, this.getTarget().getYHeadRot() + yRot), targetPos, 0, 0, this.getRandom().nextInt(10, 20));
         					if(this.isTeleportAbove())
         					{
         						lookPos = lookPos.add(0, 4.5F, 0);
