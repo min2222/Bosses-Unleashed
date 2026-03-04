@@ -19,9 +19,9 @@ import net.minecraft.world.item.ItemStack;
 public class MixinHumanoidArmorLayer<T extends LivingEntity, M extends HumanoidModel<T>, A extends HumanoidModel<T>>
 {
 	@Inject(at = @At("HEAD"), method = "renderArmorPiece", cancellable = true)
-	private void renderArmorPiece(PoseStack p_117119_, MultiBufferSource p_117120_, T p_117121_, EquipmentSlot p_117122_, int p_117123_, A p_117124_, CallbackInfo ci)
+	private void renderArmorPiece(PoseStack pPoseStack, MultiBufferSource pBuffer, T pLivingEntity, EquipmentSlot pSlot, int pPackedLight, A pModel, CallbackInfo ci)
 	{
-		ItemStack stack = p_117121_.getItemBySlot(p_117122_);
+		ItemStack stack = pLivingEntity.getItemBySlot(pSlot);
 		if(stack.getItem() instanceof IGlowingArmor)
 		{
 			ci.cancel();
