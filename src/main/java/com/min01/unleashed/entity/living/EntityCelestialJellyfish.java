@@ -37,7 +37,6 @@ import net.minecraft.commands.arguments.EntityAnchorArgument.Anchor;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.protocol.game.ClientboundSetEntityMotionPacket;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
@@ -307,10 +306,7 @@ public class EntityCelestialJellyfish extends AbstractAnimatableFlyingMonster im
 					Vec3 motion = UnleashedUtil.getVelocityTowards(this.position(), t.position(), Math.max(0.05F - (strength * 0.0001F), 0.0F));
 					t.push(motion.x, motion.y, motion.z);
 				}
-	    		if(t instanceof ServerPlayer player)
-	    		{
-	    			player.connection.send(new ClientboundSetEntityMotionPacket(t));
-	    		}
+				t.hurtMarked = true;
 			});
 			if(!this.level.isClientSide)
 			{
@@ -403,10 +399,7 @@ public class EntityCelestialJellyfish extends AbstractAnimatableFlyingMonster im
 			{
 				Vec3 motion = UnleashedUtil.getVelocityTowards(this.position(), t.position(), 0.05F);
 				t.push(motion.x, motion.y, motion.z);
-	    		if(t instanceof ServerPlayer player)
-	    		{
-	    			player.connection.send(new ClientboundSetEntityMotionPacket(t));
-	    		}
+				t.hurtMarked = true;
 			});
 			
 			if(this.swell == 300)
