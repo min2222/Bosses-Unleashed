@@ -34,6 +34,7 @@ public class EntityMadLumberjack extends AbstractAnimatableMonster
 	public EntityMadLumberjack(EntityType<? extends Monster> pEntityType, Level pLevel) 
 	{
 		super(pEntityType, pLevel);
+		this.setMaxUpStep(1.5F);
 	}
 	
     public static AttributeSupplier.Builder createAttributes()
