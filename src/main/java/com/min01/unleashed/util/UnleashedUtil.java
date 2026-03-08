@@ -92,11 +92,6 @@ public class UnleashedUtil
 			int i1 = 0;
 			for(NoiseColumn noisecolumn : list)
 			{
-				//fix for ceiling dimension like deep abyss
-				if(l > 150)
-				{
-					continue;
-				}
 				BlockState blockstate = noisecolumn.getBlock(l);
 				if(types.isOpaque().test(blockstate)) 
 				{
