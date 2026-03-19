@@ -15,7 +15,7 @@ public class CelestialJellyItem extends Item
 {
 	public CelestialJellyItem() 
 	{
-		super(new Item.Properties().rarity(Rarity.EPIC).food(new FoodProperties.Builder().nutrition(1).saturationMod(2.0F).alwaysEat().fast().build()));
+		super(new Item.Properties().rarity(Rarity.EPIC).food(new FoodProperties.Builder().nutrition(20).saturationMod(0.1F).alwaysEat().fast().build()));
 	}
 
 	@Override
