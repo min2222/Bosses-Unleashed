@@ -11,7 +11,9 @@ public class UnleashedCapabilities
     	Entity entity = event.getObject();
 		if(entity instanceof Player player)
 		{
-			event.addCapability(DashCapabilityImpl.ID, new DashCapabilityImpl(player));
+			DashCapabilityImpl cap = new DashCapabilityImpl();
+			cap.setEntity(player);
+			event.addCapability(DashCapabilityImpl.ID, cap);
 		}
 	}
 }

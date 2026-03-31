@@ -21,9 +21,9 @@ public class DashCapabilityImpl implements IDashCapability
 	public static final Capability<IDashCapability> DASH = CapabilityManager.get(new CapabilityToken<>() {});
 	
 	private int dashTick;
-	private final Entity entity;
+	private Entity entity;
 	
-	public DashCapabilityImpl(Entity entity) 
+	public void setEntity(Entity entity) 
 	{
 		this.entity = entity;
 	}
