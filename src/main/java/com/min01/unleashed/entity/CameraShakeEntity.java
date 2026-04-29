@@ -18,19 +18,19 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.network.NetworkHooks;
 
-public class EntityCameraShake extends Entity 
+public class CameraShakeEntity extends Entity 
 {
-	private static final EntityDataAccessor<Float> RADIUS = SynchedEntityData.defineId(EntityCameraShake.class, EntityDataSerializers.FLOAT);
-    private static final EntityDataAccessor<Float> MAGNITUDE = SynchedEntityData.defineId(EntityCameraShake.class, EntityDataSerializers.FLOAT);
-    private static final EntityDataAccessor<Integer> DURATION = SynchedEntityData.defineId(EntityCameraShake.class, EntityDataSerializers.INT);
-    private static final EntityDataAccessor<Integer> FADE_DURATION = SynchedEntityData.defineId(EntityCameraShake.class, EntityDataSerializers.INT);
+	private static final EntityDataAccessor<Float> RADIUS = SynchedEntityData.defineId(CameraShakeEntity.class, EntityDataSerializers.FLOAT);
+    private static final EntityDataAccessor<Float> MAGNITUDE = SynchedEntityData.defineId(CameraShakeEntity.class, EntityDataSerializers.FLOAT);
+    private static final EntityDataAccessor<Integer> DURATION = SynchedEntityData.defineId(CameraShakeEntity.class, EntityDataSerializers.INT);
+    private static final EntityDataAccessor<Integer> FADE_DURATION = SynchedEntityData.defineId(CameraShakeEntity.class, EntityDataSerializers.INT);
 
-    public EntityCameraShake(EntityType<?> type, Level world) 
+    public CameraShakeEntity(EntityType<?> type, Level world) 
     {
         super(type, world);
     }
 
-    public EntityCameraShake(Level world, Vec3 position, float radius, float magnitude, int duration, int fadeDuration) 
+    public CameraShakeEntity(Level world, Vec3 position, float radius, float magnitude, int duration, int fadeDuration) 
     {
         super(UnleashedEntities.CAMERA_SHAKE.get(), world);
         this.setRadius(radius);
@@ -140,7 +140,7 @@ public class EntityCameraShake extends Entity
     {
         if(!world.isClientSide && UnleashedConfig.cameraShakes.get()) 
         {
-            EntityCameraShake cameraShake = new EntityCameraShake(world, position, radius, magnitude, duration, fadeDuration);
+            CameraShakeEntity cameraShake = new CameraShakeEntity(world, position, radius, magnitude, duration, fadeDuration);
             world.addFreshEntity(cameraShake);
         }
     }

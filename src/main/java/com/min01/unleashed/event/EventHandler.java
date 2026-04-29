@@ -2,8 +2,8 @@ package com.min01.unleashed.event;
 
 import com.min01.unleashed.BossesUnleashed;
 import com.min01.unleashed.entity.UnleashedEntities;
-import com.min01.unleashed.entity.living.EntityCelestialJellyfish;
-import com.min01.unleashed.entity.living.EntityMadLumberjack;
+import com.min01.unleashed.entity.living.CelestialJellyfishEntity;
+import com.min01.unleashed.entity.living.MadLumberjackEntity;
 
 import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
 import net.minecraftforge.event.entity.SpawnPlacementRegisterEvent;
@@ -23,8 +23,8 @@ public class EventHandler
     @SubscribeEvent
     public static void onEntityAttributeCreation(EntityAttributeCreationEvent event) 
     {
-    	event.put(UnleashedEntities.CELESTIAL_JELLYFISH.get(), EntityCelestialJellyfish.createAttributes().build());
-    	event.put(UnleashedEntities.MAD_LUMBERJACK.get(), EntityMadLumberjack.createAttributes().build());
+    	event.put(UnleashedEntities.CELESTIAL_JELLYFISH.get(), CelestialJellyfishEntity.createAttributes().build());
+    	event.put(UnleashedEntities.MAD_LUMBERJACK.get(), MadLumberjackEntity.createAttributes().build());
     }
     
     @SubscribeEvent

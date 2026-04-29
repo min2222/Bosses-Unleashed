@@ -1,7 +1,7 @@
 package com.min01.unleashed.entity.renderer;
 
 import com.min01.unleashed.BossesUnleashed;
-import com.min01.unleashed.entity.model.ModelCelestialOrb;
+import com.min01.unleashed.entity.model.CelestialOrbModel;
 import com.min01.unleashed.entity.projectile.EntityCelestialOrb;
 import com.min01.unleashed.misc.UnleashedRenderType;
 import com.min01.unleashed.util.UnleashedClientUtil;
@@ -18,11 +18,11 @@ import net.minecraft.world.phys.Vec3;
 
 public class CelestialOrbRenderer extends EntityRenderer<EntityCelestialOrb>
 {
-	private final ModelCelestialOrb model;
+	private final CelestialOrbModel model;
 	public CelestialOrbRenderer(Context pContext) 
 	{
 		super(pContext);
-		this.model = new ModelCelestialOrb(pContext.bakeLayer(ModelCelestialOrb.LAYER_LOCATION));
+		this.model = new CelestialOrbModel(pContext.bakeLayer(CelestialOrbModel.LAYER_LOCATION));
 	}
 	
 	@Override

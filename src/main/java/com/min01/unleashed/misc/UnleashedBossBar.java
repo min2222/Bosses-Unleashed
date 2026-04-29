@@ -28,6 +28,7 @@ public class UnleashedBossBar
     static 
     {
     	register(() -> UnleashedEntities.CELESTIAL_JELLYFISH.get(), "celestial_jellyfish_bossbar", "celestial_jellyfish_bossbar_frame", 140, 32, 15, 0, 7, 127.0F, ChatFormatting.AQUA);
+    	register(() -> UnleashedEntities.MAD_LUMBERJACK.get(), "lumberjack_bossbar", "lumberjack_bossbar_frame", 132, 49, 25, -10, 0, 129.0F, ChatFormatting.DARK_GREEN);
     }
 
     private final ResourceLocation baseTexture;
@@ -89,11 +90,16 @@ public class UnleashedBossBar
 
     private void drawBar(GuiGraphics guiGraphics, int x, int y, BossEvent event) 
     {
-        guiGraphics.blit(this.overlayTexture, x, y, 0, 0, this.textureWidth, this.textureHeight, this.textureWidth, this.textureHeight);
         int progressScaled = (int)(event.getProgress() * this.progressScaled);
         if(progressScaled > 0) 
         {
-            guiGraphics.blit(this.baseTexture, x, y, 0, 0, 9 + progressScaled, this.textureHeight, this.textureWidth, this.textureHeight);
+        	int adjust = 0;
+        	if(this.baseTexture.getPath().startsWith("celestial_jellyfish"))
+        	{
+        		adjust = 9;
+        	}
+            guiGraphics.blit(this.baseTexture, x, y, 0, 0, adjust + progressScaled, this.textureHeight, this.textureWidth, this.textureHeight);
         }
+        guiGraphics.blit(this.overlayTexture, x, y, 0, 0, this.textureWidth, this.textureHeight, this.textureWidth, this.textureHeight);
     }
 }

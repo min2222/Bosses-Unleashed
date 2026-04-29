@@ -20,13 +20,13 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.network.NetworkHooks;
 
-public class EntityWormhole extends Entity implements IShaderEffect
+public class WormholeEntity extends Entity implements IShaderEffect
 {
-	public static final EntityDataAccessor<Boolean> CAN_DISAPPEAR = SynchedEntityData.defineId(EntityWormhole.class, EntityDataSerializers.BOOLEAN);
+	public static final EntityDataAccessor<Boolean> CAN_DISAPPEAR = SynchedEntityData.defineId(WormholeEntity.class, EntityDataSerializers.BOOLEAN);
 	
 	public int disapperTick;
 	
-	public EntityWormhole(EntityType<?> pEntityType, Level pLevel) 
+	public WormholeEntity(EntityType<?> pEntityType, Level pLevel) 
 	{
 		super(pEntityType, pLevel);
 		this.noCulling = true;

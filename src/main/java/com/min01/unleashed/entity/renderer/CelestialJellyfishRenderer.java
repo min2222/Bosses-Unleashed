@@ -1,8 +1,8 @@
 package com.min01.unleashed.entity.renderer;
 
 import com.min01.unleashed.BossesUnleashed;
-import com.min01.unleashed.entity.living.EntityCelestialJellyfish;
-import com.min01.unleashed.entity.model.ModelCelestialJellyfish;
+import com.min01.unleashed.entity.living.CelestialJellyfishEntity;
+import com.min01.unleashed.entity.model.CelestialJellyfishModel;
 import com.min01.unleashed.entity.renderer.layer.CelestialJellyfishLayer;
 import com.min01.unleashed.util.UnleashedClientUtil;
 import com.min01.unleashed.util.UnleashedUtil;
@@ -18,19 +18,19 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.phys.Vec3;
 
-public class CelestialJellyfishRenderer extends MobRenderer<EntityCelestialJellyfish, ModelCelestialJellyfish>
+public class CelestialJellyfishRenderer extends MobRenderer<CelestialJellyfishEntity, CelestialJellyfishModel>
 {
 	private final JellyfishRenderer renderer;
 	
 	public CelestialJellyfishRenderer(Context pContext)
 	{
-		super(pContext, new ModelCelestialJellyfish(pContext.bakeLayer(ModelCelestialJellyfish.LAYER_LOCATION)), 0.0F);
+		super(pContext, new CelestialJellyfishModel(pContext.bakeLayer(CelestialJellyfishModel.LAYER_LOCATION)), 0.0F);
 		this.addLayer(new CelestialJellyfishLayer(this, this.model, ResourceLocation.fromNamespaceAndPath(BossesUnleashed.MODID, "textures/entity/celestial_jellyfish.png")));
 		this.renderer = new JellyfishRenderer(pContext);
 	}
 	
 	@Override
-	public void render(EntityCelestialJellyfish pEntity, float pEntityYaw, float pPartialTicks, PoseStack pPoseStack, MultiBufferSource pBuffer, int pPackedLight) 
+	public void render(CelestialJellyfishEntity pEntity, float pEntityYaw, float pPartialTicks, PoseStack pPoseStack, MultiBufferSource pBuffer, int pPackedLight) 
 	{
 		if(pEntity.isTransform())
 		{
@@ -63,19 +63,19 @@ public class CelestialJellyfishRenderer extends MobRenderer<EntityCelestialJelly
 	}
 	
 	@Override
-	protected int getBlockLightLevel(EntityCelestialJellyfish pEntity, BlockPos pPos) 
+	protected int getBlockLightLevel(CelestialJellyfishEntity pEntity, BlockPos pPos) 
 	{
 		return 15;
 	}
 	
 	@Override
-	protected RenderType getRenderType(EntityCelestialJellyfish pLivingEntity, boolean pBodyVisible, boolean pTranslucent, boolean pGlowing) 
+	protected RenderType getRenderType(CelestialJellyfishEntity pLivingEntity, boolean pBodyVisible, boolean pTranslucent, boolean pGlowing) 
 	{
 		return RenderType.entityTranslucent(this.getTextureLocation(pLivingEntity));
 	}
 	
 	@Override
-	public ResourceLocation getTextureLocation(EntityCelestialJellyfish pEntity)
+	public ResourceLocation getTextureLocation(CelestialJellyfishEntity pEntity)
 	{
 		return ResourceLocation.fromNamespaceAndPath(BossesUnleashed.MODID, "textures/entity/celestial_jellyfish.png");
 	}

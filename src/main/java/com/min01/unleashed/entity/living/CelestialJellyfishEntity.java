@@ -7,9 +7,9 @@ import java.util.UUID;
 import javax.annotation.Nullable;
 
 import com.min01.unleashed.entity.AbstractAnimatableFlyingMonster;
-import com.min01.unleashed.entity.EntityBlackhole;
-import com.min01.unleashed.entity.EntityCameraShake;
-import com.min01.unleashed.entity.EntityWormhole;
+import com.min01.unleashed.entity.BlackholeEntity;
+import com.min01.unleashed.entity.CameraShakeEntity;
+import com.min01.unleashed.entity.WormholeEntity;
 import com.min01.unleashed.entity.IShaderEffect;
 import com.min01.unleashed.entity.UnleashedEntities;
 import com.min01.unleashed.entity.ai.goal.AbstractCelestialJellyfishGoal;
@@ -67,24 +67,24 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec2;
 import net.minecraft.world.phys.Vec3;
 
-public class EntityCelestialJellyfish extends AbstractAnimatableFlyingMonster implements IShaderEffect
+public class CelestialJellyfishEntity extends AbstractAnimatableFlyingMonster implements IShaderEffect
 {
-	public static final EntityDataAccessor<Boolean> IS_TRANSFORM = SynchedEntityData.defineId(EntityCelestialJellyfish.class, EntityDataSerializers.BOOLEAN);
-	public static final EntityDataAccessor<Boolean> SHOW_EFFECT = SynchedEntityData.defineId(EntityCelestialJellyfish.class, EntityDataSerializers.BOOLEAN);
-	public static final EntityDataAccessor<Boolean> SHOW_WARNING = SynchedEntityData.defineId(EntityCelestialJellyfish.class, EntityDataSerializers.BOOLEAN);
-	public static final EntityDataAccessor<Boolean> SHOW_AFTER_IMAGE = SynchedEntityData.defineId(EntityCelestialJellyfish.class, EntityDataSerializers.BOOLEAN);
-	public static final EntityDataAccessor<Boolean> IS_VISIBLE = SynchedEntityData.defineId(EntityCelestialJellyfish.class, EntityDataSerializers.BOOLEAN);
-	public static final EntityDataAccessor<Boolean> IS_CLONE = SynchedEntityData.defineId(EntityCelestialJellyfish.class, EntityDataSerializers.BOOLEAN);
-	public static final EntityDataAccessor<Boolean> IS_TELEPORT = SynchedEntityData.defineId(EntityCelestialJellyfish.class, EntityDataSerializers.BOOLEAN);
-	public static final EntityDataAccessor<Boolean> IS_TELEPORTING = SynchedEntityData.defineId(EntityCelestialJellyfish.class, EntityDataSerializers.BOOLEAN);
-	public static final EntityDataAccessor<Boolean> IS_INVINCIBLE = SynchedEntityData.defineId(EntityCelestialJellyfish.class, EntityDataSerializers.BOOLEAN);
-	public static final EntityDataAccessor<Boolean> IS_TELEPORT_ABOVE = SynchedEntityData.defineId(EntityCelestialJellyfish.class, EntityDataSerializers.BOOLEAN);
-	public static final EntityDataAccessor<Boolean> IS_DISCARD = SynchedEntityData.defineId(EntityCelestialJellyfish.class, EntityDataSerializers.BOOLEAN);
-	public static final EntityDataAccessor<Float> EFFECT_SCALE = SynchedEntityData.defineId(EntityCelestialJellyfish.class, EntityDataSerializers.FLOAT);
-	public static final EntityDataAccessor<Integer> PHASE = SynchedEntityData.defineId(EntityCelestialJellyfish.class, EntityDataSerializers.INT);
-	public static final EntityDataAccessor<Integer> PHASE_TIME = SynchedEntityData.defineId(EntityCelestialJellyfish.class, EntityDataSerializers.INT);
-	public static final EntityDataAccessor<Optional<UUID>> OWNER_UUID = SynchedEntityData.defineId(EntityCelestialJellyfish.class, EntityDataSerializers.OPTIONAL_UUID);
-	public static final EntityDataAccessor<Vec3> LAST_LOOK_POS = SynchedEntityData.defineId(EntityCelestialJellyfish.class, UnleashedEntityDataSerializers.VEC3.get());
+	public static final EntityDataAccessor<Boolean> IS_TRANSFORM = SynchedEntityData.defineId(CelestialJellyfishEntity.class, EntityDataSerializers.BOOLEAN);
+	public static final EntityDataAccessor<Boolean> SHOW_EFFECT = SynchedEntityData.defineId(CelestialJellyfishEntity.class, EntityDataSerializers.BOOLEAN);
+	public static final EntityDataAccessor<Boolean> SHOW_WARNING = SynchedEntityData.defineId(CelestialJellyfishEntity.class, EntityDataSerializers.BOOLEAN);
+	public static final EntityDataAccessor<Boolean> SHOW_AFTER_IMAGE = SynchedEntityData.defineId(CelestialJellyfishEntity.class, EntityDataSerializers.BOOLEAN);
+	public static final EntityDataAccessor<Boolean> IS_VISIBLE = SynchedEntityData.defineId(CelestialJellyfishEntity.class, EntityDataSerializers.BOOLEAN);
+	public static final EntityDataAccessor<Boolean> IS_CLONE = SynchedEntityData.defineId(CelestialJellyfishEntity.class, EntityDataSerializers.BOOLEAN);
+	public static final EntityDataAccessor<Boolean> IS_TELEPORT = SynchedEntityData.defineId(CelestialJellyfishEntity.class, EntityDataSerializers.BOOLEAN);
+	public static final EntityDataAccessor<Boolean> IS_TELEPORTING = SynchedEntityData.defineId(CelestialJellyfishEntity.class, EntityDataSerializers.BOOLEAN);
+	public static final EntityDataAccessor<Boolean> IS_INVINCIBLE = SynchedEntityData.defineId(CelestialJellyfishEntity.class, EntityDataSerializers.BOOLEAN);
+	public static final EntityDataAccessor<Boolean> IS_TELEPORT_ABOVE = SynchedEntityData.defineId(CelestialJellyfishEntity.class, EntityDataSerializers.BOOLEAN);
+	public static final EntityDataAccessor<Boolean> IS_DISCARD = SynchedEntityData.defineId(CelestialJellyfishEntity.class, EntityDataSerializers.BOOLEAN);
+	public static final EntityDataAccessor<Float> EFFECT_SCALE = SynchedEntityData.defineId(CelestialJellyfishEntity.class, EntityDataSerializers.FLOAT);
+	public static final EntityDataAccessor<Integer> PHASE = SynchedEntityData.defineId(CelestialJellyfishEntity.class, EntityDataSerializers.INT);
+	public static final EntityDataAccessor<Integer> PHASE_TIME = SynchedEntityData.defineId(CelestialJellyfishEntity.class, EntityDataSerializers.INT);
+	public static final EntityDataAccessor<Optional<UUID>> OWNER_UUID = SynchedEntityData.defineId(CelestialJellyfishEntity.class, EntityDataSerializers.OPTIONAL_UUID);
+	public static final EntityDataAccessor<Vec3> LAST_LOOK_POS = SynchedEntityData.defineId(CelestialJellyfishEntity.class, UnleashedEntityDataSerializers.VEC3.get());
 	
 	public int oldSwell;
 	public int swell;
@@ -96,10 +96,10 @@ public class EntityCelestialJellyfish extends AbstractAnimatableFlyingMonster im
 	public boolean isRewind;
 	
 	public final SmoothAnimationState swimAnimationState = new SmoothAnimationState();
-	public final AfterImage<EntityCelestialJellyfish> afterImage;
+	public final AfterImage<CelestialJellyfishEntity> afterImage;
 	public final UnleashedBossEvent bossEvent = (UnleashedBossEvent) new UnleashedBossEvent(this.getDisplayName(), this).setDarkenScreen(true);
 	   
-	public EntityCelestialJellyfish(EntityType<? extends AbstractAnimatableFlyingMonster> pEntityType, Level pLevel)
+	public CelestialJellyfishEntity(EntityType<? extends AbstractAnimatableFlyingMonster> pEntityType, Level pLevel)
 	{
 		super(pEntityType, pLevel);
 		this.afterImage = new AfterImage<>(this, 2, 1);
@@ -291,7 +291,7 @@ public class EntityCelestialJellyfish extends AbstractAnimatableFlyingMonster im
     			beam.setYaw(this.random.nextFloat() * 360.0F);
     			beam.setPitch(this.random.nextFloat() * 45.0F);
     			this.level.addFreshEntity(beam);
-    			EntityCameraShake.cameraShake(this.level, this.position(), Math.max(strength * 0.1F, 30.0F), Math.max(strength * 0.0001F, 0.0F), 0, 20);
+    			CameraShakeEntity.cameraShake(this.level, this.position(), Math.max(strength * 0.1F, 30.0F), Math.max(strength * 0.0001F, 0.0F), 0, 20);
     		}
 			List<Entity> list = this.level.getEntitiesOfClass(Entity.class, this.getBoundingBox().inflate(15.0F), this::canPush);
 			list.forEach(t -> 
@@ -313,18 +313,18 @@ public class EntityCelestialJellyfish extends AbstractAnimatableFlyingMonster im
 	    		if(this.hurtTime > 0)
 	    		{
 	    			this.level.explode(this, this.getX(), this.getEyeY(), this.getZ(), 5.0F, ExplosionInteraction.NONE);
-	    			EntityCameraShake.cameraShake(this.level, this.position(), 100.0F, 0.1F, 0, 10);
+	    			CameraShakeEntity.cameraShake(this.level, this.position(), 100.0F, 0.1F, 0, 10);
 	    			this.dropAllDeathLoot(this.damageSources().generic());
 	    			this.spawnWormhole();
 	    			this.discard();
 	    		}
 	    		else if(this.getAnimationTick() <= 0)
 	    		{
-	    			EntityBlackhole blackHole = new EntityBlackhole(UnleashedEntities.BLACKHOLE.get(), this.level);
+	    			BlackholeEntity blackHole = new BlackholeEntity(UnleashedEntities.BLACKHOLE.get(), this.level);
 	    			blackHole.setPos(this.position());
 	    			this.level.addFreshEntity(blackHole);
 	    			this.playSound(SoundEvents.GENERIC_EXPLODE);
-	    			EntityCameraShake.cameraShake(this.level, this.position(), 100.0F, 0.1F, 0, 10);
+	    			CameraShakeEntity.cameraShake(this.level, this.position(), 100.0F, 0.1F, 0, 10);
 	    			this.dropAllDeathLoot(this.damageSources().generic());
 	    			this.discard();
 	    		}
@@ -338,7 +338,7 @@ public class EntityCelestialJellyfish extends AbstractAnimatableFlyingMonster im
     	{
     		return EntitySelector.NO_CREATIVE_OR_SPECTATOR.test(player);
     	}
-    	return entity instanceof Projectile projectile && !(projectile.getOwner() instanceof EntityCelestialJellyfish);
+    	return entity instanceof Projectile projectile && !(projectile.getOwner() instanceof CelestialJellyfishEntity);
     }
     
     public void spawnWormhole()
@@ -347,7 +347,7 @@ public class EntityCelestialJellyfish extends AbstractAnimatableFlyingMonster im
     	{
 			float yRot = this.getRandom().nextFloat() * 360.0F;
 			Vec3 lookPos = UnleashedUtil.getLookPos(new Vec2(0.0F, this.getYHeadRot() + yRot), this.position(), 0, 0, this.getRandom().nextInt(10, 20));
-        	EntityWormhole wormhole = new EntityWormhole(UnleashedEntities.WORMHOLE.get(), this.level);
+        	WormholeEntity wormhole = new WormholeEntity(UnleashedEntities.WORMHOLE.get(), this.level);
         	wormhole.setPos(lookPos);
         	this.level.addFreshEntity(wormhole);
     	}
@@ -391,10 +391,10 @@ public class EntityCelestialJellyfish extends AbstractAnimatableFlyingMonster im
 		{
 			this.swell++;
 			
-			EntityCameraShake.cameraShake(this.level, this.position(), 30.0F, 0.01F, 0, 10);
+			CameraShakeEntity.cameraShake(this.level, this.position(), 30.0F, 0.01F, 0, 10);
 			this.setDeltaMovement(Vec3.ZERO);
 			
-			List<LivingEntity> list = this.level.getEntitiesOfClass(LivingEntity.class, this.getBoundingBox().inflate(this.getEffectScale() * 0.1F), EntitySelector.NO_CREATIVE_OR_SPECTATOR.and(t -> !(t instanceof EntityCelestialJellyfish) && !t.isAlliedTo(this)));
+			List<LivingEntity> list = this.level.getEntitiesOfClass(LivingEntity.class, this.getBoundingBox().inflate(this.getEffectScale() * 0.1F), EntitySelector.NO_CREATIVE_OR_SPECTATOR.and(t -> !(t instanceof CelestialJellyfishEntity) && !t.isAlliedTo(this)));
 			list.forEach(t -> 
 			{
 				Vec3 motion = UnleashedUtil.getVelocityTowards(this.position(), t.position(), 0.05F);
@@ -644,7 +644,7 @@ public class EntityCelestialJellyfish extends AbstractAnimatableFlyingMonster im
     		pos = pos.add(0, 4.5F, 0);
     	}
 		UnleashedShaderEffects.addEffect(this.level, "Shockwave", pos, 100, 1.0F);
-		EntityCameraShake.cameraShake(this.level, this.position(), 100.0F, 0.1F, 0, 20);
+		CameraShakeEntity.cameraShake(this.level, this.position(), 100.0F, 0.1F, 0, 20);
 		this.playSound(UnleashedSounds.CELESTIAL_JELLYFISH_EXPLOSION.get(), 2.0F, 1.0F);
     }
     
@@ -879,13 +879,13 @@ public class EntityCelestialJellyfish extends AbstractAnimatableFlyingMonster im
     	this.bossEvent.removePlayer(pServerPlayer);
     }
     
-	public void setOwner(EntityCelestialJellyfish owner)
+	public void setOwner(CelestialJellyfishEntity owner)
 	{
 		this.entityData.set(OWNER_UUID, Optional.of(owner.getUUID()));
 	}
 	
 	@Nullable
-	public EntityCelestialJellyfish getOwner() 
+	public CelestialJellyfishEntity getOwner() 
 	{
 		if(this.entityData.get(OWNER_UUID).isPresent()) 
 		{

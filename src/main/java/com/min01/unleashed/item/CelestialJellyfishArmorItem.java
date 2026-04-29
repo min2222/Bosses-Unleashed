@@ -5,7 +5,7 @@ import java.util.function.Consumer;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import com.min01.unleashed.item.model.ModelCelestialJellyfishArmor;
+import com.min01.unleashed.item.model.CelestialJellyfishArmorModel;
 import com.min01.unleashed.misc.UnleashedArmorMaterials;
 import com.min01.unleashed.util.UnleashedClientUtil;
 
@@ -34,7 +34,7 @@ public class CelestialJellyfishArmorItem extends ArmorItem implements IGlowingAr
 			@Override
 			public @NotNull HumanoidModel<?> getHumanoidArmorModel(LivingEntity livingEntity, ItemStack itemStack, EquipmentSlot equipmentSlot, HumanoidModel<?> original) 
 			{
-				ModelCelestialJellyfishArmor<?> model = new ModelCelestialJellyfishArmor<>(UnleashedClientUtil.MC.getEntityModels().bakeLayer(ModelCelestialJellyfishArmor.LAYER_LOCATION));
+				CelestialJellyfishArmorModel<?> model = new CelestialJellyfishArmorModel<>(UnleashedClientUtil.MC.getEntityModels().bakeLayer(CelestialJellyfishArmorModel.LAYER_LOCATION));
 				model.helmet.visible = equipmentSlot == EquipmentSlot.HEAD;
 				model.chestplate.visible = equipmentSlot == EquipmentSlot.CHEST;
 				model.right_arm.visible = equipmentSlot == EquipmentSlot.CHEST;

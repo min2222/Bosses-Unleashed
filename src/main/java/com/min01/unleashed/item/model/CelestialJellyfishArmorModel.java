@@ -16,7 +16,7 @@ import net.minecraft.client.model.geom.builders.PartDefinition;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
 
-public class ModelCelestialJellyfishArmor<T extends LivingEntity> extends HumanoidModel<T>
+public class CelestialJellyfishArmorModel<T extends LivingEntity> extends HumanoidModel<T>
 {
 	public static final ModelLayerLocation LAYER_LOCATION = new ModelLayerLocation(ResourceLocation.fromNamespaceAndPath(BossesUnleashed.MODID, "celestial_jellyfish_armor"), "main");
 	public final ModelPart helmet;
@@ -29,7 +29,7 @@ public class ModelCelestialJellyfishArmor<T extends LivingEntity> extends Humano
 	public final ModelPart right_feet;
 	public final ModelPart left_feet;
 
-	public ModelCelestialJellyfishArmor(ModelPart root) 
+	public CelestialJellyfishArmorModel(ModelPart root) 
 	{
 		super(root);
 		this.helmet = root.getChild("helmet");

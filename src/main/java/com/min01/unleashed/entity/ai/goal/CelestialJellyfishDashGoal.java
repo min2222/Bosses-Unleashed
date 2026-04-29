@@ -4,7 +4,7 @@ import java.util.List;
 
 import com.min01.unleashed.config.UnleashedConfig;
 import com.min01.unleashed.entity.UnleashedEntities;
-import com.min01.unleashed.entity.living.EntityCelestialJellyfish;
+import com.min01.unleashed.entity.living.CelestialJellyfishEntity;
 import com.min01.unleashed.entity.projectile.EntityCelestialOrb;
 import com.min01.unleashed.sound.UnleashedSounds;
 import com.min01.unleashed.util.UnleashedUtil;
@@ -21,7 +21,7 @@ public class CelestialJellyfishDashGoal extends AbstractCelestialJellyfishGoal
 	private boolean canContinueToUse = true;
 	private boolean isDash;
 	
-	public CelestialJellyfishDashGoal(EntityCelestialJellyfish mob)
+	public CelestialJellyfishDashGoal(CelestialJellyfishEntity mob)
 	{
 		super(mob);
 	}
@@ -64,7 +64,7 @@ public class CelestialJellyfishDashGoal extends AbstractCelestialJellyfishGoal
 		}
 		if(this.isDash)
 		{
-			List<LivingEntity> list = this.mob.level.getEntitiesOfClass(LivingEntity.class, this.mob.getBoundingBox().inflate(1.85F), t -> !(t instanceof EntityCelestialJellyfish) && !t.isAlliedTo(this.mob));
+			List<LivingEntity> list = this.mob.level.getEntitiesOfClass(LivingEntity.class, this.mob.getBoundingBox().inflate(1.85F), t -> !(t instanceof CelestialJellyfishEntity) && !t.isAlliedTo(this.mob));
 			list.forEach(t -> 
 			{
 				this.mob.doHurtTarget(t);

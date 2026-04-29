@@ -16,12 +16,12 @@ import net.minecraft.client.model.geom.builders.MeshDefinition;
 import net.minecraft.client.model.geom.builders.PartDefinition;
 import net.minecraft.resources.ResourceLocation;
 
-public class ModelCelestialOrb extends EntityModel<EntityCelestialOrb>
+public class CelestialOrbModel extends EntityModel<EntityCelestialOrb>
 {
 	public static final ModelLayerLocation LAYER_LOCATION = new ModelLayerLocation(ResourceLocation.fromNamespaceAndPath(BossesUnleashed.MODID, "celestial_orb"), "main");
 	private final ModelPart orb;
 
-	public ModelCelestialOrb(ModelPart root) 
+	public CelestialOrbModel(ModelPart root) 
 	{
 		this.orb = root.getChild("orb");
 	}

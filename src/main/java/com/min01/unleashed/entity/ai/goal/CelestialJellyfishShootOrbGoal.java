@@ -1,7 +1,7 @@
 package com.min01.unleashed.entity.ai.goal;
 
 import com.min01.unleashed.entity.UnleashedEntities;
-import com.min01.unleashed.entity.living.EntityCelestialJellyfish;
+import com.min01.unleashed.entity.living.CelestialJellyfishEntity;
 import com.min01.unleashed.entity.projectile.EntityCelestialOrb;
 import com.min01.unleashed.sound.UnleashedSounds;
 import com.min01.unleashed.util.UnleashedUtil;
@@ -18,7 +18,7 @@ public class CelestialJellyfishShootOrbGoal extends AbstractCelestialJellyfishGo
 	public boolean isShoot;
 	public boolean isRewind;
 	
-	public CelestialJellyfishShootOrbGoal(EntityCelestialJellyfish mob) 
+	public CelestialJellyfishShootOrbGoal(CelestialJellyfishEntity mob) 
 	{
 		super(mob);
 	}

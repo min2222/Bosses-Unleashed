@@ -197,6 +197,13 @@ public class UnleashedUtil
         return new Vec3(x, y, z);
 	}
 	
+	public static void dashToward(Entity entity, float scale)
+	{
+        float x = (float) Math.cos(Math.toRadians(entity.getYHeadRot() + 90));
+        float z = (float) Math.sin(Math.toRadians(entity.getYHeadRot() + 90));
+        entity.push(x * scale, 0, z * scale);
+	}
+	
 	public static Vec3 getSpreadPosition(Entity entity, Vec3 range)
 	{
         double x = entity.getX() + (entity.level.random.nextDouble() - entity.level.random.nextDouble()) * range.x + 0.5D;
@@ -297,4 +304,26 @@ public class UnleashedUtil
 		}
 		return null;
 	}
+	
+    public static double getMeleeAttackRangeSqr(float width, LivingEntity target, float multiplier)
+    {
+    	return (double)(width * multiplier * width * multiplier + target.getBbWidth());
+    }
+    
+    public static double getMeleeAttackRangeSqr(Entity owner, LivingEntity target, float multiplier)
+    {
+    	return (double)(owner.getBbWidth() * multiplier * owner.getBbWidth() * multiplier + target.getBbWidth());
+    }
+    
+    public static boolean isWithinMeleeAttackRange(Vec3 pos, float width, LivingEntity target, float multiplier)
+    {
+    	double d0 = pos.distanceToSqr(target.getX(), target.getY(), target.getZ());
+    	return d0 <= getMeleeAttackRangeSqr(width, target, multiplier);
+    }
+
+    public static boolean isWithinMeleeAttackRange(Entity owner, LivingEntity target, float multiplier)
+    {
+    	double d0 = owner.distanceToSqr(target.getX(), target.getY(), target.getZ());
+    	return d0 <= getMeleeAttackRangeSqr(owner, target, multiplier);
+    }
 }

@@ -4,7 +4,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 import com.min01.unleashed.BossesUnleashed;
 import com.min01.unleashed.config.UnleashedConfig;
-import com.min01.unleashed.entity.EntityCameraShake;
+import com.min01.unleashed.entity.CameraShakeEntity;
 import com.min01.unleashed.misc.UnleashedBossBar;
 import com.min01.unleashed.shader.UnleashedShaderEffects;
 import com.min01.unleashed.util.UnleashedClientUtil;
@@ -40,7 +40,7 @@ public class ClientEventHandlerForge
         	if(UnleashedConfig.cameraShakes.get())
         	{
                 float shakeAmplitude = 0.0F;
-                for(EntityCameraShake cameraShake : player.level.getEntitiesOfClass(EntityCameraShake.class, player.getBoundingBox().inflate(100.0F))) 
+                for(CameraShakeEntity cameraShake : player.level.getEntitiesOfClass(CameraShakeEntity.class, player.getBoundingBox().inflate(100.0F))) 
                 {
                     if(cameraShake.distanceTo(player) < cameraShake.getRadius())
                     {

@@ -1,7 +1,7 @@
 package com.min01.unleashed.entity.ai.goal;
 
 import com.min01.unleashed.entity.UnleashedEntities;
-import com.min01.unleashed.entity.living.EntityCelestialJellyfish;
+import com.min01.unleashed.entity.living.CelestialJellyfishEntity;
 import com.min01.unleashed.util.UnleashedUtil;
 
 import net.minecraft.world.phys.Vec2;
@@ -13,7 +13,7 @@ public class CelestialJellyfishSummonOrbCloneGoal extends AbstractCelestialJelly
 	public int cloneTick;
 	public int cloneCount;
 	
-	public CelestialJellyfishSummonOrbCloneGoal(EntityCelestialJellyfish mob) 
+	public CelestialJellyfishSummonOrbCloneGoal(CelestialJellyfishEntity mob) 
 	{
 		super(mob);
 	}
@@ -46,7 +46,7 @@ public class CelestialJellyfishSummonOrbCloneGoal extends AbstractCelestialJelly
 		--this.cloneTick;
 		if(this.cloneTick == 10)
 		{
-			EntityCelestialJellyfish jellyfish = new EntityCelestialJellyfish(UnleashedEntities.CELESTIAL_JELLYFISH.get(), this.mob.level);
+			CelestialJellyfishEntity jellyfish = new CelestialJellyfishEntity(UnleashedEntities.CELESTIAL_JELLYFISH.get(), this.mob.level);
 			jellyfish.setClone(true);
 			jellyfish.setTransform(true);
 			jellyfish.setAnimationState(2);

@@ -3,7 +3,7 @@ package com.min01.unleashed.entity.ai.goal;
 import org.joml.Math;
 
 import com.min01.unleashed.entity.UnleashedEntities;
-import com.min01.unleashed.entity.living.EntityCelestialJellyfish;
+import com.min01.unleashed.entity.living.CelestialJellyfishEntity;
 import com.min01.unleashed.util.UnleashedUtil;
 
 import net.minecraft.world.phys.Vec2;
@@ -14,7 +14,7 @@ public class CelestialJellyfishSummonDashCloneGoal extends AbstractCelestialJell
 	public boolean canContinueToUse = true;
 	public int cloneTick;
 	
-	public CelestialJellyfishSummonDashCloneGoal(EntityCelestialJellyfish mob) 
+	public CelestialJellyfishSummonDashCloneGoal(CelestialJellyfishEntity mob) 
 	{
 		super(mob);
 	}
@@ -46,7 +46,7 @@ public class CelestialJellyfishSummonDashCloneGoal extends AbstractCelestialJell
 		--this.cloneTick;
 		if(this.cloneTick == 15)
 		{
-			EntityCelestialJellyfish jellyfish = new EntityCelestialJellyfish(UnleashedEntities.CELESTIAL_JELLYFISH.get(), this.mob.level);
+			CelestialJellyfishEntity jellyfish = new CelestialJellyfishEntity(UnleashedEntities.CELESTIAL_JELLYFISH.get(), this.mob.level);
 			jellyfish.setClone(true);
 			jellyfish.setTransform(true);
 			jellyfish.setAnimationState(2);

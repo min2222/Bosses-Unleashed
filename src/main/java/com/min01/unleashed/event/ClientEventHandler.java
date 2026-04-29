@@ -5,10 +5,10 @@ import java.util.Objects;
 
 import com.min01.unleashed.BossesUnleashed;
 import com.min01.unleashed.entity.UnleashedEntities;
-import com.min01.unleashed.entity.model.ModelCelestialJellyfish;
-import com.min01.unleashed.entity.model.ModelCelestialOrb;
-import com.min01.unleashed.entity.model.ModelJellyfish;
-import com.min01.unleashed.entity.model.ModelMadLumberjack;
+import com.min01.unleashed.entity.model.CelestialJellyfishModel;
+import com.min01.unleashed.entity.model.CelestialOrbModel;
+import com.min01.unleashed.entity.model.JellyfishModel;
+import com.min01.unleashed.entity.model.MadLumberjackModel;
 import com.min01.unleashed.entity.renderer.CelestialBeamRenderer;
 import com.min01.unleashed.entity.renderer.CelestialJellyfishRenderer;
 import com.min01.unleashed.entity.renderer.CelestialOrbRenderer;
@@ -17,7 +17,7 @@ import com.min01.unleashed.entity.renderer.NoneRenderer;
 import com.min01.unleashed.entity.renderer.layer.CelestialJellyfishArmorLayer;
 import com.min01.unleashed.item.CelestialJellyfishUmbrellaItem;
 import com.min01.unleashed.item.UnleashedItems;
-import com.min01.unleashed.item.model.ModelCelestialJellyfishArmor;
+import com.min01.unleashed.item.model.CelestialJellyfishArmorModel;
 import com.min01.unleashed.misc.UnleashedArmPoses;
 import com.min01.unleashed.particle.CelestialExplosionParticle;
 import com.min01.unleashed.particle.UnleashedParticles;
@@ -89,12 +89,12 @@ public class ClientEventHandler
     @SubscribeEvent
     public static void onRegisterLayerDefinitions(EntityRenderersEvent.RegisterLayerDefinitions event)
     {
-    	event.registerLayerDefinition(ModelJellyfish.LAYER_LOCATION, ModelJellyfish::createBodyLayer);
-    	event.registerLayerDefinition(ModelCelestialJellyfish.LAYER_LOCATION, ModelCelestialJellyfish::createBodyLayer);
-    	event.registerLayerDefinition(ModelCelestialOrb.LAYER_LOCATION, ModelCelestialOrb::createBodyLayer);
-    	event.registerLayerDefinition(ModelCelestialJellyfishArmor.LAYER_LOCATION, ModelCelestialJellyfishArmor::createBodyLayer);
+    	event.registerLayerDefinition(JellyfishModel.LAYER_LOCATION, JellyfishModel::createBodyLayer);
+    	event.registerLayerDefinition(CelestialJellyfishModel.LAYER_LOCATION, CelestialJellyfishModel::createBodyLayer);
+    	event.registerLayerDefinition(CelestialOrbModel.LAYER_LOCATION, CelestialOrbModel::createBodyLayer);
+    	event.registerLayerDefinition(CelestialJellyfishArmorModel.LAYER_LOCATION, CelestialJellyfishArmorModel::createBodyLayer);
     	
-    	event.registerLayerDefinition(ModelMadLumberjack.LAYER_LOCATION, ModelMadLumberjack::createBodyLayer);
+    	event.registerLayerDefinition(MadLumberjackModel.LAYER_LOCATION, MadLumberjackModel::createBodyLayer);
     }
     
     @SubscribeEvent

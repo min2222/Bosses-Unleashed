@@ -2,9 +2,9 @@ package com.min01.unleashed.event;
 
 import com.min01.unleashed.BossesUnleashed;
 import com.min01.unleashed.config.UnleashedConfig;
-import com.min01.unleashed.entity.EntityWormhole;
+import com.min01.unleashed.entity.WormholeEntity;
 import com.min01.unleashed.entity.UnleashedEntities;
-import com.min01.unleashed.entity.living.EntityCelestialJellyfish;
+import com.min01.unleashed.entity.living.CelestialJellyfishEntity;
 import com.min01.unleashed.entity.projectile.EntityCelestialOrb;
 import com.min01.unleashed.misc.UnleashedTags;
 import com.min01.unleashed.network.UnleashedNetwork;
@@ -46,7 +46,7 @@ public class EventHandlerForge
 	@SubscribeEvent
 	public static void onExplostionDetonate(ExplosionEvent.Detonate event)
 	{
-		if(event.getExplosion().getExploder() instanceof EntityCelestialJellyfish)
+		if(event.getExplosion().getExploder() instanceof CelestialJellyfishEntity)
 		{
 			event.getAffectedEntities().removeIf(t -> t instanceof ItemEntity itemEntity && itemEntity.getItem().is(UnleashedTags.UnleashedItems.EXPLOSION_IMMUNE));
 		}
@@ -65,7 +65,7 @@ public class EventHandlerForge
 			{
 				if(Math.random() <= UnleashedConfig.wormholeSpawnChance.get() / 100.0F)
 				{
-					EntityWormhole wormhole = new EntityWormhole(UnleashedEntities.WORMHOLE.get(), enderMan.level);
+					WormholeEntity wormhole = new WormholeEntity(UnleashedEntities.WORMHOLE.get(), enderMan.level);
 					wormhole.setPos(enderMan.position());
 					level.addFreshEntity(wormhole);
 					event.setSpawnCancelled(true);
@@ -88,7 +88,7 @@ public class EventHandlerForge
 				UnleashedNetwork.sendToAll(new UpdateStarfieldPacket(data.isStarfield()));
 				if(!data.isJellyfishSpawned())
 				{
-					EntityCelestialJellyfish jellyfish = new EntityCelestialJellyfish(UnleashedEntities.CELESTIAL_JELLYFISH.get(), level);
+					CelestialJellyfishEntity jellyfish = new CelestialJellyfishEntity(UnleashedEntities.CELESTIAL_JELLYFISH.get(), level);
 					float yRot = player.getRandom().nextFloat() * 360.0F;
 					Vec3 lookPos = UnleashedUtil.getLookPos(new Vec2(0.0F, player.getYHeadRot() + yRot), player.position(), 0, 4.5F, player.getRandom().nextInt(10, 20));
 					jellyfish.setPos(lookPos);
@@ -121,7 +121,7 @@ public class EventHandlerForge
 		if(entity instanceof ServerPlayer player && player.level.dimension() == UnleashedWorlds.CELESTIAL_FIELD)
 		{
 			UnleashedSavedData data = UnleashedSavedData.get(player.level);
-			if(data != null && data.isJellyfishSpawned() && event.getSource().getEntity() instanceof EntityCelestialJellyfish)
+			if(data != null && data.isJellyfishSpawned() && event.getSource().getEntity() instanceof CelestialJellyfishEntity)
 			{
 				player.setRespawnPosition(UnleashedWorlds.CELESTIAL_FIELD, player.blockPosition(), player.getRespawnAngle(), player.isRespawnForced(), false);
 			}

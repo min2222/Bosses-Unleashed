@@ -2,7 +2,7 @@ package com.min01.unleashed.entity.model;
 
 import com.min01.unleashed.BossesUnleashed;
 import com.min01.unleashed.entity.animation.JellyfishAnimation;
-import com.min01.unleashed.entity.living.EntityCelestialJellyfish;
+import com.min01.unleashed.entity.living.CelestialJellyfishEntity;
 import com.min01.unleashed.util.UnleashedClientUtil;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
@@ -18,13 +18,13 @@ import net.minecraft.client.model.geom.builders.MeshDefinition;
 import net.minecraft.client.model.geom.builders.PartDefinition;
 import net.minecraft.resources.ResourceLocation;
 
-public class ModelJellyfish extends HierarchicalModel<EntityCelestialJellyfish>
+public class JellyfishModel extends HierarchicalModel<CelestialJellyfishEntity>
 {
 	public static final ModelLayerLocation LAYER_LOCATION = new ModelLayerLocation(ResourceLocation.fromNamespaceAndPath(BossesUnleashed.MODID, "jellyfish"), "main");
 	private final ModelPart root;
 	private final ModelPart jellyfish;
 
-	public ModelJellyfish(ModelPart root) 
+	public JellyfishModel(ModelPart root) 
 	{
 		this.root = root.getChild("root");
 		this.jellyfish = this.root.getChild("jellyfish");
@@ -46,7 +46,7 @@ public class ModelJellyfish extends HierarchicalModel<EntityCelestialJellyfish>
 	}
 
 	@Override
-	public void setupAnim(EntityCelestialJellyfish entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) 
+	public void setupAnim(CelestialJellyfishEntity entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) 
 	{
 		this.root().getAllParts().forEach(ModelPart::resetPose);
 		UnleashedClientUtil.animateHead(this.jellyfish, netHeadYaw, headPitch + 90.0F);

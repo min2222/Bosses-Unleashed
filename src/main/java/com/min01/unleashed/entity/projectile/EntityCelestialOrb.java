@@ -7,7 +7,7 @@ import java.util.UUID;
 import javax.annotation.Nullable;
 
 import com.min01.unleashed.entity.ITrail;
-import com.min01.unleashed.entity.living.EntityCelestialJellyfish;
+import com.min01.unleashed.entity.living.CelestialJellyfishEntity;
 import com.min01.unleashed.particle.UnleashedParticles;
 import com.min01.unleashed.util.UnleashedUtil;
 
@@ -58,7 +58,7 @@ public class EntityCelestialOrb extends ThrowableProjectile implements ITrail
 		}
 		if(this.isTrail())
 		{
-			if(this.getOwner() instanceof EntityCelestialJellyfish jellyfish)
+			if(this.getOwner() instanceof CelestialJellyfishEntity jellyfish)
 			{
 				if(!this.isRewind())
 				{
@@ -123,7 +123,7 @@ public class EntityCelestialOrb extends ThrowableProjectile implements ITrail
 	{
 		if(this.getOwner() != null)
 		{
-			if(this.getOwner() instanceof EntityCelestialJellyfish owner && entity instanceof EntityCelestialJellyfish jellyfish)
+			if(this.getOwner() instanceof CelestialJellyfishEntity owner && entity instanceof CelestialJellyfishEntity jellyfish)
 			{
 				if(owner.isClone() && jellyfish.isClone())
 				{

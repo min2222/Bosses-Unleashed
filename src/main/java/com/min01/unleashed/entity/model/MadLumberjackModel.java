@@ -2,8 +2,9 @@ package com.min01.unleashed.entity.model;
 
 import com.min01.unleashed.BossesUnleashed;
 import com.min01.unleashed.entity.animation.MadLumberjackAnimation;
-import com.min01.unleashed.entity.living.EntityMadLumberjack;
+import com.min01.unleashed.entity.living.MadLumberjackEntity;
 import com.min01.unleashed.misc.SmoothAnimationState;
+import com.min01.unleashed.util.UnleashedClientUtil;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 
@@ -18,26 +19,28 @@ import net.minecraft.client.model.geom.builders.MeshDefinition;
 import net.minecraft.client.model.geom.builders.PartDefinition;
 import net.minecraft.resources.ResourceLocation;
 
-public class ModelMadLumberjack extends HierarchicalModel<EntityMadLumberjack>
+public class MadLumberjackModel extends HierarchicalModel<MadLumberjackEntity>
 {
 	public static final ModelLayerLocation LAYER_LOCATION = new ModelLayerLocation(ResourceLocation.fromNamespaceAndPath(BossesUnleashed.MODID, "mad_lumberjack"), "main");
 	private final ModelPart root;
 	private final ModelPart bone;
 	private final ModelPart bone2;
 	private final ModelPart bone3;
+	private final ModelPart bone18;
 	private final ModelPart bone9;
 	private final ModelPart bone10;
 	private final ModelPart bone11;
 	private final ModelPart axe;
 	private final ModelPart shotgun;
 
-	public ModelMadLumberjack(ModelPart root) 
+	public MadLumberjackModel(ModelPart root) 
 	{
 		this.root = root.getChild("root");
 		this.bone = this.root.getChild("bone");
 		this.bone2 = this.bone.getChild("bone2");
 		this.bone3 = this.bone2.getChild("bone3");
 		this.bone9 = this.bone3.getChild("bone9");
+		this.bone18 = this.bone3.getChild("bone18");
 		this.bone10 = this.bone9.getChild("bone10");
 		this.bone11 = this.bone10.getChild("bone11");
 		this.axe = this.bone11.getChild("axe");
@@ -84,10 +87,12 @@ public class ModelMadLumberjack extends HierarchicalModel<EntityMadLumberjack>
 
 		bone11.addOrReplaceChild("bone23", CubeListBuilder.create().texOffs(130, 171).addBox(-2.0F, 0.0F, -1.5F, 4.0F, 8.0F, 3.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 8.0F, 1.5F));
 
-		bone11.addOrReplaceChild("axe", CubeListBuilder.create().texOffs(65, 159).addBox(-2.0F, -2.0F, -38.0F, 4.0F, 4.0F, 93.0F, new CubeDeformation(0.0F))
+		PartDefinition axe = bone11.addOrReplaceChild("axe", CubeListBuilder.create().texOffs(65, 159).addBox(-2.0F, -2.0F, -38.0F, 4.0F, 4.0F, 93.0F, new CubeDeformation(0.0F))
 		.texOffs(64, 206).addBox(-3.0F, -5.0F, -33.0F, 6.0F, 10.0F, 21.0F, new CubeDeformation(0.0F))
 		.texOffs(2, 217).addBox(-0.5F, 10.0F, -35.0F, 1.0F, 10.0F, 25.0F, new CubeDeformation(0.0F))
 		.texOffs(0, 191).addBox(-0.5F, 5.0F, -33.0F, 1.0F, 5.0F, 21.0F, new CubeDeformation(0.0F)), PartPose.offset(2.0F, 9.0F, -1.0F));
+
+		axe.addOrReplaceChild("axePos", CubeListBuilder.create(), PartPose.offset(0.0F, 15.0F, -22.0F));
 
 		bone11.addOrReplaceChild("shotgun", CubeListBuilder.create().texOffs(166, 217).addBox(-2.0F, -1.0F, -10.25F, 4.0F, 4.0F, 18.0F, new CubeDeformation(0.0F))
 		.texOffs(126, 210).addBox(-4.0F, 2.0F, -13.25F, 8.0F, 34.0F, 8.0F, new CubeDeformation(0.0F))
@@ -127,16 +132,21 @@ public class ModelMadLumberjack extends HierarchicalModel<EntityMadLumberjack>
 	}
 
 	@Override
-	public void setupAnim(EntityMadLumberjack entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch)
+	public void setupAnim(MadLumberjackEntity entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch)
 	{
 		this.root().getAllParts().forEach(ModelPart::resetPose);
 		this.shotgun.visible = entity.isGun();
 		this.axe.visible = !entity.isGun();
-
-		entity.axeIdleAnimationState.animateIdle(this, MadLumberjackAnimation.AXE_IDLE, ageInTicks, limbSwingAmount, 2.5F, entity.gunWalkAnimationState, entity.axeSprintAnimationState, entity.gunSprintAnimationState);
-		entity.gunIdleAnimationState.animateIdle(this, MadLumberjackAnimation.GUN_IDLE, ageInTicks, limbSwingAmount, 2.5F, entity.gunWalkAnimationState, entity.axeSprintAnimationState, entity.gunSprintAnimationState);
 		
-		SmoothAnimationState.animateWalk(this, MadLumberjackAnimation.AXE_WALK, limbSwing, limbSwingAmount, 2.5F, 2.5F, entity.gunWalkAnimationState, entity.axeSprintAnimationState, entity.gunSprintAnimationState);
+		UnleashedClientUtil.animateHead(this.bone18, netHeadYaw, headPitch);
+
+		entity.axeIdleAnimationState.animateIdle(this, MadLumberjackAnimation.AXE_IDLE, ageInTicks, limbSwingAmount, 2.5F, entity.gunWalkAnimationState, entity.gunIdleAnimationState);
+		entity.gunIdleAnimationState.animateIdle(this, MadLumberjackAnimation.GUN_IDLE, ageInTicks, limbSwingAmount, 2.5F, entity.gunWalkAnimationState, entity.axeIdleAnimationState);
+		
+		entity.axeAttack1AnimationState.animate(this, MadLumberjackAnimation.AXE_ATTACK1, ageInTicks);
+		entity.axeAttack2AnimationState.animate(this, MadLumberjackAnimation.AXE_ATTACK2, ageInTicks);
+		
+		SmoothAnimationState.animateWalk(this, MadLumberjackAnimation.AXE_WALK, limbSwing, limbSwingAmount, 2.5F, 2.5F, entity.axeAttack1AnimationState, entity.axeAttack2AnimationState);
 		entity.gunWalkAnimationState.animateWalkWithFactor(this, MadLumberjackAnimation.GUN_WALK, limbSwing, limbSwingAmount, 2.5F, 2.5F);
 		entity.axeSprintAnimationState.animateWalkWithFactor(this, MadLumberjackAnimation.AXE_SPRINT, limbSwing, limbSwingAmount, 1.0F, 1.0F);
 		entity.gunSprintAnimationState.animateWalkWithFactor(this, MadLumberjackAnimation.GUN_SPRINT, limbSwing, limbSwingAmount, 1.0F, 1.0F);

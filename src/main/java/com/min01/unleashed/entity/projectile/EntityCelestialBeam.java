@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Optional;
 
 import com.min01.unleashed.entity.AbstractOwnableEntity;
-import com.min01.unleashed.entity.living.EntityCelestialJellyfish;
+import com.min01.unleashed.entity.living.CelestialJellyfishEntity;
 
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
@@ -19,7 +19,7 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 
-public class EntityCelestialBeam extends AbstractOwnableEntity<EntityCelestialJellyfish>
+public class EntityCelestialBeam extends AbstractOwnableEntity<CelestialJellyfishEntity>
 {
 	public static final EntityDataAccessor<Float> YAW = SynchedEntityData.defineId(EntityCelestialBeam.class, EntityDataSerializers.FLOAT);
 	public static final EntityDataAccessor<Float> PITCH = SynchedEntityData.defineId(EntityCelestialBeam.class, EntityDataSerializers.FLOAT);

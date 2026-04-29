@@ -1,10 +1,10 @@
 package com.min01.unleashed.entity.ai.goal;
 
-import com.min01.unleashed.entity.living.EntityCelestialJellyfish;
+import com.min01.unleashed.entity.living.CelestialJellyfishEntity;
 
 public class CelestialJellyfishCloneShootOrbGoal extends AbstractCelestialJellyfishGoal
 {
-	public CelestialJellyfishCloneShootOrbGoal(EntityCelestialJellyfish mob) 
+	public CelestialJellyfishCloneShootOrbGoal(CelestialJellyfishEntity mob) 
 	{
 		super(mob);
 	}

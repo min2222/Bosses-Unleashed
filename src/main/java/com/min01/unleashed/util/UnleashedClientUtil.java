@@ -2,7 +2,9 @@ package com.min01.unleashed.util;
 
 import org.joml.Matrix3f;
 import org.joml.Matrix4f;
+import org.joml.Quaternionf;
 import org.joml.Vector3f;
+import org.joml.Vector4f;
 
 import com.min01.unleashed.BossesUnleashed;
 import com.min01.unleashed.entity.ITrail;
@@ -21,6 +23,8 @@ import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.Mth;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.phys.Vec3;
 
 public class UnleashedClientUtil 
@@ -126,6 +130,41 @@ public class UnleashedClientUtil
 			minecraft.getMainRenderTarget().bindWrite(false);
 		}
 	}
+	
+	//https://github.com/EEEAB/EEEABsMobs/blob/master/src/main/java/com/eeeab/animate/client/util/ModelPartUtils.java#L57
+    
+    public static Vec3 getWorldPosition(Entity entity, ModelPart root, Vec3 rotation, String... modelPartName)
+    {
+        PoseStack poseStack = new PoseStack();
+        float partialTick = MC.getPartialTick();
+        double x = Mth.lerp((double)partialTick, entity.xOld, entity.getX());
+        double y = Mth.lerp((double)partialTick, entity.yOld, entity.getY());
+        double z = Mth.lerp((double)partialTick, entity.zOld, entity.getZ());
+    	poseStack.translate(x, y, z);
+        Quaternionf quat = new Quaternionf().rotateXYZ((float) Math.toRadians(rotation.x), (float) Math.toRadians(-rotation.y + 180.0F), (float) Math.toRadians(rotation.z));
+        poseStack.mulPose(quat);
+        poseStack.scale(-1.0F, -1.0F, 1.0F);
+        ModelPart nextPart = null;
+        for(int i = 0; i < modelPartName.length; i++)
+        {
+            if(i == 0)
+            {
+                nextPart = root.getChild(modelPartName[0]);
+                nextPart.translateAndRotate(poseStack);
+            }
+            else 
+            {
+                ModelPart child = nextPart.getChild(modelPartName[i]);
+                child.translateAndRotate(poseStack);
+                nextPart = child;
+            }
+        }
+        PoseStack.Pose last = poseStack.last();
+        Matrix4f matrix4f = last.pose();
+        Vector4f vector4f = new Vector4f(0, 0, 0, 1);
+        vector4f.mul(matrix4f);
+        return new Vec3(vector4f.x(), vector4f.y(), vector4f.z());
+    }
 	
     public static void drawQuad(PoseStack stack, VertexConsumer consumer, float size, int packedLightIn, Vec3 color, float alpha) 
     {
