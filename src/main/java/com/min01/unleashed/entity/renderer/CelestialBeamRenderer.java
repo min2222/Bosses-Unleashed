@@ -5,7 +5,7 @@ import org.joml.Matrix4f;
 import org.joml.Quaternionf;
 
 import com.min01.unleashed.BossesUnleashed;
-import com.min01.unleashed.entity.projectile.EntityCelestialBeam;
+import com.min01.unleashed.entity.projectile.CelestialBeamEntity;
 import com.min01.unleashed.misc.UnleashedRenderType;
 import com.min01.unleashed.util.UnleashedClientUtil;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -22,7 +22,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.phys.Vec3;
 
-public class CelestialBeamRenderer extends EntityRenderer<EntityCelestialBeam>
+public class CelestialBeamRenderer extends EntityRenderer<CelestialBeamEntity>
 {
     private static final float TEXTURE_WIDTH = 256.0F;
     private static final float TEXTURE_HEIGHT = 32.0F;
@@ -35,7 +35,7 @@ public class CelestialBeamRenderer extends EntityRenderer<EntityCelestialBeam>
 	}
 	
 	@Override
-	public void render(EntityCelestialBeam pEntity, float pEntityYaw, float pPartialTick, PoseStack pPoseStack, MultiBufferSource pBuffer, int pPackedLight) 
+	public void render(CelestialBeamEntity pEntity, float pEntityYaw, float pPartialTick, PoseStack pPoseStack, MultiBufferSource pBuffer, int pPackedLight) 
 	{
 		Vec3 collidePos = pEntity.collidePos;
         Vec3 pos = pEntity.getPosition(pPartialTick);
@@ -141,7 +141,7 @@ public class CelestialBeamRenderer extends EntityRenderer<EntityCelestialBeam>
     }
 
 	@Override
-	public ResourceLocation getTextureLocation(EntityCelestialBeam pEntity)
+	public ResourceLocation getTextureLocation(CelestialBeamEntity pEntity)
 	{
 		return ResourceLocation.fromNamespaceAndPath(BossesUnleashed.MODID, "textures/entity/celestial_beam.png");
 	}

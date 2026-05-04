@@ -5,7 +5,7 @@ import com.min01.unleashed.config.UnleashedConfig;
 import com.min01.unleashed.entity.WormholeEntity;
 import com.min01.unleashed.entity.UnleashedEntities;
 import com.min01.unleashed.entity.living.CelestialJellyfishEntity;
-import com.min01.unleashed.entity.projectile.EntityCelestialOrb;
+import com.min01.unleashed.entity.projectile.CelestialOrbEntity;
 import com.min01.unleashed.misc.UnleashedTags;
 import com.min01.unleashed.network.UnleashedNetwork;
 import com.min01.unleashed.network.UpdateStarfieldPacket;
@@ -138,7 +138,7 @@ public class EventHandlerForge
 			int tick = UnleashedUtil.getDashTick(player);
 			if(tick % 2 == 0)
 			{
-				EntityCelestialOrb orb = new EntityCelestialOrb(UnleashedEntities.CELESTIAL_ORB.get(), player.level);
+				CelestialOrbEntity orb = new CelestialOrbEntity(UnleashedEntities.CELESTIAL_ORB.get(), player.level);
 				orb.setPos(player.position());
 				orb.setOwner(player);
 				player.level.addFreshEntity(orb);

@@ -25,18 +25,18 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.Vec3;
 
-public class EntityCelestialOrb extends ThrowableProjectile implements ITrail
+public class CelestialOrbEntity extends ThrowableProjectile implements ITrail
 {
-	public static final EntityDataAccessor<Boolean> IS_TRAIL = SynchedEntityData.defineId(EntityCelestialOrb.class, EntityDataSerializers.BOOLEAN);
-	public static final EntityDataAccessor<Boolean> IS_REWIND = SynchedEntityData.defineId(EntityCelestialOrb.class, EntityDataSerializers.BOOLEAN);
-	public static final EntityDataAccessor<Optional<UUID>> OWNER_UUID = SynchedEntityData.defineId(EntityCelestialOrb.class, EntityDataSerializers.OPTIONAL_UUID);
+	public static final EntityDataAccessor<Boolean> IS_TRAIL = SynchedEntityData.defineId(CelestialOrbEntity.class, EntityDataSerializers.BOOLEAN);
+	public static final EntityDataAccessor<Boolean> IS_REWIND = SynchedEntityData.defineId(CelestialOrbEntity.class, EntityDataSerializers.BOOLEAN);
+	public static final EntityDataAccessor<Optional<UUID>> OWNER_UUID = SynchedEntityData.defineId(CelestialOrbEntity.class, EntityDataSerializers.OPTIONAL_UUID);
 	
     private Vec3[] trailPositions = new Vec3[64];
     private int trailPointer = -1;
     
-	public EntityCelestialOrb(EntityType<? extends ThrowableProjectile> p_37466_, Level p_37467_) 
+	public CelestialOrbEntity(EntityType<? extends ThrowableProjectile> pEntityType, Level pLevel) 
 	{
-		super(p_37466_, p_37467_);
+		super(pEntityType, pLevel);
 		this.setNoGravity(true);
 	}
 
@@ -157,10 +157,10 @@ public class EntityCelestialOrb extends ThrowableProjectile implements ITrail
 	}
 	
 	@Override
-	protected void onHitEntity(EntityHitResult p_37259_) 
+	protected void onHitEntity(EntityHitResult pResult) 
 	{
-		super.onHitEntity(p_37259_);
-		if(this.canExplode(p_37259_.getEntity()))
+		super.onHitEntity(pResult);
+		if(this.canExplode(pResult.getEntity()))
 		{
 			this.playSound(SoundEvents.GENERIC_EXPLODE);
 			this.level.broadcastEntityEvent(this, (byte) 99);
@@ -174,10 +174,10 @@ public class EntityCelestialOrb extends ThrowableProjectile implements ITrail
 	}
 	
 	@Override
-	public void handleEntityEvent(byte p_19882_) 
+	public void handleEntityEvent(byte pId) 
 	{
-		super.handleEntityEvent(p_19882_);
-		if(p_19882_ == 99)
+		super.handleEntityEvent(pId);
+		if(pId == 99)
 		{
 			this.level.addAlwaysVisibleParticle(UnleashedParticles.CELESTIAL_EXPLOSION.get(), this.getX(), this.getY() + 0.5F, this.getZ(), 0, 0, 0);
 		}
@@ -190,26 +190,26 @@ public class EntityCelestialOrb extends ThrowableProjectile implements ITrail
 	}
 	
 	@Override
-	protected void addAdditionalSaveData(CompoundTag p_37265_)
+	protected void addAdditionalSaveData(CompoundTag pCompound)
 	{
-		super.addAdditionalSaveData(p_37265_);
-		p_37265_.putBoolean("isTrail", this.isTrail());
-		p_37265_.putBoolean("isRewind", this.isRewind());
+		super.addAdditionalSaveData(pCompound);
+		pCompound.putBoolean("isTrail", this.isTrail());
+		pCompound.putBoolean("isRewind", this.isRewind());
 		if(this.entityData.get(OWNER_UUID).isPresent())
 		{
-			p_37265_.putUUID("Owner", this.entityData.get(OWNER_UUID).get());
+			pCompound.putUUID("Owner", this.entityData.get(OWNER_UUID).get());
 		}
 	}
 	
 	@Override
-	protected void readAdditionalSaveData(CompoundTag p_37262_) 
+	protected void readAdditionalSaveData(CompoundTag pCompound) 
 	{
-		super.readAdditionalSaveData(p_37262_);
-		this.setTrail(p_37262_.getBoolean("isTrail"));
-		this.setRewind(p_37262_.getBoolean("isRewind"));
-		if(p_37262_.hasUUID("Owner")) 
+		super.readAdditionalSaveData(pCompound);
+		this.setTrail(pCompound.getBoolean("isTrail"));
+		this.setRewind(pCompound.getBoolean("isRewind"));
+		if(pCompound.hasUUID("Owner")) 
 		{
-			this.entityData.set(OWNER_UUID, Optional.of(p_37262_.getUUID("Owner")));
+			this.entityData.set(OWNER_UUID, Optional.of(pCompound.getUUID("Owner")));
 		}
 	}
 	

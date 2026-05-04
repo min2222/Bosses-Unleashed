@@ -2,9 +2,11 @@ package com.min01.unleashed.entity.ai.goal;
 
 import java.util.List;
 
+import com.min01.unleashed.entity.CameraShakeEntity;
 import com.min01.unleashed.entity.living.MadLumberjackEntity;
 import com.min01.unleashed.util.UnleashedUtil;
 
+import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
@@ -26,7 +28,7 @@ public class LumberjackAxeAttack2Goal extends AbstractAnimationGoal<MadLumberjac
 	@Override
 	public boolean canUse() 
 	{
-		return super.canUse() && this.mob.getPhase() == 0 && !this.mob.isGun() && this.mob.distanceTo(this.mob.getTarget()) <= 4.0F;
+		return super.canUse() && this.mob.getPhase() < 2 && !this.mob.isGun() && this.mob.distanceTo(this.mob.getTarget()) <= 4.0F;
 	}
 	
 	@Override
@@ -51,12 +53,15 @@ public class LumberjackAxeAttack2Goal extends AbstractAnimationGoal<MadLumberjac
 			Vec3 pos = this.mob.posArray[0];
 			if(pos != null)
 			{
-				float size = 5.0F;
+				float size = 8.0F;
+				DamageSource source = this.mob.damageSources().mobAttack(this.mob);
 				List<LivingEntity> list = this.mob.level.getEntitiesOfClass(LivingEntity.class, new AABB(-size, -size, -size, size, size, size).move(pos), t -> t != this.mob && !t.isAlliedTo(this.mob));
 				list.forEach(t -> 
 				{
-					this.mob.doHurtTarget(t);
+					t.hurt(source, 15.0F);
+					UnleashedUtil.disableShield(t, source, 40);
 				});
+				CameraShakeEntity.cameraShake(this.mob.level, pos, 30.0F, 0.05F, 0, 20);
 			}
 		}
 	}

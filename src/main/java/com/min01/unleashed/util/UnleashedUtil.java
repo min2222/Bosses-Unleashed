@@ -20,9 +20,11 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.ClipContext;
@@ -58,6 +60,27 @@ public class UnleashedUtil
         float clampedDelta = Mth.clamp(delta, -maxStep, maxStep);
         return Mth.wrapDegrees(start + clampedDelta);
     }
+    
+    public static void disableShield(LivingEntity livingEntity, DamageSource source, int ticks)
+    {
+    	if(livingEntity.isDamageSourceBlocked(source))
+    	{
+        	if(livingEntity instanceof Player player)
+        	{
+        		player.disableShield(true);
+        	}
+        	else
+        	{
+        		livingEntity.stopUsingItem();
+        		livingEntity.level.broadcastEntityEvent(livingEntity, (byte)30);
+        	}
+    	}
+    }
+    
+	public static float percent(float baseValue, float percent)
+	{
+		return baseValue * percent / 100.0F;
+	}
     
 	public static void moveStructurePiece(Structure.GenerationContext pContext, Heightmap.Types types, StructurePiece piece, StructureTemplate template, Rotation rotation, Mirror mirror, Consumer<Integer> consumer)
 	{

@@ -2,7 +2,7 @@ package com.min01.unleashed.entity.ai.goal;
 
 import com.min01.unleashed.entity.UnleashedEntities;
 import com.min01.unleashed.entity.living.CelestialJellyfishEntity;
-import com.min01.unleashed.entity.projectile.EntityCelestialOrb;
+import com.min01.unleashed.entity.projectile.CelestialOrbEntity;
 import com.min01.unleashed.sound.UnleashedSounds;
 import com.min01.unleashed.util.UnleashedUtil;
 
@@ -52,7 +52,7 @@ public class CelestialJellyfishShootOrbGoal extends AbstractCelestialJellyfishGo
 				Vec2 rot = new Vec2(this.mob.getXRot(), this.mob.getYHeadRot());
 				Vec3 lookPos = UnleashedUtil.getLookPos(rot, this.mob.getEyePosition().subtract(0.0F, 0.5F, 0.0F), 0, 0, 1);
 				Vec3 motion = UnleashedUtil.getLookPos(rot, this.mob.getEyePosition().subtract(0.0F, 0.5F, 0.0F), 0, 0, 3);
-				EntityCelestialOrb orb = new EntityCelestialOrb(UnleashedEntities.CELESTIAL_ORB.get(), this.mob.level);
+				CelestialOrbEntity orb = new CelestialOrbEntity(UnleashedEntities.CELESTIAL_ORB.get(), this.mob.level);
 				orb.setPos(lookPos);
 				orb.setDeltaMovement(UnleashedUtil.getVelocityTowards(lookPos, motion, 1.0F));
 				orb.setOwner(this.mob);
@@ -86,7 +86,7 @@ public class CelestialJellyfishShootOrbGoal extends AbstractCelestialJellyfishGo
 					Vec2 rot = new Vec2(this.xRot * dir, i + (this.yRot * dir));
 					Vec3 lookPos = UnleashedUtil.getLookPos(rot, this.mob.getEyePosition().subtract(0.0F, 0.5F, 0.0F), 0, 0, 1);
 					Vec3 motion = UnleashedUtil.getLookPos(rot, this.mob.getEyePosition().subtract(0.0F, 0.5F, 0.0F), 0, 0, 3);
-					EntityCelestialOrb orb = new EntityCelestialOrb(UnleashedEntities.CELESTIAL_ORB.get(), this.mob.level);
+					CelestialOrbEntity orb = new CelestialOrbEntity(UnleashedEntities.CELESTIAL_ORB.get(), this.mob.level);
 					orb.setPos(lookPos);
 					orb.setDeltaMovement(UnleashedUtil.getVelocityTowards(lookPos, motion, 1.0F));
 					orb.setOwner(this.mob);

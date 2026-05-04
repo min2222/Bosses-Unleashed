@@ -2,7 +2,7 @@ package com.min01.unleashed.entity.renderer;
 
 import com.min01.unleashed.BossesUnleashed;
 import com.min01.unleashed.entity.model.CelestialOrbModel;
-import com.min01.unleashed.entity.projectile.EntityCelestialOrb;
+import com.min01.unleashed.entity.projectile.CelestialOrbEntity;
 import com.min01.unleashed.misc.UnleashedRenderType;
 import com.min01.unleashed.util.UnleashedClientUtil;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -16,7 +16,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.phys.Vec3;
 
-public class CelestialOrbRenderer extends EntityRenderer<EntityCelestialOrb>
+public class CelestialOrbRenderer extends EntityRenderer<CelestialOrbEntity>
 {
 	private final CelestialOrbModel model;
 	public CelestialOrbRenderer(Context pContext) 
@@ -26,7 +26,7 @@ public class CelestialOrbRenderer extends EntityRenderer<EntityCelestialOrb>
 	}
 	
 	@Override
-	public void render(EntityCelestialOrb pEntity, float pEntityYaw, float pPartialTicks, PoseStack pPoseStack, MultiBufferSource pBuffer, int pPackedLight) 
+	public void render(CelestialOrbEntity pEntity, float pEntityYaw, float pPartialTicks, PoseStack pPoseStack, MultiBufferSource pBuffer, int pPackedLight) 
 	{
 		float xRot = Mth.lerp(pPartialTicks, pEntity.xRotO, pEntity.getXRot());
 		float yRot = Mth.lerp(pPartialTicks, pEntity.yRotO, pEntity.getYRot());
@@ -52,7 +52,7 @@ public class CelestialOrbRenderer extends EntityRenderer<EntityCelestialOrb>
 	}
 
 	@Override
-	public ResourceLocation getTextureLocation(EntityCelestialOrb pEntity) 
+	public ResourceLocation getTextureLocation(CelestialOrbEntity pEntity) 
 	{
 		return ResourceLocation.fromNamespaceAndPath(BossesUnleashed.MODID, "textures/entity/celestial_orb.png");
 	}

@@ -19,17 +19,17 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 
-public class EntityCelestialBeam extends AbstractOwnableEntity<CelestialJellyfishEntity>
+public class CelestialBeamEntity extends AbstractOwnableEntity<CelestialJellyfishEntity>
 {
-	public static final EntityDataAccessor<Float> YAW = SynchedEntityData.defineId(EntityCelestialBeam.class, EntityDataSerializers.FLOAT);
-	public static final EntityDataAccessor<Float> PITCH = SynchedEntityData.defineId(EntityCelestialBeam.class, EntityDataSerializers.FLOAT);
+	public static final EntityDataAccessor<Float> YAW = SynchedEntityData.defineId(CelestialBeamEntity.class, EntityDataSerializers.FLOAT);
+	public static final EntityDataAccessor<Float> PITCH = SynchedEntityData.defineId(CelestialBeamEntity.class, EntityDataSerializers.FLOAT);
     
     public Vec3 endPos = Vec3.ZERO;
     public Vec3 collidePos = Vec3.ZERO;
     
-	public EntityCelestialBeam(EntityType<?> p_19870_, Level p_19871_) 
+	public CelestialBeamEntity(EntityType<?> pEntityType, Level pLevel) 
 	{
-		super(p_19870_, p_19871_);
+		super(pEntityType, pLevel);
 		this.noCulling = true;
 	}
 	
@@ -62,19 +62,19 @@ public class EntityCelestialBeam extends AbstractOwnableEntity<CelestialJellyfis
 	}
 	
 	@Override
-	public void addAdditionalSaveData(CompoundTag p_37265_) 
+	public void addAdditionalSaveData(CompoundTag pCompound) 
 	{
-		super.addAdditionalSaveData(p_37265_);
-		p_37265_.putFloat("Yaw", this.getYaw());
-		p_37265_.putFloat("Pitch", this.getPitch());
+		super.addAdditionalSaveData(pCompound);
+		pCompound.putFloat("Yaw", this.getYaw());
+		pCompound.putFloat("Pitch", this.getPitch());
 	}
 	
 	@Override
-	public void readAdditionalSaveData(CompoundTag p_37262_)
+	public void readAdditionalSaveData(CompoundTag pCompound)
 	{
-		super.readAdditionalSaveData(p_37262_);
-		this.setYaw(p_37262_.getFloat("Yaw"));
-		this.setPitch(p_37262_.getFloat("Pitch"));
+		super.readAdditionalSaveData(pCompound);
+		this.setYaw(pCompound.getFloat("Yaw"));
+		this.setPitch(pCompound.getFloat("Pitch"));
 	}
 	
     @Override

@@ -1,7 +1,7 @@
 package com.min01.unleashed.entity.model;
 
 import com.min01.unleashed.BossesUnleashed;
-import com.min01.unleashed.entity.projectile.EntityCelestialOrb;
+import com.min01.unleashed.entity.projectile.CelestialOrbEntity;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 
@@ -16,7 +16,7 @@ import net.minecraft.client.model.geom.builders.MeshDefinition;
 import net.minecraft.client.model.geom.builders.PartDefinition;
 import net.minecraft.resources.ResourceLocation;
 
-public class CelestialOrbModel extends EntityModel<EntityCelestialOrb>
+public class CelestialOrbModel extends EntityModel<CelestialOrbEntity>
 {
 	public static final ModelLayerLocation LAYER_LOCATION = new ModelLayerLocation(ResourceLocation.fromNamespaceAndPath(BossesUnleashed.MODID, "celestial_orb"), "main");
 	private final ModelPart orb;
@@ -38,7 +38,7 @@ public class CelestialOrbModel extends EntityModel<EntityCelestialOrb>
 	}
 
 	@Override
-	public void setupAnim(EntityCelestialOrb entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) 
+	public void setupAnim(CelestialOrbEntity entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) 
 	{
 
 	}

@@ -5,7 +5,7 @@ import java.util.List;
 import com.min01.unleashed.config.UnleashedConfig;
 import com.min01.unleashed.entity.UnleashedEntities;
 import com.min01.unleashed.entity.living.CelestialJellyfishEntity;
-import com.min01.unleashed.entity.projectile.EntityCelestialOrb;
+import com.min01.unleashed.entity.projectile.CelestialOrbEntity;
 import com.min01.unleashed.sound.UnleashedSounds;
 import com.min01.unleashed.util.UnleashedUtil;
 
@@ -72,7 +72,7 @@ public class CelestialJellyfishDashGoal extends AbstractCelestialJellyfishGoal
 			if(this.mob.getAnimationTick() % 2 == 0)
 			{
 				Vec3 lookPos = UnleashedUtil.getLookPos(new Vec2(0.0F, this.mob.getYHeadRot()), this.mob.position(), 0, 0, -15);
-				EntityCelestialOrb orb = new EntityCelestialOrb(UnleashedEntities.CELESTIAL_ORB.get(), this.mob.level);
+				CelestialOrbEntity orb = new CelestialOrbEntity(UnleashedEntities.CELESTIAL_ORB.get(), this.mob.level);
 				orb.setPos(lookPos);
 				orb.setOwner(this.mob);
 				this.mob.level.addFreshEntity(orb);

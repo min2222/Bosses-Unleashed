@@ -2,6 +2,7 @@ package com.min01.unleashed.entity.model;
 
 import com.min01.unleashed.BossesUnleashed;
 import com.min01.unleashed.entity.animation.MadLumberjackAnimation;
+import com.min01.unleashed.entity.animation.MadLumberjackAnimation2;
 import com.min01.unleashed.entity.living.MadLumberjackEntity;
 import com.min01.unleashed.misc.SmoothAnimationState;
 import com.min01.unleashed.util.UnleashedClientUtil;
@@ -22,16 +23,16 @@ import net.minecraft.resources.ResourceLocation;
 public class MadLumberjackModel extends HierarchicalModel<MadLumberjackEntity>
 {
 	public static final ModelLayerLocation LAYER_LOCATION = new ModelLayerLocation(ResourceLocation.fromNamespaceAndPath(BossesUnleashed.MODID, "mad_lumberjack"), "main");
-	private final ModelPart root;
-	private final ModelPart bone;
-	private final ModelPart bone2;
-	private final ModelPart bone3;
-	private final ModelPart bone18;
-	private final ModelPart bone9;
-	private final ModelPart bone10;
-	private final ModelPart bone11;
-	private final ModelPart axe;
-	private final ModelPart shotgun;
+	public final ModelPart root;
+	public final ModelPart bone;
+	public final ModelPart bone2;
+	public final ModelPart bone3;
+	public final ModelPart bone18;
+	public final ModelPart bone9;
+	public final ModelPart bone10;
+	public final ModelPart bone11;
+	public final ModelPart axe;
+	public final ModelPart shotgun;
 
 	public MadLumberjackModel(ModelPart root) 
 	{
@@ -135,21 +136,40 @@ public class MadLumberjackModel extends HierarchicalModel<MadLumberjackEntity>
 	public void setupAnim(MadLumberjackEntity entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch)
 	{
 		this.root().getAllParts().forEach(ModelPart::resetPose);
-		this.shotgun.visible = entity.isGun();
-		this.axe.visible = !entity.isGun();
+		this.shotgun.visible = entity.isGun() && entity.getPhase() < 2;
+		this.axe.visible = !entity.isGun() && entity.getPhase() < 2;
 		
 		UnleashedClientUtil.animateHead(this.bone18, netHeadYaw, headPitch);
 
-		entity.axeIdleAnimationState.animateIdle(this, MadLumberjackAnimation.AXE_IDLE, ageInTicks, limbSwingAmount, 2.5F, entity.gunWalkAnimationState, entity.gunIdleAnimationState);
-		entity.gunIdleAnimationState.animateIdle(this, MadLumberjackAnimation.GUN_IDLE, ageInTicks, limbSwingAmount, 2.5F, entity.gunWalkAnimationState, entity.axeIdleAnimationState);
+		entity.axeIdleAnimationState.animateIdle(this, MadLumberjackAnimation.AXE_IDLE, ageInTicks, limbSwingAmount, 2.5F, entity.gunWalkAnimationState, entity.zombieWalkAnimationState, entity.zombieSprintAnimationState);
+		entity.gunIdleAnimationState.animateIdle(this, MadLumberjackAnimation.GUN_IDLE, ageInTicks, limbSwingAmount, 2.5F, entity.gunWalkAnimationState, entity.zombieWalkAnimationState, entity.zombieSprintAnimationState);
+		entity.zombieIdleAnimationState.animateIdle(this, MadLumberjackAnimation.ZOMBIE_IDLE, ageInTicks, limbSwingAmount, 2.5F, entity.gunWalkAnimationState, entity.zombieWalkAnimationState, entity.zombieSprintAnimationState);
 		
 		entity.axeAttack1AnimationState.animate(this, MadLumberjackAnimation.AXE_ATTACK1, ageInTicks);
 		entity.axeAttack2AnimationState.animate(this, MadLumberjackAnimation.AXE_ATTACK2, ageInTicks);
+		entity.axeAttack3AnimationState.animate(this, MadLumberjackAnimation.AXE_ATTACK3, ageInTicks);
+		entity.shotgunShotAnimationState.animate(this, MadLumberjackAnimation.SHOTGUN_SHOT, ageInTicks);
+		entity.axeChangeAnimationState.animate(this, MadLumberjackAnimation.AXE_CHANGE, ageInTicks);
+		entity.shotgunChangeAnimationState.animate(this, MadLumberjackAnimation.SHOTGUN_CHANGE, ageInTicks);
+		entity.zombieAttack1AnimationState.animate(this, MadLumberjackAnimation2.ZOMBIE_ATTACK1, ageInTicks);
+		entity.zombieAttack2AnimationState.animate(this, MadLumberjackAnimation2.ZOMBIE_ATTACK2, ageInTicks);
+		entity.zombieAttack2SuccessAnimationState.animate(this, MadLumberjackAnimation2.ZOMBIE_ATTACK2_SUCCESS, ageInTicks);
+		entity.zombieAttack3AnimationState.animate(this, MadLumberjackAnimation2.ZOMBIE_ATTACK3, ageInTicks);
+		entity.zombieAttack4LeftAnimationState.animate(this, MadLumberjackAnimation2.ZOMBIE_ATTACK4_LEFT, ageInTicks);
+		entity.zombieAttack4RightAnimationState.animate(this, MadLumberjackAnimation2.ZOMBIE_ATTACK4_RIGHT, ageInTicks);
 		
-		SmoothAnimationState.animateWalk(this, MadLumberjackAnimation.AXE_WALK, limbSwing, limbSwingAmount, 2.5F, 2.5F, entity.axeAttack1AnimationState, entity.axeAttack2AnimationState);
+		SmoothAnimationState.animateWalk(this, MadLumberjackAnimation.AXE_WALK, limbSwing, limbSwingAmount, 2.5F, 2.5F, entity.gunWalkAnimationState, entity.zombieWalkAnimationState, entity.zombieSprintAnimationState, 
+				entity.axeAttack1AnimationState, entity.axeAttack2AnimationState, 
+				entity.axeAttack3AnimationState, entity.shotgunShotAnimationState, 
+				entity.axeChangeAnimationState, entity.shotgunChangeAnimationState, 
+				entity.zombieAttack1AnimationState, entity.zombieAttack2AnimationState, 
+				entity.zombieAttack2SuccessAnimationState, entity.zombieAttack3AnimationState, 
+				entity.zombieAttack4LeftAnimationState, entity.zombieAttack4RightAnimationState);
 		entity.gunWalkAnimationState.animateWalkWithFactor(this, MadLumberjackAnimation.GUN_WALK, limbSwing, limbSwingAmount, 2.5F, 2.5F);
-		entity.axeSprintAnimationState.animateWalkWithFactor(this, MadLumberjackAnimation.AXE_SPRINT, limbSwing, limbSwingAmount, 1.0F, 1.0F);
-		entity.gunSprintAnimationState.animateWalkWithFactor(this, MadLumberjackAnimation.GUN_SPRINT, limbSwing, limbSwingAmount, 1.0F, 1.0F);
+		entity.zombieWalkAnimationState.animateWalkWithFactor(this, MadLumberjackAnimation.ZOMBIE_WALK, limbSwing, limbSwingAmount, 2.5F, 2.5F);
+		entity.zombieSprintAnimationState.animateWalkWithFactor(this, MadLumberjackAnimation2.ZOMBIE_SPRINT, limbSwing, limbSwingAmount, 2.5F, 2.5F);
+		//entity.axeSprintAnimationState.animateWalkWithFactor(this, MadLumberjackAnimation.AXE_SPRINT, limbSwing, limbSwingAmount, 1.0F, 1.0F);
+		//entity.gunSprintAnimationState.animateWalkWithFactor(this, MadLumberjackAnimation.GUN_SPRINT, limbSwing, limbSwingAmount, 1.0F, 1.0F);
 	}
 	
 	@Override

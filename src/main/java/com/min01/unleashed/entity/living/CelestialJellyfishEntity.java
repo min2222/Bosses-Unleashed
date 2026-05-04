@@ -19,8 +19,8 @@ import com.min01.unleashed.entity.ai.goal.CelestialJellyfishDashGoal;
 import com.min01.unleashed.entity.ai.goal.CelestialJellyfishShootOrbGoal;
 import com.min01.unleashed.entity.ai.goal.CelestialJellyfishSummonDashCloneGoal;
 import com.min01.unleashed.entity.ai.goal.CelestialJellyfishSummonOrbCloneGoal;
-import com.min01.unleashed.entity.projectile.EntityCelestialBeam;
-import com.min01.unleashed.entity.projectile.EntityCelestialOrb;
+import com.min01.unleashed.entity.projectile.CelestialBeamEntity;
+import com.min01.unleashed.entity.projectile.CelestialOrbEntity;
 import com.min01.unleashed.misc.AfterImage;
 import com.min01.unleashed.misc.SmoothAnimationState;
 import com.min01.unleashed.misc.UnleashedBossEvent;
@@ -285,7 +285,7 @@ public class CelestialJellyfishEntity extends AbstractAnimatableFlyingMonster im
     		int tick1 = Math.max(tick / 20, 1);
     		if(this.tickCount % tick1 == 0)
     		{
-    			EntityCelestialBeam beam = new EntityCelestialBeam(UnleashedEntities.CELESTIAL_BEAM.get(), this.level);
+    			CelestialBeamEntity beam = new CelestialBeamEntity(UnleashedEntities.CELESTIAL_BEAM.get(), this.level);
     			beam.setPos(this.getEyePosition());
     			beam.setOwner(this);
     			beam.setYaw(this.random.nextFloat() * 360.0F);
@@ -424,7 +424,7 @@ public class CelestialJellyfishEntity extends AbstractAnimatableFlyingMonster im
     		if(this.getPhase() == 1 && !this.isAlive() && this.swell < 250)
 			{
     			Vec3 spreadPos = UnleashedUtil.getSpreadPosition(this, new Vec3(50, 15, 50));
-				EntityCelestialOrb orb = new EntityCelestialOrb(UnleashedEntities.CELESTIAL_ORB.get(), this.level);
+				CelestialOrbEntity orb = new CelestialOrbEntity(UnleashedEntities.CELESTIAL_ORB.get(), this.level);
 				orb.setPos(spreadPos);
 				orb.setDeltaMovement(UnleashedUtil.getVelocityTowards(spreadPos, this.position(), 1.0F));
 				orb.setOwner(this);
@@ -682,7 +682,7 @@ public class CelestialJellyfishEntity extends AbstractAnimatableFlyingMonster im
     @Override
     public boolean hurt(DamageSource pSource, float pAmount)
     {
-    	if(pSource.is(DamageTypeTags.IS_EXPLOSION) || pSource.getDirectEntity() instanceof EntityCelestialOrb)
+    	if(pSource.is(DamageTypeTags.IS_EXPLOSION) || pSource.getDirectEntity() instanceof CelestialOrbEntity)
     	{
     		return false;
     	}

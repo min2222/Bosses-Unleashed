@@ -5,10 +5,12 @@ import java.util.Objects;
 
 import com.min01.unleashed.BossesUnleashed;
 import com.min01.unleashed.entity.UnleashedEntities;
+import com.min01.unleashed.entity.model.BearTrapModel;
 import com.min01.unleashed.entity.model.CelestialJellyfishModel;
 import com.min01.unleashed.entity.model.CelestialOrbModel;
 import com.min01.unleashed.entity.model.JellyfishModel;
 import com.min01.unleashed.entity.model.MadLumberjackModel;
+import com.min01.unleashed.entity.renderer.BearTrapRenderer;
 import com.min01.unleashed.entity.renderer.CelestialBeamRenderer;
 import com.min01.unleashed.entity.renderer.CelestialJellyfishRenderer;
 import com.min01.unleashed.entity.renderer.CelestialOrbRenderer;
@@ -58,14 +60,6 @@ public class ClientEventHandler
 	        	return CelestialJellyfishUmbrellaItem.isUnfolded(pStack) ? 0.0F : 1.0F;
 	        });
 		});
-		/*try
-		{
-			AESUtil.encryptFiles(".png");
-		}
-		catch (Exception e)
-		{
-			
-		}*/
 	}
 	
     @SubscribeEvent
@@ -93,8 +87,9 @@ public class ClientEventHandler
     	event.registerLayerDefinition(CelestialJellyfishModel.LAYER_LOCATION, CelestialJellyfishModel::createBodyLayer);
     	event.registerLayerDefinition(CelestialOrbModel.LAYER_LOCATION, CelestialOrbModel::createBodyLayer);
     	event.registerLayerDefinition(CelestialJellyfishArmorModel.LAYER_LOCATION, CelestialJellyfishArmorModel::createBodyLayer);
-    	
+
     	event.registerLayerDefinition(MadLumberjackModel.LAYER_LOCATION, MadLumberjackModel::createBodyLayer);
+    	event.registerLayerDefinition(BearTrapModel.LAYER_LOCATION, BearTrapModel::createBodyLayer);
     }
     
     @SubscribeEvent
@@ -109,6 +104,7 @@ public class ClientEventHandler
     	event.registerEntityRenderer(UnleashedEntities.BLACKHOLE.get(), NoneRenderer::new);
     	
     	event.registerEntityRenderer(UnleashedEntities.MAD_LUMBERJACK.get(), MadLumberjackRenderer::new);
+    	event.registerEntityRenderer(UnleashedEntities.BEAR_TRAP.get(), BearTrapRenderer::new);
     }
     
 	@SuppressWarnings({ "unchecked", "deprecation" })

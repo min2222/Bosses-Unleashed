@@ -6,7 +6,7 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.level.Level;
 
-public class AbstractAnimatableFlyingMonster extends AbstractAnimatableMonster
+public abstract class AbstractAnimatableFlyingMonster extends AbstractAnimatableMonster
 {
 	public AbstractAnimatableFlyingMonster(EntityType<? extends Monster> pEntityType, Level pLevel)
 	{

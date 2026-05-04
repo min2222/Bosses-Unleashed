@@ -12,6 +12,7 @@ import net.minecraft.client.renderer.entity.LivingEntityRenderer;
 import net.minecraft.client.renderer.entity.RenderLayerParent;
 import net.minecraft.client.renderer.entity.layers.RenderLayer;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.Mth;
 
 public class MadLumberjackLayer extends RenderLayer<MadLumberjackEntity, MadLumberjackModel>
 {
@@ -23,7 +24,7 @@ public class MadLumberjackLayer extends RenderLayer<MadLumberjackEntity, MadLumb
 	@Override
 	public void render(PoseStack poseStack, MultiBufferSource bufferIn, int packedLightIn, MadLumberjackEntity entity, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch)
 	{
-		if(entity.getPhase() >= 2)
+		if(entity.getAnimationState() == 0 && entity.getAnimationTick() > 0 && entity.getPhase() >= 2)
 		{
 			ResourceLocation texture = ResourceLocation.fromNamespaceAndPath(BossesUnleashed.MODID, "textures/entity/infected_brute.png");
 			RenderType cutout = RenderType.entityCutoutNoCull(texture);
@@ -34,7 +35,8 @@ public class MadLumberjackLayer extends RenderLayer<MadLumberjackEntity, MadLumb
 			
 			ResourceLocation alphaTexture = ResourceLocation.fromNamespaceAndPath(BossesUnleashed.MODID, "textures/entity/mad_lumberjack_alpha.png");
 			RenderType alpha = RenderType.dragonExplosionAlpha(alphaTexture);
-			this.coloredGlowingModelCopyLayerRender(this.getParentModel(), this.getParentModel(), alpha, poseStack, bufferIn, packedLightIn, entity, limbSwing, limbSwingAmount, partialTicks, ageInTicks, netHeadYaw, headPitch, 1.0F, 1.0F, 1.0F, 0.5F);
+			float a = Mth.lerp((40.0F - entity.getAnimationTick()) / 40.0F, 0, 1);
+			this.coloredGlowingModelCopyLayerRender(this.getParentModel(), this.getParentModel(), alpha, poseStack, bufferIn, packedLightIn, entity, limbSwing, limbSwingAmount, partialTicks, ageInTicks, netHeadYaw, headPitch, 1.0F, 1.0F, 1.0F, a);
 			
 			ResourceLocation decalTexture = ResourceLocation.fromNamespaceAndPath(BossesUnleashed.MODID, "textures/entity/mad_lumberjack.png");
 			RenderType decal = RenderType.entityDecal(decalTexture);
