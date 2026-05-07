@@ -27,7 +27,7 @@ public class BruteSmashGoal extends AbstractAnimationGoal<MadLumberjackEntity>
 	@Override
 	public boolean canUse() 
 	{
-		return super.canUse() && this.mob.getPhase() >= 2 && this.mob.distanceTo(this.mob.getTarget()) <= 8.0F && this.mob.getRandom().nextInt(3) == 0;
+		return super.canUse() && this.mob.getPhase() >= 2 && this.mob.distanceTo(this.mob.getTarget()) <= 6.0F && this.mob.getRandom().nextInt(6) == 0;
 	}
 	
 	@Override
@@ -71,6 +71,6 @@ public class BruteSmashGoal extends AbstractAnimationGoal<MadLumberjackEntity>
 	@Override
 	public int getSkillUsingInterval() 
 	{
-		return 80;
+		return 10;
 	}
 }

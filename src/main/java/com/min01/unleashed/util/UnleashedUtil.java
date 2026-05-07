@@ -219,6 +219,13 @@ public class UnleashedUtil
         double z = startPos.z + (level.random.nextDouble() - level.random.nextDouble()) * range + 0.5D;
         return new Vec3(x, y, z);
 	}
+
+	public static void dashToward(Entity entity, float scale, float yScale)
+	{
+        float x = (float) Math.cos(Math.toRadians(entity.getYHeadRot() + 90));
+        float z = (float) Math.sin(Math.toRadians(entity.getYHeadRot() + 90));
+        entity.push(x * scale, yScale, z * scale);
+	}
 	
 	public static void dashToward(Entity entity, float scale)
 	{

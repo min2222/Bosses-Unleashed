@@ -23,7 +23,7 @@ public class MadLumberjackRenderer extends MobRenderer<MadLumberjackEntity, MadL
 {
 	public MadLumberjackRenderer(Context pContext) 
 	{
-		super(pContext, new MadLumberjackModel(pContext.bakeLayer(MadLumberjackModel.LAYER_LOCATION)), 0.5F);
+		super(pContext, new MadLumberjackModel(pContext.bakeLayer(MadLumberjackModel.LAYER_LOCATION)), 1.5F);
 		this.addLayer(new MadLumberjackLayer(this));
 	}
 	

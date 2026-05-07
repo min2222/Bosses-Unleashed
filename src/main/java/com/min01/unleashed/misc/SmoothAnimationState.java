@@ -92,9 +92,15 @@ public class SmoothAnimationState extends AnimationState
 	}
 
 	@OnlyIn(Dist.CLIENT)
-	public void animateWalkWithFactor(HierarchicalModel<?> model, AnimationDefinition definition, float limbSwing, float limbSwingAmount, float maxAnimationSpeed, float animationScaleFactor)
+	public void animateWalkWithFactor(HierarchicalModel<?> model, AnimationDefinition definition, float limbSwing, float limbSwingAmount, float maxAnimationSpeed, float animationScaleFactor, SmoothAnimationState... states)
 	{
-		animateWalk(model, definition, limbSwing, limbSwingAmount, maxAnimationSpeed, animationScaleFactor, this.factor());
+		float totalFactor = this.factor();
+		for(SmoothAnimationState state : states)
+		{
+			float factor = state.factor();
+			totalFactor *= 1.0F - factor;
+		}
+		animateWalk(model, definition, limbSwing, limbSwingAmount, maxAnimationSpeed, animationScaleFactor, totalFactor);
 	}
 	
 	@OnlyIn(Dist.CLIENT)

@@ -7,6 +7,7 @@ import com.min01.unleashed.entity.living.MadLumberjackEntity;
 import com.min01.unleashed.util.UnleashedUtil;
 
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
@@ -39,13 +40,16 @@ public class LumberjackAxeAttack2Goal extends AbstractAnimationGoal<MadLumberjac
 		{
 			if(this.mob.getTarget() != null && UnleashedUtil.isWithinMeleeAttackRange(this.mob, this.mob.getTarget(), 3.5F))
 			{
-				this.mob.getTarget().knockback(2.0F, this.mob.getX() - this.mob.getTarget().getX(), this.mob.getZ() - this.mob.getTarget().getZ());
+				this.knockback(this.mob.getTarget(), 2.0F, this.mob.getX() - this.mob.getTarget().getX(), this.mob.getZ() - this.mob.getTarget().getZ());
 				this.mob.getTarget().hurtMarked = true;
 			}
 		}
 		if(this.mob.getAnimationTick() == 30)
 		{
-			UnleashedUtil.dashToward(this.mob, 2.5F);
+			if(this.mob.getTarget() != null)
+			{
+				UnleashedUtil.dashToward(this.mob, this.mob.distanceTo(this.mob.getTarget()) / 4.0F);
+			}
 			this.mob.setStopLookTick(this.mob.getAnimationTick());
 		}
 		if(this.mob.getAnimationTick() == 24)
@@ -53,7 +57,7 @@ public class LumberjackAxeAttack2Goal extends AbstractAnimationGoal<MadLumberjac
 			Vec3 pos = this.mob.posArray[0];
 			if(pos != null)
 			{
-				float size = 8.0F;
+				float size = 5.0F;
 				DamageSource source = this.mob.damageSources().mobAttack(this.mob);
 				List<LivingEntity> list = this.mob.level.getEntitiesOfClass(LivingEntity.class, new AABB(-size, -size, -size, size, size, size).move(pos), t -> t != this.mob && !t.isAlliedTo(this.mob));
 				list.forEach(t -> 
@@ -63,6 +67,18 @@ public class LumberjackAxeAttack2Goal extends AbstractAnimationGoal<MadLumberjac
 				});
 				CameraShakeEntity.cameraShake(this.mob.level, pos, 30.0F, 0.05F, 0, 20);
 			}
+		}
+	}
+	
+	//copy of LivingEntity#knockback
+	public void knockback(Entity target, double pStrength, double pX, double pZ)
+	{
+		if(!(pStrength <= 0.0D))
+		{
+			target.hasImpulse = true;
+			Vec3 vec3 = target.getDeltaMovement();
+			Vec3 vec31 = (new Vec3(pX, 0.0D, pZ)).normalize().scale(pStrength);
+			target.setDeltaMovement(vec3.x / 2.0D - vec31.x, target.onGround() ? Math.min(0.4D, vec3.y / 2.0D + pStrength) : vec3.y, vec3.z / 2.0D - vec31.z);
 		}
 	}
 
@@ -75,6 +91,6 @@ public class LumberjackAxeAttack2Goal extends AbstractAnimationGoal<MadLumberjac
 	@Override
 	public int getSkillUsingInterval() 
 	{
-		return 100;
+		return 60;
 	}
 }

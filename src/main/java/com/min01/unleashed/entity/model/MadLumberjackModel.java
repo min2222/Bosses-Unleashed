@@ -165,9 +165,27 @@ public class MadLumberjackModel extends HierarchicalModel<MadLumberjackEntity>
 				entity.zombieAttack1AnimationState, entity.zombieAttack2AnimationState, 
 				entity.zombieAttack2SuccessAnimationState, entity.zombieAttack3AnimationState, 
 				entity.zombieAttack4LeftAnimationState, entity.zombieAttack4RightAnimationState);
-		entity.gunWalkAnimationState.animateWalkWithFactor(this, MadLumberjackAnimation.GUN_WALK, limbSwing, limbSwingAmount, 2.5F, 2.5F);
-		entity.zombieWalkAnimationState.animateWalkWithFactor(this, MadLumberjackAnimation.ZOMBIE_WALK, limbSwing, limbSwingAmount, 2.5F, 2.5F);
-		entity.zombieSprintAnimationState.animateWalkWithFactor(this, MadLumberjackAnimation2.ZOMBIE_SPRINT, limbSwing, limbSwingAmount, 2.5F, 2.5F);
+		entity.gunWalkAnimationState.animateWalkWithFactor(this, MadLumberjackAnimation.GUN_WALK, limbSwing, limbSwingAmount, 2.5F, 2.5F, entity.zombieWalkAnimationState, entity.zombieSprintAnimationState, 
+				entity.axeAttack1AnimationState, entity.axeAttack2AnimationState, 
+				entity.axeAttack3AnimationState, entity.shotgunShotAnimationState, 
+				entity.axeChangeAnimationState, entity.shotgunChangeAnimationState, 
+				entity.zombieAttack1AnimationState, entity.zombieAttack2AnimationState, 
+				entity.zombieAttack2SuccessAnimationState, entity.zombieAttack3AnimationState, 
+				entity.zombieAttack4LeftAnimationState, entity.zombieAttack4RightAnimationState);
+		entity.zombieWalkAnimationState.animateWalkWithFactor(this, MadLumberjackAnimation.ZOMBIE_WALK, limbSwing, limbSwingAmount, 2.5F, 2.5F, entity.gunWalkAnimationState, entity.zombieSprintAnimationState, 
+				entity.axeAttack1AnimationState, entity.axeAttack2AnimationState, 
+				entity.axeAttack3AnimationState, entity.shotgunShotAnimationState, 
+				entity.axeChangeAnimationState, entity.shotgunChangeAnimationState, 
+				entity.zombieAttack1AnimationState, entity.zombieAttack2AnimationState, 
+				entity.zombieAttack2SuccessAnimationState, entity.zombieAttack3AnimationState, 
+				entity.zombieAttack4LeftAnimationState, entity.zombieAttack4RightAnimationState);
+		entity.zombieSprintAnimationState.animateWalkWithFactor(this, MadLumberjackAnimation2.ZOMBIE_SPRINT, limbSwing, limbSwingAmount, 1.5F, 2.5F, entity.gunWalkAnimationState, entity.zombieWalkAnimationState,
+				entity.axeAttack1AnimationState, entity.axeAttack2AnimationState, 
+				entity.axeAttack3AnimationState, entity.shotgunShotAnimationState, 
+				entity.axeChangeAnimationState, entity.shotgunChangeAnimationState, 
+				entity.zombieAttack1AnimationState, entity.zombieAttack2AnimationState, 
+				entity.zombieAttack2SuccessAnimationState, entity.zombieAttack3AnimationState, 
+				entity.zombieAttack4LeftAnimationState, entity.zombieAttack4RightAnimationState);
 		//entity.axeSprintAnimationState.animateWalkWithFactor(this, MadLumberjackAnimation.AXE_SPRINT, limbSwing, limbSwingAmount, 1.0F, 1.0F);
 		//entity.gunSprintAnimationState.animateWalkWithFactor(this, MadLumberjackAnimation.GUN_SPRINT, limbSwing, limbSwingAmount, 1.0F, 1.0F);
 	}

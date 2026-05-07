@@ -56,6 +56,6 @@ public class LumberjackAxeAttack3Goal extends AbstractAnimationGoal<MadLumberjac
 	@Override
 	public int getSkillUsingInterval() 
 	{
-		return 40;
+		return 20;
 	}
 }
